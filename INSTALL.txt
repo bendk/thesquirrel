@@ -1,0 +1,49 @@
+-------------------------------
+Step 1 -- Install Prerequisites
+-------------------------------
+
+You'll need the following
+  * python and virtualenv
+  * gcc and other basic build tools
+  * python development headers
+  * MySQL development headers
+
+This line should work on debian-based systems:
+
+apt-get install python python-virtualenv python-dev build-essential libmysqlclient-dev
+
+----------------------------------------
+Step 2: Setup a MySQL Database
+----------------------------------------
+
+MySQL is the only supported DB at this time.
+
+Cretae a datbaase with UTF-8 as the character set:
+
+CREATE DATABASE <dbname> CHARACTER SET utf8;
+
+Create a user account and give it access to the DB:
+
+GRANT ALL PRIVILEGES ON <dbname>.* TO '<username>'@'%' IDENTIFIED BY '<password>';
+
+----------------------------------------
+Step 3: Setup the local_settings.py file
+----------------------------------------
+
+  * Run generate-local-settings.py to create the initial file
+  * Open that file in an editor and fill in the values
+
+---------------------------
+Step 4: Run setup-server.py
+---------------------------
+
+setup-server.py does all the work to make sure things are set up for
+deployment.  You can also use it to update things after updating the code.
+
+--------------
+Step 5: Deploy
+--------------
+
+We use the standard django processes here:
+  * Use ./manage.py runserver to run a development server
+  * Read the django docs for setting up a production server
