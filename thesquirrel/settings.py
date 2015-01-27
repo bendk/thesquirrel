@@ -43,12 +43,15 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = (
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
+    # our apps
+    'thesquirrel',
 )
 
 MIDDLEWARE_CLASSES = (
