@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     # our apps
+    'mediabundles',
     'thesquirrel',
     'weblibs',
 )
@@ -76,5 +77,23 @@ USE_TZ = True
 WEB_LIBRARIES = {
     'foundation': 'https://github.com/zurb/bower-foundation/archive/5.5.1.tar.gz'
 }
+# Define SASS files that will be used to create css files.
+SASS_BUNDLES = {
+    'app.css': {
+        'source': 'thesquirrel/scss/app.scss',
+        'include_paths': [
+            'weblibs/downloads/foundation/scss/'
+        ],
+    },
+}
+JS_BUNDLES = {
+    'app.js': {
+        'sources': [
+            'weblibs/downloads/foundation/js/foundation.js',
+            'weblibs/downloads/foundation/js/vendor/*.js',
+        ],
+    }
+}
+
 # Static files
 STATIC_URL = '/static/'
