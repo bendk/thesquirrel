@@ -58,7 +58,7 @@ class Command(BaseCommand):
             f.write(content)
 
     def build_sass_bundle(self, dest, bundle):
-        self.stdout.write("Building {}\n".format(dest))
+        self.stdout.write("* building {}\n".format(dest))
         source_path = os.path.join(settings.BASE_DIR, bundle['source'])
         content = sass.compile(
             filename=source_path,
@@ -68,7 +68,7 @@ class Command(BaseCommand):
         self.writeout(dest, content)
 
     def build_js_bundle(self, dest, bundle):
-        self.stdout.write("Building {}\n".format(dest))
+        self.stdout.write("* building {}\n".format(dest))
         js_source = []
         for source in bundle['sources']:
             for path in glob.glob(self.source_path(source)):

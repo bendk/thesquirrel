@@ -75,7 +75,7 @@ class Command(BaseCommand):
     def download_library(self, dest, url):
         dest_path = os.path.join(self.downloads_dir(), dest)
         self.clearout_dest_path(dest_path)
-        self.stdout.write("* {}".format(url))
+        self.stdout.write("* downloading {}".format(url))
         response = requests.get(url)
         response.raise_for_status()
         if self.is_tarball(url):
