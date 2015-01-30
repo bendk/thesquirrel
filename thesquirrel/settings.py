@@ -66,7 +66,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'thesquirrel.urls'
 
-WSGI_APPLICATION = 'thesquirrel.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
