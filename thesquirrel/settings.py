@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     # our apps
     'thesquirrel',
+    'weblibs',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -69,5 +70,11 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# WEB_LIBRARIES maps filenames -> URLs for web libraries
+# These will be downloaded to weblibs/downloads when manage download_weblibs
+# is run.
+WEB_LIBRARIES = {
+    'foundation': 'https://github.com/zurb/bower-foundation/archive/5.5.1.tar.gz'
+}
 # Static files
 STATIC_URL = '/static/'
