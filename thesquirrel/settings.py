@@ -48,9 +48,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     # our apps
-    'mediabundles',
+    'mediabuilder',
     'thesquirrel',
-    'weblibs',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -71,28 +70,27 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# WEB_LIBRARIES maps filenames -> URLs for web libraries
-# These will be downloaded to weblibs/downloads when manage download_weblibs
-# is run.
-WEB_LIBRARIES = {
-    'foundation': 'https://github.com/zurb/bower-foundation/archive/5.5.1.tar.gz'
-}
-# Define SASS files that will be used to create css files.
-SASS_BUNDLES = {
-    'app.css': {
-        'source': 'thesquirrel/scss/app.scss',
-        'include_paths': [
-            'weblibs/downloads/foundation/scss/'
-        ],
+MEDIA_BUILDER = {
+    'DOWNLOADS': {
+        'foundation':
+        'https://github.com/zurb/bower-foundation/archive/5.5.1.tar.gz',
     },
-}
-JS_BUNDLES = {
-    'app.js': {
-        'sources': [
-            'weblibs/downloads/foundation/js/foundation.js',
-            'weblibs/downloads/foundation/js/vendor/*.js',
-        ],
-    }
+    'SASS_BUNDLES': {
+        'app.css': {
+            'source': 'thesquirrel/scss/app.scss',
+            'include_paths': [
+                'mediabuilder/downloads/foundation/scss/'
+            ],
+        },
+    },
+    'JS_BUNDLES': {
+        'app.js': {
+            'sources': [
+                'mediabuilder/downloads/foundation/js/foundation.js',
+                'mediabuilder/downloads/foundation/js/vendor/*.js',
+            ],
+        },
+    },
 }
 
 # Static files

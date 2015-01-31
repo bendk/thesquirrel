@@ -35,9 +35,8 @@ def main():
     os.chdir(BASE_DIR)
     setup_virtualenv()
     manage('migrate')
-    manage('downloadweblibs')
+    manage('buildmedia')
     if production():
-        manage('buildmedia')
         manage('collectstatic')
 
 if __name__ == '__main__':
