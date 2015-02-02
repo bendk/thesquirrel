@@ -14,16 +14,30 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+
 from django.conf import settings
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
+from django.http import Http404, HttpResponse
 
-urlpatterns = patterns('',
-    url(r'^$', 'thesquirrel.views.home', name='home'),
-    url(r'^admin/', include(admin.site.urls)),
-)
+from mediabuilder import bundles
 
-if settings.DEV:
-    urlpatterns += patterns('',
-        url(r'^mediasrc/', include('mediabuilder.sourceurls')),
-    )
+def check_source_path(bundles, path):
+    """Source paths
+
+    This method will raise Http404 if path is not a source path any of the
+    bundles.
+    """
+    if not os.path.exists(path):
+        raise Http404()
+    for bundle in bundles:
+        for source_path in bundle.source_paths():
+            if os.path.samefile(path, source_path):
+                return
+    raise Http404()
+
+def js_source(request, path):
+    check_source_path(bundles.JSBundle.all_bundles(), path)
+    path = os.path.join(settings.BASE_DIR, path)
+    return HttpResponse(open(path).read(),
+                        content_type='application/javascript')
+

@@ -14,16 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 
 urlpatterns = patterns('',
-    url(r'^$', 'thesquirrel.views.home', name='home'),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^js/(?P<path>.*)$', 'mediabuilder.views.js_source',
+        name='js_source'),
 )
-
-if settings.DEV:
-    urlpatterns += patterns('',
-        url(r'^mediasrc/', include('mediabuilder.sourceurls')),
-    )
