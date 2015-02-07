@@ -34,8 +34,7 @@ class Bundle(object):
 
     @classmethod
     def settings_entry(cls):
-        settings_dict = getattr(settings, 'MEDIA_BUILDER', {})
-        return settings_dict.get(cls.settings_key, {})
+        return getattr(mediabuilder.config, cls.settings_key, {})
 
     @classmethod
     def all_bundles(cls):
@@ -56,6 +55,8 @@ class Bundle(object):
         return mediabuilder.path('static', self.name)
 
     def needs_build(self):
+        if not os.path.exists(self.dest_path()):
+            return True
         dest_mtime = os.stat(self.dest_path()).st_mtime
         return any(os.stat(path).st_mtime > dest_mtime
                    for path in self.source_paths())

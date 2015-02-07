@@ -71,6 +71,7 @@ USE_L10N = True
 USE_TZ = True
 
 MEDIA_BUILDER = {
+    'BUNDLE_MEDIA': not DEV,
     'DOWNLOADS': {
         'foundation':
         'https://github.com/zurb/bower-foundation/archive/5.5.1.tar.gz',

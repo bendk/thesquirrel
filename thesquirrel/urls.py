@@ -25,5 +25,5 @@ urlpatterns = patterns('',
 
 if settings.DEV:
     urlpatterns += patterns('',
-        url(r'^mediasrc/', include('mediabuilder.sourceurls')),
+        url(r'^mediasrc/', include('mediabuilder.urls', 'mediabuilder')),
     )

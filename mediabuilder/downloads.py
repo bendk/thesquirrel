@@ -21,7 +21,6 @@ import shutil
 import tarfile
 import os
 
-from django.conf import settings
 import requests
 
 import mediabuilder
@@ -54,11 +53,9 @@ class Download(object):
 
     @staticmethod
     def all_downloads():
-        settings_dict = getattr(settings, 'MEDIA_BUILDER', {})
-        settings_entry = settings_dict.get('DOWNLOADS', {})
         return [
             Download(name, url)
-            for name, url in settings_entry.items()
+            for name, url in mediabuilder.config.DOWNLOADS.items()
         ]
 
     def __init__(self, name, url):

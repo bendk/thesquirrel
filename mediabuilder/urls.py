@@ -16,7 +16,13 @@
 
 from django.conf.urls import patterns, include, url
 
-urlpatterns = patterns('',
-    url(r'^js/(?P<path>.*)$', 'mediabuilder.views.js_source',
-        name='js_source'),
-)
+import mediabuilder
+
+
+if mediabuilder.config.BUNDLE_MEDIA:
+    urlpatterns = []
+else:
+    urlpatterns = patterns('',
+        url(r'^js/(?P<path>.*)$', 'mediabuilder.views.js_source',
+            name='js_source'),
+    )
