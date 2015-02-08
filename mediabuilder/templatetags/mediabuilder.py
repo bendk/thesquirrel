@@ -20,21 +20,29 @@ from django import template
 from django.core.urlresolvers import reverse
 
 from mediabuilder import bundles
+import mediabuilder
 
 register = template.Library()
 
 @register.simple_tag
 def js_bundle(bundle_name):
     bundle = bundles.JSBundle.get_bundle(bundle_name)
-    urls = [
-        reverse('mediabuilder:js_source', args=(path,))
-        for path in bundle.source_paths()
-    ]
+    if mediabuilder.config.BUNDLE_MEDIA:
+        urls = [bundle.static_url()]
+    else:
+        urls = [
+            reverse('mediabuilder:js_source', args=(path,))
+            for path in bundle.source_paths()
+        ]
     return '\n'.join(
         '<script src="{}"></script>'.format(url) for url in urls
     )
 
 @register.simple_tag
 def sass_bundle(bundle_name):
-    url = reverse('mediabuilder:sass_source', args=(bundle_name,))
+    bundle = bundles.SassBundle.get_bundle(bundle_name)
+    if mediabuilder.config.BUNDLE_MEDIA:
+        url = bundle.static_url()
+    else:
+        url = reverse('mediabuilder:sass_source', args=(bundle.name,))
     return '<link rel="stylesheet" type="text/css" href="{}" />'.format(url)

@@ -97,3 +97,9 @@ MEDIA_BUILDER = {
 # Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Last step is to exec settings_override.py  This allows it to change any
+# settings defined here.
+settings_override_path = os.path.join(BASE_DIR, 'settings_override.py')
+if os.path.exists(settings_override_path):
+    execfile(settings_override_path)

@@ -19,6 +19,7 @@ import glob
 import os
 
 from django.conf import settings
+from django.templatetags.static import static
 import sass
 import slimit
 
@@ -53,6 +54,9 @@ class Bundle(object):
 
     def dest_path(self):
         return mediabuilder.path('static', self.name)
+
+    def static_url(self):
+        return static(self.name)
 
     def needs_build(self):
         if not os.path.exists(self.dest_path()):
