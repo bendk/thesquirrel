@@ -21,22 +21,22 @@ from django.http import Http404, HttpResponse
 
 from mediabuilder import bundles
 
-def check_source_path(bundles, path):
-    """Source paths
+def check_source_path(bundle, path):
+    """Check JS Source paths
 
     This method will raise Http404 if path is not a source path any of the
-    bundles.
+    bundle.
     """
     if not os.path.exists(path):
         raise Http404()
-    for bundle in bundles:
-        for source_path in bundle.source_paths():
-            if os.path.samefile(path, source_path):
-                return
+    for source_path in bundle.source_paths():
+        if os.path.samefile(path, source_path):
+            return
     raise Http404()
 
-def js_source(request, path):
-    check_source_path(bundles.JSBundle.all_bundles(), path)
+def js_source(request, bundle_name, path):
+    bundle = bundles.JSBundle.get_bundle(bundle_name)
+    check_source_path(bundle, path)
     path = os.path.join(settings.BASE_DIR, path)
     return HttpResponse(open(path).read(),
                         content_type='application/javascript')

@@ -31,7 +31,7 @@ def js_bundle(bundle_name):
         urls = [bundle.static_url()]
     else:
         urls = [
-            reverse('mediabuilder:js_source', args=(path,))
+            reverse('mediabuilder:js_source', args=(bundle.name, path,))
             for path in bundle.source_paths()
         ]
     return '\n'.join(

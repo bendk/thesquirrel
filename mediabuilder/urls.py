@@ -23,8 +23,8 @@ if mediabuilder.config.BUNDLE_MEDIA:
     urlpatterns = []
 else:
     urlpatterns = patterns('',
-        url(r'^src/js/(?P<path>.*)$', 'mediabuilder.views.js_source',
-            name='js_source'),
+        url(r'^src/js/(?P<bundle_name>.*)/(?P<path>.*)$',
+            'mediabuilder.views.js_source', name='js_source'),
         url(r'^src/sass/(?P<bundle_name>.*)$',
             'mediabuilder.views.sass_source', name='sass_source'),
     )
