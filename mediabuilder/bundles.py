@@ -49,7 +49,7 @@ class Bundle(object):
         return cls(name, info)
 
     def source_path(self, source):
-        return os.path.join(settings.BASE_DIR, source)
+        return os.path.normpath(os.path.join(settings.BASE_DIR, source))
 
     def dest_path(self):
         return mediabuilder.path('static', self.name)

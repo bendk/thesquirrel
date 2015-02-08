@@ -41,3 +41,8 @@ def js_source(request, path):
     return HttpResponse(open(path).read(),
                         content_type='application/javascript')
 
+def sass_source(request, bundle_name):
+    # We can't just send the SASS source to the browser, so we build it here
+    # and output it.
+    bundle = bundles.SassBundle.get_bundle(bundle_name)
+    return HttpResponse(bundle.build_content(), content_type='text/css')

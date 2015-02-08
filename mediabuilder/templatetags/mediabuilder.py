@@ -14,17 +14,27 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
+from __future__ import absolute_import
 
-import mediabuilder
+from django import template
+from django.core.urlresolvers import reverse
 
+from mediabuilder import bundles
 
-if mediabuilder.config.BUNDLE_MEDIA:
-    urlpatterns = []
-else:
-    urlpatterns = patterns('',
-        url(r'^src/js/(?P<path>.*)$', 'mediabuilder.views.js_source',
-            name='js_source'),
-        url(r'^src/sass/(?P<bundle_name>.*)$',
-            'mediabuilder.views.sass_source', name='sass_source'),
+register = template.Library()
+
+@register.simple_tag
+def js_bundle(bundle_name):
+    bundle = bundles.JSBundle.get_bundle(bundle_name)
+    urls = [
+        reverse('mediabuilder:js_source', args=(path,))
+        for path in bundle.source_paths()
+    ]
+    return '\n'.join(
+        '<script src="{}"></script>'.format(url) for url in urls
     )
+
+@register.simple_tag
+def sass_bundle(bundle_name):
+    url = reverse('mediabuilder:sass_source', args=(bundle_name,))
+    return '<link rel="stylesheet" type="text/css" href="{}" />'.format(url)
