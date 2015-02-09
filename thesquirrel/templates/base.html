@@ -1,39 +1,34 @@
 {% load mediabuilder %}
 <html>
 <head>
-<title>Flying Squirrel Community Space</title>
+    <title>Flying Squirrel Community Space</title>
+    <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:300,400,700,300italic|Alegreya:700' rel='stylesheet' type='text/css'>
     {% js_bundle "app.js" %}
     {% sass_bundle "app.css" %}
 </head>
 <body>
-<nav class="top-bar" data-topbar role="navigation">
-  <ul class="title-area">
-    <li class="name">
-      <h1><a href="#">My Site</a></h1>
-    </li>
-     <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-  </ul>
-
-  <section class="top-bar-section">
-    <!-- Right Nav Section -->
-    <ul class="right">
-      <li class="active"><a href="#">Right Button Active</a></li>
-      <li class="has-dropdown">
-        <a href="#">Right Button Dropdown</a>
-        <ul class="dropdown">
-          <li><a href="#">First link in dropdown</a></li>
-          <li class="active"><a href="#">Active link in dropdown</a></li>
-        </ul>
-      </li>
+<div class="contain-to-grid">
+  <nav class="top-bar" data-topbar role="navigation">
+    <ul class="title-area">
+      <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
     </ul>
 
-    <!-- Left Nav Section -->
-    <ul class="left">
-      <li><a href="#">Left Nav Button</a></li>
-    </ul>
-  </section>
-</nav>
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="left">
+        <li class="active"><a href="#">home</a></li>
+        <li><a href="#">about us</a></li>
+        <li><a href="#">calendar</a></li>
+        <li><a href="#">groups</a></li>
+        <li><a href="#">using the space</a></li>
+      </ul>
+
+      <ul class="right">
+        <li><a href="#">login/signup</a></li>
+      </ul>
+    </section>
+  </nav>
+</div>
 {% block "content" %}{% endblock %}
 </body>
 </html>
