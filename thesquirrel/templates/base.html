@@ -2,33 +2,43 @@
 <html>
 <head>
     <title>Flying Squirrel Community Space</title>
-    <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:300,400,700,300italic|Alegreya:700' rel='stylesheet' type='text/css'>
+    <meta name="viewport" content="width=device-width">
+    <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:300|Alegreya:700|Lato:400,700' rel='stylesheet' type='text/css'>
     {% js_bundle "app.js" %}
     {% sass_bundle "app.css" %}
 </head>
 <body>
-<div class="contain-to-grid">
-  <nav class="top-bar" data-topbar role="navigation">
-    <ul class="title-area">
-      <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+<div class="page">
+  <nav class="main" role="navigation">
+    <a class="menu" href="#"><span>Menu</span></a></li>
+
+    <a class="user" href="#">login/signup</a></li>
+
+    <ul class="links">
+      <li class="active"><a href="#">home</a></li>
+      <li><a href="#">about us</a></li>
+      <li><a href="#">calendar</a></li>
+      <li><a href="#">groups</a></li>
+      <li><a href="#">using the space</a></li>
     </ul>
 
-    <section class="top-bar-section">
-      <!-- Right Nav Section -->
-      <ul class="left">
-        <li class="active"><a href="#">home</a></li>
-        <li><a href="#">about us</a></li>
-        <li><a href="#">calendar</a></li>
-        <li><a href="#">groups</a></li>
-        <li><a href="#">using the space</a></li>
-      </ul>
-
-      <ul class="right">
-        <li><a href="#">login/signup</a></li>
-      </ul>
-    </section>
   </nav>
+  <div class="heading">
+      <div class="top">
+          <h1>Flying Squirrel Community Space</h1>
+          <ul class="vcard">
+              <li class="adr">
+                  <span class="street-address">285 Clarissa St.</span>
+                  <span class="locality">Rochester</span>
+                  <span class="state">NY</state>,
+                  <span class="postal-code">14608</span>
+              </li>
+              <li class="tel">585-678-6870</li>
+          </ul>
+      </div>
+      <div class="extra">{% block "header-extra" %}{% endblock %}</div>
+  </div>
+  {% block "content" %}{% endblock %}
 </div>
-{% block "content" %}{% endblock %}
 </body>
 </html>

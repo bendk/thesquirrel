@@ -1,0 +1,10 @@
+body {
+    background: $jet;
+}
+
+.page {
+    @include large-screen {
+        width: $large-screen-width;
+        margin: 0 auto;
+    }
+}

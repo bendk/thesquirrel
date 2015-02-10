@@ -94,6 +94,7 @@ class SassBundle(Bundle):
         return sass.compile(
             filename=self.source_path(self.bundle_info['source']),
             output_style='compressed',
+            image_path=settings.STATIC_URL + 'images/',
             include_paths=self.bundle_info.get('include_paths', [])
         )
 

@@ -1,0 +1,86 @@
+@mixin body-font {
+    font-family: "Lato", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+    font-weight: 400;
+}
+
+@mixin header-font {
+    font-family: "Alegreya", Georgia, Cambria, "Times New Roman", Times, serif;
+    font-weight: bold;
+}
+
+@mixin title-font {
+    font-family: "Alegreya Sans", Georgia, Cambria, "Times New Roman", Times, serif;
+    font-weight: 300;
+    font-size: 4.4rem;
+    @include small-screen {
+        font-size: 3.4rem;
+        line-height: 1.2em;
+    }
+}
+
+@mixin small-text {
+    font-size: 0.875em;
+}
+
+html {
+    // Make the root font size 10px by default, for easy sizing with rems
+    font-size: 62.5%;
+}
+
+body {
+    @include body-font;
+    font-size: 1.6rem;
+    line-height: 1.4em;
+}
+
+a {
+    color: $link;
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    @include header-font;
+    line-height: 1.0em;
+    margin: 0 0 0.5em 0;
+}
+
+h1 {
+    font-size: 3.7rem;
+    @include small-screen {
+        font-size: 2.4rem;
+    }
+}
+h2 {
+    font-size: 2.7rem;
+    @include small-screen {
+        font-size: 2.0rem;
+    }
+}
+h3 {
+    font-size: 2.3rem;
+    @include small-screen {
+        font-size: 1.8rem;
+    }
+}
+h4 {
+    font-size: 1.8rem;
+    @include small-screen {
+        font-size: 1.6rem;
+    }
+}
+h5 {
+    font-size: 1.4rem;
+}
+h6 {
+    font-size: 1.4rem;
+}
+
+p {
+    margin: 0 0 1em 0;
+}
+
+ul {
+    margin: 0 0 1em 0;
+    padding: 0;
+    list-style: disc inside;
+}

@@ -72,23 +72,14 @@ USE_TZ = True
 
 MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,
-    'DOWNLOADS': {
-        'foundation':
-        'https://github.com/zurb/bower-foundation/archive/5.5.1.tar.gz',
-    },
     'SASS_BUNDLES': {
         'app.css': {
             'source': 'thesquirrel/scss/app.scss',
-            'include_paths': [
-                'mediabuilder/downloads/foundation/scss/'
-            ],
         },
     },
     'JS_BUNDLES': {
         'app.js': {
             'sources': [
-                'mediabuilder/downloads/foundation/js/foundation.js',
-                'mediabuilder/downloads/foundation/js/vendor/*.js',
             ],
         },
     },

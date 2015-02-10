@@ -1,0 +1,96 @@
+.heading {
+    background-image: image-url('heading.png');
+    @include group;
+
+    @include small-screen {
+        background-image: image-url('heading-small.png');
+    }
+
+    .top {
+        position: relative;
+        height: 148px;
+
+        @include small-screen {
+            height: 105px;
+        }
+
+        h1 {
+            @include title-font;
+            margin: 0;
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            text-align: right;
+
+            @include small-screen {
+                top: 10px;
+            }
+        }
+
+        ul.vcard {
+            position: absolute;
+            bottom: 0.5em;
+            left: 100px;
+            right: 20px;
+
+            text-align: right;
+
+            margin: 0;
+            padding: 0;
+
+            @include small-text;
+
+            li {
+                display: inline;
+                margin-left: 20px;
+            }
+
+            @include small-screen {
+                display: none;
+            }
+        }
+    }
+
+    .callout {
+        float: left;
+        width: 400px;
+
+        @include medium-screen {
+            width: 33%;
+        }
+        @include small-screen {
+            width: 100%;
+        }
+
+        .inner {
+            margin: 0 10px 10px 10px;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #888;
+        }
+
+        .vcard {
+            display: none;
+
+            @include small-screen {
+                margin-top: -1em;
+                display: block;
+            }
+        }
+
+        ul.upcoming {
+            list-style-type: none;
+
+            @include small-text;
+            
+            li {
+                margin-bottom: 0.5em;
+            }
+
+            .date {
+                font-style: italic;
+            }
+        }
+    }
+}

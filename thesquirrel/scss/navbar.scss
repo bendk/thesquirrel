@@ -1,0 +1,36 @@
+nav.main {
+    padding: 0 10px;
+
+    ul {
+        @include group;
+        margin: 0;
+        padding: 0;
+
+        li {
+            float: left;
+            list-style-type: none;
+            padding: 1em 0;
+            margin-right: 20px;
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
+    }
+    a {
+        color: #ddd;
+        text-decoration: none;
+        font-weight: normal;
+
+        &.menu {
+            display: none;
+        }
+
+        &.user {
+            padding: 1em 0;
+            float: right;
+        }
+    }
+
+}
+
+

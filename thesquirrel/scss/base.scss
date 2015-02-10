@@ -1,0 +1,47 @@
+// Media breakpoints
+
+$large-screen-width: 1200px;
+$medium-screen-width: 768px;
+
+@mixin small-screen {
+  @media only screen and (max-width: $medium-screen-width - 1) {
+    @content;
+  }
+}
+
+@mixin medium-screen {
+  @media only screen and (min-width: $medium-screen-width) and (max-width: $large-screen-width - 1) {
+    @content;
+  }
+}
+
+@mixin large-screen {
+  @media only screen and (min-width: $large-screen-width) {
+    @content;
+  }
+}
+
+
+@mixin group {
+    // clearfix for container elements with floating children
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+body {
+    margin: 0;
+}
+img {
+    // Prevent images from overflowing their container.
+    max-width: 100%;
+    height: auto;
+}
