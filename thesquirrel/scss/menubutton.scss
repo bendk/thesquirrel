@@ -1,7 +1,7 @@
 $menu-button-size : 3.5rem;
 $menu-button-transition-time: .5s;
-$menu-button-background: #222;
-$menu-button-color: #ddd;
+$menu-button-background: $dark-gray;
+$menu-button-color: $light-gray;
 
 @mixin menu-button-line {
     position: absolute;

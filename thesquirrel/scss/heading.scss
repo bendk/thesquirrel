@@ -1,6 +1,7 @@
 .heading {
     background-image: image-url('heading.png');
     @include group;
+    margin-bottom: 3rem;
 
     @include small-screen {
         background-image: image-url('heading-small.png');
@@ -67,8 +68,8 @@
 
         .inner {
             margin: 0 10px 10px 10px;
-            padding: 20px;
-            background: white;
+            padding: 0 10px;
+            background: $white;
             border-radius: 5px;
             border: 1px solid #888;
         }

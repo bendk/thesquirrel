@@ -1,5 +1,5 @@
 body {
-    background: $jet;
+    background: $dark-gray;
 }
 
 .page {
@@ -7,4 +7,9 @@ body {
         width: $large-screen-width;
         margin: 0 auto;
     }
+}
+
+.content {
+    background: $white;
+    padding: 0 20px;
 }
