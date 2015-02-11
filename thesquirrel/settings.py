@@ -72,6 +72,9 @@ USE_TZ = True
 
 MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,
+    'DOWNLOADS': {
+        'jquery.js': 'http://code.jquery.com/jquery-2.1.3.js',
+    },
     'SASS_BUNDLES': {
         'app.css': {
             'source': 'thesquirrel/scss/app.scss',
@@ -80,6 +83,8 @@ MEDIA_BUILDER = {
     'JS_BUNDLES': {
         'app.js': {
             'sources': [
+                'mediabuilder/downloads/jquery.js',
+                'thesquirrel/js/navmenu.js',
             ],
         },
     },

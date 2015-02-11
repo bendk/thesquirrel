@@ -1,0 +1,68 @@
+$menu-button-size : 3.5rem;
+$menu-button-transition-time: .5s;
+$menu-button-background: #222;
+$menu-button-color: #ddd;
+
+@mixin menu-button-line {
+    position: absolute;
+    display: block;
+    left: 0;
+    right: 0;
+    height: $menu-button-size / 7;
+    background: $menu-button-color;
+    border-radius: $menu-button-size / 14;
+}
+
+#menu-toggle {
+    text-align: right;
+
+    button {
+        display: inline-block;
+        height: $menu-button-size;
+        width: $menu-button-size;
+        background: $menu-button-background;
+        border: none;
+        padding: 0;
+        outline: 0;
+        position: relative;
+
+        .lines {
+            @include menu-button-line; // middle line
+            top: $menu-button-size * 3/7;
+
+            transition-property: background;
+            transition-delay: $menu-button-transition-time / 2;
+            transition-duration: $menu-button-transition-time / 2;
+
+            &:before, &:after { // Upper/lower lines
+                @include menu-button-line;
+                content: '';
+
+                transition-property: transform, top;
+                transition-delay: 0, $menu-button-transition-time / 2;
+                transition-duration: $menu-button-transition-time / 2;
+                transform-origin: center center;
+            }
+
+            &:before { top: $menu-button-size / 4 }
+            &:after { top: -$menu-button-size / 4 }
+        }
+
+        &.close {
+            .lines {
+                background-color: $menu-button-background;
+
+                &:before, &:after{
+                    top: 0;
+                    transition-property: top, transform;
+                }
+                &:before{
+                    transform: rotate3d(0, 0, 1, 45deg);
+                }
+                &:after{
+                    transform: rotate3d(0, 0, 1, -45deg);
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,4 @@
-nav.main {
+nav#main {
     padding: 0 10px;
 
     ul {
@@ -11,14 +11,14 @@ nav.main {
             list-style-type: none;
             padding: 1em 0;
             margin-right: 20px;
-            &:last-of-type {
+            &.user {
+                float: right;
                 margin-right: 0;
             }
         }
     }
     a {
         color: #ddd;
-        text-decoration: none;
         font-weight: normal;
 
         &.menu {
@@ -30,7 +30,32 @@ nav.main {
             float: right;
         }
     }
-
 }
 
+#menu-toggle {
+    display: none;
+}
 
+@include small-screen {
+    #menu-toggle {
+        display: block;
+        padding-right: 10px;
+    }
+
+    nav#main {
+        display: none;
+
+        &.open {
+            display: block;
+        }
+
+        ul {
+            padding-top: 0.5em;
+            li {
+                float: none;
+                width: 100%;
+                border-top: 1px solid $gray;
+            }
+        }
+    }
+}

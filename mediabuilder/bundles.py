@@ -76,7 +76,11 @@ class JSBundle(Bundle):
     def source_paths(self):
         paths = []
         for source in self.bundle_info['sources']:
-            paths.extend(glob.glob(self.source_path(source)))
+            glob_paths = glob.glob(self.source_path(source))
+            if glob_paths:
+                paths.extend(glob_paths)
+            else:
+                raise ValueError("no files matching {}".format(source))
         return paths
 
     def build_content(self):
