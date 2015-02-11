@@ -34,6 +34,7 @@ body {
     @include body-font;
     font-size: 1.6rem;
     line-height: 1.4em;
+    color: $dark-gray;
 }
 
 a {

@@ -21,6 +21,8 @@ from django.contrib import admin
 urlpatterns = patterns('',
     url(r'^$', 'thesquirrel.views.home', name='home'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',
+        name='login'),
 )
 
 if settings.DEV:
