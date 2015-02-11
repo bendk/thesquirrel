@@ -1,6 +1,4 @@
 nav#main {
-    padding: 0 10px;
-
     ul {
         @include group;
         margin: 0;
@@ -9,16 +7,63 @@ nav#main {
         li {
             float: left;
             list-style-type: none;
-            padding: 1em 0;
-            margin-right: 20px;
+            a, span {
+              display: block;
+              padding: 1em 10px;
+              &:hover {
+                text-decoration: none;
+              }
+            }
+
+            &:hover {
+              background: lighten($dark-gray, 20%);
+            }
+
+
+            &.submenu {
+              position: relative;
+              &:hover {
+                background: $dark-gray;
+              }
+            }
+
+            // submenus get displayed when the parent li is hovered
+            ul {
+              position: absolute;
+              left: 0;
+              top: 100%;
+              z-index: 1;
+              background: $dark-gray;
+              display: none;
+              width: 200px;
+              li {
+                display: block;
+                float: none;
+              }
+              box-shadow: -2px -2px 5px rgba(0.1, 0.1, 0.1, 0.4);
+            }
+            &:hover ul {
+              display: block;
+            }
+
+            // user menu is floated to the right
             &.user {
                 float: right;
                 margin-right: 0;
+
+                ul {
+                  left: auto;
+                  right: 0;
+                }
             }
+
         }
     }
+
+    color: $light-gray;
+
     a {
-        color: $light-gray;
+        color: inherit;
         font-weight: normal;
 
         &.menu {
@@ -50,11 +95,20 @@ nav#main {
         }
 
         ul {
-            padding-top: 0.5em;
             li {
                 float: none;
                 width: 100%;
                 border-top: 1px solid $gray;
+
+                ul {
+                  display: block;
+                  position: auto;
+                  width: 100%;
+                  box-shadow: none;
+                  li a, li span {
+                    padding-left: 40px;
+                  }
+                }
             }
         }
     }

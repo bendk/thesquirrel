@@ -1,4 +1,4 @@
-{% load mediabuilder %}
+{% load i18n mediabuilder %}
 <html>
 <head>
     <title>Flying Squirrel Community Space</title>
@@ -10,9 +10,9 @@
 <body>
 <div class="page">
   <div id="menu-toggle">
-      <button role="button" aria-label="Toggle Menu">
+    <button role="button" aria-label="Toggle Menu">
         <span class="lines"></span>
-      </button>
+    </button>
   </div>
   <nav id="main" role="navigation">
     <ul class="links">
@@ -21,27 +21,42 @@
       <li><a href="#">calendar</a></li>
       <li><a href="#">groups</a></li>
       <li><a href="#">using the space</a></li>
-      <li class="user"><a href="{% url "login" %}">login/signup</a></li>
+      {% if user.is_anonymous %}
+      <li class="user">
+        <a href="{% url "login" %}">login/signup</a></li>
+      </li>
+      {% else %}
+      <li class="user submenu">
+        {% blocktrans with user.username as username %}
+          <span>logged in as {{ username }}</span>
+        {% endblocktrans %}
+          <ul>
+            <li><a href="#">event requests</a></li>
+            <li><a href="#">member docs</a></li>
+            <li><a href="{% url "logout" %}?next=/">logout</a></li>
+          </ul>
+        </li>
+      {% endif %}
     </ul>
   </nav>
   <div class="heading">
-      <div class="top">
-          <h1><span>Flying Squirrel</span> <span>Community Space</span></h1>
-          <ul class="vcard">
-              <li class="adr">
-                  <span class="street-address">285 Clarissa St.</span>
-                  <span class="locality">Rochester</span>
-                  <span class="state">NY</state>,
-                  <span class="postal-code">14608</span>
-              </li>
-              <li class="tel">585-678-6870</li>
-          </ul>
+    <div class="top">
+      <h1><span>Flying Squirrel</span> <span>Community Space</span></h1>
+      <ul class="vcard">
+        <li class="adr">
+        <span class="street-address">285 Clarissa St.</span>
+        <span class="locality">Rochester</span>
+        <span class="state">NY</state>,
+          <span class="postal-code">14608</span>
+          </li>
+          <li class="tel">585-678-6870</li>
+        </ul>
       </div>
       <div class="extra">{% block "header-extra" %}{% endblock %}</div>
-  </div>
-  <div class="content">
+    </div>
+    <div class="content">
       {% block "content" %}{% endblock %}
+    </div>
   </div>
-</div>
-</body>
-</html>
+  </body>
+  </html>
