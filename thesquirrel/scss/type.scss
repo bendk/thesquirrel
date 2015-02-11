@@ -13,8 +13,10 @@
     font-weight: 300;
     font-size: 4.4rem;
     @include small-screen {
-        font-size: 3.4rem;
-        line-height: 1.2em;
+        // Use absolute font sizes because we want to precisely position over
+        // the background image
+        font-size: 35px;
+        line-height: 50px;
     }
 }
 

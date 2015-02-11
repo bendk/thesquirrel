@@ -24,6 +24,9 @@
 
             @include small-screen {
                 top: 10px;
+                span {
+                    display: block;
+                }
             }
         }
 
