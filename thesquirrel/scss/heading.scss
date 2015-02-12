@@ -2,6 +2,7 @@
     background: image-url('heading.png') center top no-repeat #ffc600;
     @include group;
     margin-bottom: 3rem;
+    border-bottom: 1px solid $gray;
 
     @include small-screen {
         background-image: image-url('heading-small.png');
@@ -77,7 +78,7 @@
             padding: 0 10px;
             background: $white;
             border-radius: 5px;
-            border: 1px solid #888;
+            border: 1px solid $gray;
         }
 
         .vcard {
@@ -89,17 +90,19 @@
             }
         }
 
-        ul.upcoming {
+        ul {
             list-style-type: none;
 
-            @include small-text;
+            &.upcoming {
+                @include small-text;
 
-            li {
-                margin-bottom: 0.5em;
-            }
+                li {
+                    margin-bottom: 0.5em;
+                }
 
-            .date {
-                font-style: italic;
+                .date {
+                    font-style: italic;
+                }
             }
         }
     }
