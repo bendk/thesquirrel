@@ -1,75 +1,65 @@
 nav#main {
+    background: $dark-gray;
+    color: $light-gray;
+
     ul {
         @include group;
         margin: 0;
         padding: 0;
+    }
 
-        li {
-            float: left;
-            list-style-type: none;
-            a, span {
-              display: block;
-              padding: 1em 10px;
-              &:hover {
-                text-decoration: none;
-              }
-            }
+    li {
+        float: left;
+        list-style-type: none;
+        &:hover {
+            background: lighten($dark-gray, 15%);
+        }
+        &.user {
+            float: right;
+            margin-right: 0;
 
+        }
+        &.submenu {
+            position: relative;
             &:hover {
-              background: lighten($dark-gray, 20%);
-            }
-
-
-            &.submenu {
-              position: relative;
-              &:hover {
                 background: $dark-gray;
-              }
             }
-
-            // submenus get displayed when the parent li is hovered
-            ul {
-              position: absolute;
-              left: 0;
-              top: 100%;
-              z-index: 1;
-              background: $dark-gray;
-              display: none;
-              width: 200px;
-              li {
+        }
+    }
+    // Submenus
+    li {
+        ul {
+            position: absolute;
+            left: 0;
+            top: 100%;
+            z-index: 1;
+            background: $dark-gray;
+            display: none;
+            width: 200px;
+            li {
                 display: block;
                 float: none;
-              }
-              box-shadow: -2px -2px 5px rgba(0.1, 0.1, 0.1, 0.4);
             }
-            &:hover ul {
-              display: block;
-            }
-
-            // user menu is floated to the right
-            &.user {
-                float: right;
-                margin-right: 0;
-
-                ul {
-                  left: auto;
-                  right: 0;
-                }
-            }
-
+            box-shadow: -2px -2px 5px rgba(0.1, 0.1, 0.1, 0.4);
+        }
+        &:hover ul {
+            display: block;
+        }
+        &.user ul {
+            left: auto;
+            right: 0;
         }
     }
 
-    color: $light-gray;
-
-    a {
-        color: inherit;
+    a, span {
+        display: block;
+        padding: 1em 10px;
         font-weight: normal;
-
-        &.menu {
-            display: none;
+        color: inherit;
+        &:hover {
+            color: white;
+            text-decoration: none;
         }
-
         &.user {
             padding: 1em 0;
             float: right;
@@ -85,6 +75,7 @@ nav#main {
     #menu-toggle {
         display: block;
         padding-right: 10px;
+        background: $dark-gray;
     }
 
     nav#main {
@@ -101,13 +92,13 @@ nav#main {
                 border-top: 1px solid $gray;
 
                 ul {
-                  display: block;
-                  position: auto;
-                  width: 100%;
-                  box-shadow: none;
-                  li a, li span {
-                    padding-left: 40px;
-                  }
+                    display: block;
+                    position: auto;
+                    width: 100%;
+                    box-shadow: none;
+                    li a, li span {
+                        padding-left: 40px;
+                    }
                 }
             }
         }

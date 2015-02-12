@@ -8,55 +8,55 @@
     {% sass_bundle "app.css" %}
 </head>
 <body>
-<div class="page">
-  <div id="menu-toggle">
-    <button role="button" aria-label="Toggle Menu">
-        <span class="lines"></span>
-    </button>
-  </div>
-  <nav id="main" role="navigation">
-    <ul class="links">
-      <li class="active"><a href="#">home</a></li>
-      <li><a href="#">about us</a></li>
-      <li><a href="#">calendar</a></li>
-      <li><a href="#">groups</a></li>
-      <li><a href="#">using the space</a></li>
-      {% if user.is_anonymous %}
-      <li class="user">
-        <a href="{% url "login" %}">login/signup</a></li>
-      </li>
-      {% else %}
-      <li class="user submenu">
-        {% blocktrans with user.username as username %}
-          <span>logged in as {{ username }}</span>
-        {% endblocktrans %}
-          <ul>
-            <li><a href="#">event requests</a></li>
-            <li><a href="#">member docs</a></li>
-            <li><a href="{% url "logout" %}?next=/">logout</a></li>
-          </ul>
-        </li>
-      {% endif %}
+<div id="menu-toggle">
+  <button role="button" aria-label="Toggle Menu">
+      <span class="lines"></span>
+  </button>
+</div>
+<nav id="main" role="navigation">
+  <ul class="links">
+    <li class="active"><a href="#">home</a></li>
+    <li><a href="#">about us</a></li>
+    <li><a href="#">calendar</a></li>
+    <li><a href="#">groups</a></li>
+    <li><a href="#">using the space</a></li>
+    {% if user.is_anonymous %}
+    <li class="user">
+    <a href="{% url "login" %}">login/signup</a></li>
+    </li>
+    {% else %}
+    <li class="user submenu">
+    {% blocktrans with user.username as username %}
+    <span>logged in as {{ username }}</span>
+    {% endblocktrans %}
+    <ul>
+      <li><a href="#">event requests</a></li>
+      <li><a href="#">member docs</a></li>
+      <li><a href="{% url "logout" %}?next=/">logout</a></li>
     </ul>
-  </nav>
-  <div class="heading">
-    <div class="top">
-      <h1><span>Flying Squirrel</span> <span>Community Space</span></h1>
-      <ul class="vcard">
-        <li class="adr">
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+<div class="heading">
+  <div class="top">
+    <h1><span>Flying Squirrel</span> <span>Community Space</span></h1>
+    <ul class="vcard">
+      <li class="adr">
         <span class="street-address">285 Clarissa St.</span>
         <span class="locality">Rochester</span>
         <span class="state">NY</state>,
-          <span class="postal-code">14608</span>
-          </li>
-          <li class="tel">585-678-6870</li>
-        </ul>
-      </div>
-      <div class="extra">{% block "header-extra" %}{% endblock %}</div>
-    </div>
-    <div class="content">
-      {% block "content" %}{% endblock %}
-    </div>
+        <span class="postal-code">14608</span>
+      </li>
+      <li class="tel">585-678-6870</li>
+    </ul>
   </div>
-  </body>
-  </html>
+  <div class="extra">{% block "header-extra" %}{% endblock %}</div>
+</div>
+<div class="page">
+  <div class="content">
+    {% block "content" %}{% endblock %}
+  </div>
+</div>
+</body>
+</html>

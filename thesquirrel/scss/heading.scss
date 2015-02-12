@@ -1,10 +1,16 @@
 .heading {
-    background-image: image-url('heading.png');
+    background: image-url('heading.png') center top no-repeat #ffc600;
     @include group;
     margin-bottom: 3rem;
 
     @include small-screen {
         background-image: image-url('heading-small.png');
+        background-position: left top;
+    }
+
+    .top, .extra {
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
     .top {
@@ -87,7 +93,7 @@
             list-style-type: none;
 
             @include small-text;
-            
+
             li {
                 margin-bottom: 0.5em;
             }
