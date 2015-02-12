@@ -94,10 +94,14 @@
             list-style-type: none;
 
             &.upcoming {
-                @include small-text;
-
                 li {
                     margin-bottom: 0.5em;
+                }
+
+                a.title {
+                    display: block;
+                    max-height: 1.4em;
+                    overflow: hidden;
                 }
 
                 .date {
