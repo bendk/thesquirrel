@@ -80,11 +80,14 @@ MEDIA_BUILDER = {
     'DOWNLOADS': {
         'jquery.js': 'http://code.jquery.com/jquery-2.1.3.js',
         'fontawesome': ('http://fortawesome.github.io/'
-                        'Font-Awesome/assets/font-awesome-4.3.0.zip'),
+                               'Font-Awesome/assets/font-awesome-4.3.0.zip'),
     },
     'SASS_BUNDLES': {
         'app.css': {
             'source': 'thesquirrel/scss/app.scss',
+            'include_paths': [
+                'mediabuilder/downloads/fontawesome/scss/',
+            ],
         },
     },
     'JS_BUNDLES': {
@@ -95,6 +98,9 @@ MEDIA_BUILDER = {
             ],
         },
     },
+    'COPY_TO_STATIC': {
+        'fontawesome': 'mediabuilder/downloads/fontawesome/fonts/',
+    }
 }
 
 # Static files

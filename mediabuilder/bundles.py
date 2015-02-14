@@ -94,12 +94,27 @@ class SassBundle(Bundle):
     def source_paths(self):
         return [self.source_path(self.bundle_info['source'])]
 
+    def sass_source(self):
+        # start with some code to set $static-url inside the scss files
+        source = [
+            '$static-url: "{}";\n'.format(settings.STATIC_URL),
+        ]
+        for path in self.source_paths():
+            source.append(open(path).read())
+        return ''.join(source)
+
+    def include_paths(self):
+        include_paths = self.bundle_info.get('include_paths', [])
+        # automatically include the directories from ant source paths
+        include_paths.extend(
+            set(os.path.dirname(p) for p in self.source_paths()))
+        return include_paths
+
     def build_content(self):
         return sass.compile(
-            filename=self.source_path(self.bundle_info['source']),
+            string=self.sass_source(),
             output_style='compressed',
-            image_path=settings.STATIC_URL + 'images/',
-            include_paths=self.bundle_info.get('include_paths', [])
+            include_paths=self.include_paths(),
         )
 
 def all_bundles():

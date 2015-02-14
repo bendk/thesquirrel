@@ -16,13 +16,14 @@ input {
     padding: 0.75em;
     border-radius: 5px;
     margin: 0.25em 0 0 0;
+}
 
-    &[type=submit] {
-        float: right;
-        background: $primary;
-        width: auto;
-        padding: 0.5em 2em;
-        color: $white;
-        font-size: 1.6rem;
-    }
+input[type=submit], button.submit {
+    float: right;
+    border: 1px solid $light-gray;
+    background: $primary;
+    width: auto;
+    padding: 0.5em 2em;
+    color: $white;
+    font-size: 1.6rem;
 }

@@ -21,7 +21,7 @@ import os
 from django.core.management.base import BaseCommand, CommandError
 
 import mediabuilder
-from mediabuilder import bundles, downloads
+from mediabuilder import bundles, copytostatic, downloads
 
 class Command(BaseCommand):
     help = 'Build app CSS/JS files'
@@ -41,6 +41,10 @@ class Command(BaseCommand):
             if options['rebuild'] or download.needs_download():
                 self.stdout.write("* downloading {}\n".format(download.name))
                 download.download()
+        for copier in copytostatic.all_entries():
+            if options['rebuild'] or copier.needs_copy():
+                self.stdout.write("* copying {}\n".format(copier.name))
+                copier.copy()
         for bundle in bundles.all_bundles():
             if options['rebuild'] or bundle.needs_build():
                 self.stdout.write("* building {}\n".format(bundle.name))

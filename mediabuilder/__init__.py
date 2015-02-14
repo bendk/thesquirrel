@@ -25,6 +25,7 @@ class MediaBuilderConfig(object):
     DOWNLOADS = {}
     JS_BUNDLES = {}
     CSS_BUNDLES = {}
+    COPY_TO_STATIC = {}
 
     def __getattribute__(self, name):
         try:

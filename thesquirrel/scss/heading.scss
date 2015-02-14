@@ -1,11 +1,11 @@
 .heading {
-    background: image-url('heading.png') center top no-repeat #ffc600;
+    background: url($static-url + 'images/heading.png') center top no-repeat #ffc600;
     @include group;
     margin-bottom: 3rem;
     border-bottom: 1px solid $gray;
 
     @include small-screen {
-        background-image: image-url('heading-small.png');
+        background-image: url($static-url + 'images/heading-small.png');
         background-position: left top;
     }
 
