@@ -4,6 +4,10 @@
     margin-bottom: 3rem;
     border-bottom: 1px solid $gray;
 
+    @include medium-screen {
+        background-position: -600px top;
+    }
+
     @include small-screen {
         background-image: url($static-url + 'images/heading-small.png');
         background-position: left top;
