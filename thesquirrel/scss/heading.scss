@@ -81,6 +81,17 @@
             border: 1px solid $gray;
         }
 
+        .next-step {
+            width: 80%;
+            padding-bottom: 0.8rem;
+            margin: 0 auto;
+
+            a {
+                @include button;
+                display: block;
+            }
+        }
+
         .vcard {
             display: none;
 

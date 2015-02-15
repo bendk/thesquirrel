@@ -1,0 +1,20 @@
+@mixin button {
+    display: inline-block;
+    font-size: 1.8rem;
+    text-align: center;
+    background: $primary;
+    color: $white;
+    border: none;
+    padding: 0.6rem 4.4rem;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: none;
+        background-color: lighten($primary, 5%);
+    }
+}
+
+a.button, button {
+    @include button;
+}
