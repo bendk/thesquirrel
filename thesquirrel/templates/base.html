@@ -43,7 +43,7 @@
     {% if user.is_anonymous %}
     <a href="{% url "login" %}"><div class="fa fa-sign-in"></div>Member Login</a>
     {% else %}
-    <a href="{% url "logout" %}?next=/"><div class="fa fa-sign-out"></div>Logout</a>
+    <a href="{% url "logout" %}"><div class="fa fa-sign-out"></div>Logout</a>
     {% endif %}
     </li>
   </ul>

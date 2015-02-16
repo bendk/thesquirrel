@@ -15,7 +15,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.shortcuts import render
+from django.contrib import auth
+from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect
 
 def home(request):
     return render(request, 'home.html')
+
+def login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            auth.login(request, form.get_user())
+            return redirect("home")
+    else:
+        form = AuthenticationForm(request)
+    return render(request, 'registration/login.html', {
+        'form': form,
+    })
+
+def logout(request):
+    auth.logout(request)
+    return redirect("home")
