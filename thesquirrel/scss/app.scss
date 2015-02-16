@@ -1,4 +1,8 @@
+// Settings sets up variables used by other files
 @import "settings";
+// External files
+@import "font-awesome";
+// Our files
 @import "colors";
 @import "base";
 @import "type";
@@ -8,4 +12,4 @@
 @import "menubutton";
 @import "heading";
 @import "content";
-@import "font-awesome";
+@import "footer";
