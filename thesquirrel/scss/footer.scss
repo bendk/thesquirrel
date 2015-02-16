@@ -1,15 +1,19 @@
-ul.footer {
-    @include group;
-    max-width: 1200px;
-    margin: 300px auto 10px auto;
-    border-top: 1px solid $light-gray;
+.footer {
+    padding: 30px 0;
+    background: #eee;
+
+    ul {
+        @include group;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0;
+    }
 
     li {
-        margin-top: 20px;
         float: left;
         width: 25%;
         text-align: center;
-        border-right: 1px solid $light-gray;
+        border-right: 1px solid $gray;
         box-sizing: border-box;
 
         &.last {
@@ -20,12 +24,15 @@ ul.footer {
     div.fa {
         display: block;
         font-size: 3.6rem;
+        line-height: 4.0rem;
     }
 
     a {
         display: block;
         text-align: center;
         color: #444;
+        font-size: 1.6rem;
+        line-height: 2.0rem;
         &:hover {
             text-decoration: none;
             color: $primary;

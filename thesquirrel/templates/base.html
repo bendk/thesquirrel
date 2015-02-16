@@ -8,46 +8,45 @@
     {% sass_bundle "app.css" %}
 </head>
 <body>
-<div id="menu-toggle">
-  <button role="button" aria-label="Toggle Menu">
-      <span class="lines"></span>
-  </button>
-</div>
-<div class="heading">
-  <div class="top">
-    <h1><span>Flying Squirrel</span> <span>Community Space</span></h1>
-    <ul class="vcard">
-      <li class="adr">
-        <span class="street-address">285 Clarissa St.</span>
-        <span class="locality">Rochester</span>
-        <span class="state">NY</state>,
-        <span class="postal-code">14608</span>
-      </li>
-      <li class="tel">585-678-6870</li>
-    </ul>
+<div class="page">
+  <div class="heading">
+    <div class="top">
+      <h1><span>Flying Squirrel</span> <span>Community Space</span></h1>
+      <ul class="vcard">
+        <li class="adr">
+          <span class="street-address">285 Clarissa St.</span>
+          <span class="locality">Rochester</span>
+          <span class="state">NY</state>,
+          <span class="postal-code">14608</span>
+        </li>
+        <li class="tel">585-678-6870</li>
+      </ul>
+    </div>
+    <div class="extra">{% block "header-extra" %}{% endblock %}</div>
   </div>
-  <div class="extra">{% block "header-extra" %}{% endblock %}</div>
-</div>
   <div class="content">
     {% block "content" %}{% endblock %}
   </div>
-  <ul class="footer">
+</div>
+<div class="footer">
+  <ul>
     <li>
-      <a href="#"><div class="fa fa-envelope"></div>Announcement Email List</a>
+    <a href="#"><div class="fa fa-envelope"></div>Announcement Email List</a>
     </li>
     <li>
-      <a href="#"><div class="fa fa-facebook-square"></div>Facebook Page</a>
+    <a href="#"><div class="fa fa-facebook-square"></div>Facebook Page</a>
     </li>
     <li>
-      <a href="#"><div class="fa fa-money"></div>Donate</a>
+    <a href="#"><div class="fa fa-money"></div>Donate</a>
     </li>
     <li class="last">
     {% if user.is_anonymous %}
-      <a href="{% url "login" %}"><div class="fa fa-sign-in"></div>Member Login</a>
+    <a href="{% url "login" %}"><div class="fa fa-sign-in"></div>Member Login</a>
     {% else %}
-      <a href="{% url "logout" %}?next=/"><div class="fa fa-sign-out"></div>Logout</a>
-      {% endif %}
+    <a href="{% url "logout" %}?next=/"><div class="fa fa-sign-out"></div>Logout</a>
+    {% endif %}
     </li>
   </ul>
+</div>
 </body>
 </html>

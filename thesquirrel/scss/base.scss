@@ -46,3 +46,12 @@ img {
     max-width: 100%;
     height: auto;
 }
+.page {
+    // Implement a "sticky footer".  This ensures that if the content doesn't
+    // fill a full screen, we still position the footer at the bottom.
+    min-height: 100%;
+    box-sizing: border-box;
+    margin-bottom: -12rem; // Height of the footer
+    padding-bottom: 22rem; // The height of the footer + extra padding
+}
+
