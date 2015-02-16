@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     # our apps
+    'docs',
     'mediabuilder',
     'thesquirrel',
 )

@@ -14,19 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 
-urlpatterns = patterns('',
-    url(r'^$', 'thesquirrel.views.home', name='home'),
-    url(r'^login/$', 'thesquirrel.views.login', name='login'),
-    url(r'^logout/$', 'thesquirrel.views.logout', name='logout'),
-    url(r'^docs/', include('docs.urls', 'docs')),
-    url(r'^admin/', include(admin.site.urls)),
+urlpatterns = patterns('docs.views',
+    url(r'^(?P<slug>[-\w]+)/$', 'view', name='view'),
 )
 
-if settings.DEV:
-    urlpatterns += patterns('',
-        url(r'^mediabuilder/', include('mediabuilder.urls', 'mediabuilder')),
-    )
