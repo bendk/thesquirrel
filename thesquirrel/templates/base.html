@@ -21,6 +21,16 @@
         </li>
         <li class="tel">585-678-6870</li>
       </ul>
+      {% block "nav" %}
+      <nav>
+        <ul>
+          <li><a href="{% url "home" %}">Home</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Calendar</a></li>
+          <li><a href="#">Using the Space</a></li>
+        </ul>
+      </nav>
+      {% endblock %}
     </div>
     <div class="extra">{% block "header-extra" %}{% endblock %}</div>
   </div>
