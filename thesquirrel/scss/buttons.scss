@@ -1,11 +1,18 @@
+$button-font-size: 1.8rem;
+$button-line-height: 2.4rem;
+$button-vertical-padding: 0.6rem;
+$button-horizontal-padding: 4.4rem;
+$button-height: $button-line-height + $button-vertical-padding * 2;
+
 @mixin button {
     display: inline-block;
-    font-size: 1.8rem;
-    text-align: center;
+    font-size: $button-font-size;
+    line-height: $button-line-height;
+    padding: $button-vertical-padding $button-horizontal-padding;
     background: $primary;
     color: $white;
+    text-align: center;
     border: none;
-    padding: 0.6rem 4.4rem;
     border-radius: 5px;
     cursor: pointer;
 

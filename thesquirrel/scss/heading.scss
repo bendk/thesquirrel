@@ -79,7 +79,7 @@
     .callout {
         display: table-cell;
         width: 400px;
-        padding: 0 10px 38px 10px; // 38px maker room for the buttons
+        padding: 0 1rem $button-height + 1.6rem 1rem;
         background: $white;
         border-radius: 5px;
         border: 1px solid $gray;
@@ -99,7 +99,7 @@
             position: absolute;
             left: 10%;
             width: 80%;
-            bottom: 8px;
+            bottom: 0.8rem;
             margin: 0 auto;
 
             a {
