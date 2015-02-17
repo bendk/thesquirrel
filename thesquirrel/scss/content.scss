@@ -11,16 +11,7 @@
         margin-top: 4rem;
 
         a {
-            @include button;
-            border: 1px solid $gray;
-            background: transparent;
-            color: inherit;
-
-            &:hover {
-                background: $primary;
-                color: $white;
-                border-color: $primary;
-            }
+            @include button-secondary;
         }
     }
 }

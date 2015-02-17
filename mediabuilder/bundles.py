@@ -110,10 +110,10 @@ class SassBundle(Bundle):
             set(os.path.dirname(p) for p in self.source_paths()))
         return include_paths
 
-    def build_content(self):
+    def build_content(self, output_style='compressed'):
         return sass.compile(
             string=self.sass_source(),
-            output_style='compressed',
+            output_style=output_style,
             include_paths=self.include_paths(),
         )
 

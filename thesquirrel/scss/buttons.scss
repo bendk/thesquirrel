@@ -4,25 +4,43 @@ $button-vertical-padding: 0.6rem;
 $button-horizontal-padding: 4.4rem;
 $button-height: $button-line-height + $button-vertical-padding * 2;
 
-@mixin button {
+@mixin button-base {
     display: inline-block;
     font-size: $button-font-size;
     line-height: $button-line-height;
     padding: $button-vertical-padding $button-horizontal-padding;
-    background: $primary;
-    color: $white;
     text-align: center;
-    border: 1px solid $primary;
     border-radius: 5px;
     cursor: pointer;
     margin-right: 2rem;
 
     &:hover {
         text-decoration: none;
+    }
+}
+
+@mixin button {
+    @include button-base;
+    background: $primary;
+    color: $white;
+    border: 1px solid $primary;
+    &:hover {
         background-color: lighten($primary, 5%);
     }
 }
 
-a.button, button {
+@mixin button-secondary {
+    @include button-base;
+    border: 1px solid $gray;
+    background: $white;
+    color: $dark-gray;
+    &:hover {
+        background: $primary;
+        color: $white;
+        border-color: $primary;
+    }
+}
+
+button {
     @include button;
 }
