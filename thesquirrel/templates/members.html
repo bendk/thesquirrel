@@ -6,19 +6,16 @@
   <div class="documents">
     <h2>{% trans "Member Documents" %}</h2>
     <ul>
+      {% for doc in documents %}
       <li>
-      <a href="#">edit</a>
-      <h3>Document 1</h3>
+        <a href="{% url "docs:edit" doc.slug %}" class="action">{% trans "edit" %}</a>
+        <a href="{% url "docs:view" doc.slug %}"><h3>{{ doc.title }}</h3></a>
       </li>
-      <li>
-      <a href="#">edit</a>
-      <h3>Document 2 <span class="emblem">public</span></h3>
-      </li>
-      <li>
-      <a href="#">edit</a>
-      <h3>Document 3 <span class="emblem">public</span></h3>
-      </li>
+      {% empty %}
+      <li class="empty">No documents created</li>
+      {% endfor %}
     </ul>
+    <a href="#" class="create">{% trans "Create New Document" %}</a>
   </div>
 </div>
 {% endblock %}

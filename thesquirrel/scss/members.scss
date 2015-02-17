@@ -1,44 +1,6 @@
 .members {
     .documents {
-        margin-top: 2rem;
-        border: 1px solid $gray;
-        border-radius: 5px;
+        @include big-list;
         width: 500px;
-
-        h2 {
-            padding-left: 1rem;
-        }
-
-
-        ul {
-            list-style-type: none;
-            border-top: 1px solid $gray;
-            padding: 0;
-        }
-
-        li {
-            padding: 0 1rem;
-
-            &:nth-of-type(even) {
-                background: $lighter-gray;
-            }
-        }
-        a {
-            @include button-secondary;
-            float: right;
-            padding: 0.0rem 1rem;
-            font-size: 1.4rem;
-            margin-top: 1.2rem;
-        }
-
-        .emblem {
-            font-size: 1.4rem;
-            background: $primary;
-            color: $white;
-            padding: 0.25em 0.5em;
-            border-radius: 5px;
-            margin-left: 1rem;
-        }
     }
-
 }

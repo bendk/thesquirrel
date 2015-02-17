@@ -16,6 +16,7 @@
 
 from __future__ import absolute_import
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 
 from .models import Document
@@ -26,3 +27,9 @@ def view(request, slug):
         'document': document,
     })
 
+@login_required
+def edit(request, slug):
+    document = get_object_or_404(Document, slug=slug)
+    return render(request, 'docs/edit.html', {
+        'document': document,
+    })
