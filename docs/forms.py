@@ -14,12 +14,28 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
-from docs import views
+from django import forms
+from django.utils.translation import ugettext as _
 
-urlpatterns = patterns('docs.views',
-    url(r'^create/$', views.CreateDocumentView.as_view(), name='create'),
-    url(r'^(?P<slug>[-\w]+)/$', 'view', name='view'),
-    url(r'^(?P<slug>[-\w]+)/edit/$', views.EditDocumentView.as_view(), name='edit'),
-)
+from docs.models import Document
 
+class DocumentForm(forms.ModelForm):
+    public = forms.ChoiceField(label=_('Access'), choices=(
+        (False, 'Members Only'),
+        (True, 'Public'),
+    ))
+
+    class Meta:
+        model = Document
+        fields = ( 'title', 'slug', 'public', 'body', )
+
+    def __init__(self, author, *args, **kwargs):
+        self.author = author
+        super(DocumentForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        document = super(DocumentForm, self).save(commit=False)
+        document.author = self.author
+        if commit:
+            document.save()
+        return document

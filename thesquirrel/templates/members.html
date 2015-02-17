@@ -15,7 +15,7 @@
       <li class="empty">No documents created</li>
       {% endfor %}
     </ul>
-    <a href="#" class="create">{% trans "Create New Document" %}</a>
+    <a href="{% url "docs:create" %}" class="create">{% trans "Create New Document" %}</a>
   </div>
 </div>
 {% endblock %}

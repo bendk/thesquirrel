@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block "content" %}
+<h2>{{ title }}</h2>
+<form method="POST">
+  {% csrf_token %}
+  <fieldset>
+    {% include "field.html" with field=form.title %}
+    {% include "field.html" with field=form.slug %}
+    {% include "field.html" with field=form.public %}
+  </fieldset>
+  {% include "field.html" with field=form.body %}
+  <div class="actions">
+    <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
+    <button class="submit">{% trans "Create" %}</button>
+  </div>
+</form>
+{% endblock %}
