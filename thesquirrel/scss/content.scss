@@ -1,17 +1,27 @@
+// content.scss
+//
+// General styles for page content
+
 .content {
     max-width: 700px;
     margin: 0 auto;
     padding: 0 20px;
 
+    #members & {
+        max-width: 1200px;
+    }
+
     #homepage & {
         padding-top: 2rem;
     }
+}
 
-    .tools {
-        margin-top: 4rem;
+.tools {
+    margin-top: 4rem;
 
-        a {
-            @include button-secondary;
-        }
+    a {
+        @include button-secondary;
     }
 }
+
+

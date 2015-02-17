@@ -16,11 +16,16 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 
 def home(request):
     return render(request, 'home.html')
+
+@login_required
+def members(request):
+    return render(request, 'members.html')
 
 def login(request):
     if request.method == 'POST':

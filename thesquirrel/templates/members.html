@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block "body-attrs" %} id="members"{% endblock %}
+{% block "content" %}
+<div class="members">
+  <div class="documents">
+    <h2>{% trans "Member Documents" %}</h2>
+    <ul>
+      <li>
+      <a href="#">edit</a>
+      <h3>Document 1</h3>
+      </li>
+      <li>
+      <a href="#">edit</a>
+      <h3>Document 2 <span class="emblem">public</span></h3>
+      </li>
+      <li>
+      <a href="#">edit</a>
+      <h3>Document 3 <span class="emblem">public</span></h3>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

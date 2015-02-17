@@ -5,13 +5,13 @@
 <p>Please enter your username and password.  If you don't have one, ask a member to create an invitation for you.
 </p>
 <form method="POST">
-    {% csrf_token %}
-    <label>{% trans "Username" %}
-        {{ form.username }}
-    </label>
-    <label>{% trans "Password" %}
-        {{ form.password }}
-    </label>
-    <button class="submit">{% trans "Login" %}</button>
+  {% csrf_token %}
+  <label>{% trans "Username" %}
+    {{ form.username }}
+  </label>
+  <label>{% trans "Password" %}
+    {{ form.password }}
+  </label>
+  <button class="submit">{% trans "Login" %}</button>
 </form>
 {% endblock %}

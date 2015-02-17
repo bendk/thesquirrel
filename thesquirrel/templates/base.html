@@ -28,15 +28,16 @@
           <li><a href="#">About Us</a></li>
           <li><a href="#">Calendar</a></li>
           <li><a href="#">Using the Space</a></li>
+          {% if user.is_authenticated %}
+          <li><a href="{% url "members" %}">Members Home</a></li>
+          {% endif %}
         </ul>
       </nav>
       {% endblock %}
     </div>
     <div class="extra">{% block "header-extra" %}{% endblock %}</div>
   </div>
-  <div class="content">
-    {% block "content" %}{% endblock %}
-  </div>
+  <div class="content">{% block "content" %}{% endblock %}</div>
 </div>
 <div class="footer">
   <ul>
