@@ -2,5 +2,10 @@
 {% block "content" %}
 <h2>{{ document.title }}</h2>
 {{ document.render_body }}
+{% if user.is_authenticated %}
+<div class="tools">
+  <a href="#">Edit</a>
+</div>
+{% endif %}
 {% endblock %}
 

@@ -2,4 +2,25 @@
     max-width: 700px;
     margin: 0 auto;
     padding: 0 20px;
+
+    #homepage & {
+        padding-top: 2rem;
+    }
+
+    .tools {
+        margin-top: 4rem;
+
+        a {
+            @include button;
+            border: 1px solid $gray;
+            background: transparent;
+            color: inherit;
+
+            &:hover {
+                background: $primary;
+                color: $white;
+                border-color: $primary;
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@
     {% js_bundle "app.js" %}
     {% sass_bundle "app.css" %}
 </head>
-<body>
+<body{% block "body-attrs" %}{% endblock %}>
 <div class="page">
   <div class="heading">
     <div class="top">

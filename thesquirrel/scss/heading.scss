@@ -1,7 +1,6 @@
 .heading {
     background: url($static-url + 'images/heading.png') center top no-repeat #ffc600;
     @include group;
-    margin-bottom: 3rem;
     border-bottom: 1px solid $gray;
 
     @include medium-screen {

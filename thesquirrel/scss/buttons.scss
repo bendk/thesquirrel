@@ -12,9 +12,10 @@ $button-height: $button-line-height + $button-vertical-padding * 2;
     background: $primary;
     color: $white;
     text-align: center;
-    border: none;
+    border: 1px solid $primary;
     border-radius: 5px;
     cursor: pointer;
+    margin-right: 2rem;
 
     &:hover {
         text-decoration: none;
