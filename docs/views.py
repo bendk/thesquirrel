@@ -17,10 +17,10 @@
 from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
-from django.utils.translation import ugettext_lazy as _
-from django.views import generic
+from django.utils.translation import ugettext as _
 
 from .forms import DocumentForm
 from .models import Document
@@ -32,65 +32,50 @@ def index(request):
     })
 
 
+@login_required
 def view(request, slug):
     document = get_object_or_404(Document, slug=slug)
     return render(request, 'docs/view.html', {
         'document': document,
     })
 
-class CreateDocumentView(generic.FormView):
-    form_class = DocumentForm
-    template_name = "docs/edit.html"
-    title = _('Create New Document')
-    submit_text = _('Create')
-    enable_delete = False
+@login_required
+def create(request):
+    return edit_form(request, None, reverse('docs:index'))
 
-    def cancel(self):
-        try:
-            return HttpResponseRedirect(self.request.GET['from_url'])
-        except KeyError:
-            return redirect('docs:index')
+@login_required
+def edit(request, slug):
+    instance = get_object_or_404(Document, slug=slug)
+    return edit_form(request, instance, reverse('docs:view', args=(slug,)))
 
-    def form_valid(self, form):
-        document = form.save()
-        return redirect('docs:view', document.slug)
-
-    def get_form_kwargs(self):
-        kwargs = super(CreateDocumentView, self).get_form_kwargs()
-        kwargs['author'] = self.request.user
-        return kwargs
-
-    def get_context_data(self, form):
-        return {
-            'title': self.title,
-            'submit_text': self.submit_text,
-            'enable_delete': self.enable_delete,
-            'form': form,
-        }
-
-    def post(self, request, *args, **kwargs):
+def edit_form(request, instance, return_url):
+    return_url = request.GET.get('return_url', return_url)
+    if request.method == 'POST':
         if 'cancel' in request.POST:
-            return self.cancel()
-        return super(CreateDocumentView, self).post(request, *args, **kwargs)
-
-class EditDocumentView(CreateDocumentView):
-    title = _('Edit Document')
-    submit_text = _('Update')
-    enable_delete = True
-
-    def get_document(self):
-        return get_object_or_404(Document, slug=self.kwargs['slug'])
-
-    def cancel(self):
-        return redirect('docs:view', self.get_document().slug)
-
-    def post(self, request, *args, **kwargs):
-        if 'delete' in request.POST:
-            self.get_document().delete()
+            return HttpResponseRedirect(return_url)
+        if instance and 'delete' in request.POST:
+            instance.delete()
             return redirect('docs:index')
-        return super(Edit, self).post(request, *args, **kwargs)
+        form = DocumentForm(request.user, data=request.POST,
+                            instance=instance)
+        if form.is_valid():
+            document = form.save()
+            return redirect('docs:view', document.slug)
+    else:
+        form = DocumentForm(request.user, instance=instance)
 
-    def get_form_kwargs(self):
-        kwargs = super(EditDocumentView, self).get_form_kwargs()
-        kwargs['instance'] = self.get_document()
-        return kwargs
+    if not instance:
+        title = _('Create New Document')
+        submit_text = _('Create')
+        enable_delete = False
+    else:
+        title = _('Edit Document')
+        submit_text = _('Update')
+        enable_delete = True
+
+    return render(request, "docs/edit.html", {
+        'form': form,
+        'title': title,
+        'submit_text': submit_text,
+        'enable_delete': enable_delete,
+    })

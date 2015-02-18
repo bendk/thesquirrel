@@ -19,8 +19,8 @@ from docs import views
 
 urlpatterns = patterns('docs.views',
     url(r'^$', 'index', name='index'),
-    url(r'^create/$', views.CreateDocumentView.as_view(), name='create'),
+    url(r'^create/$', 'create', name='create'),
     url(r'^(?P<slug>[-\w]+)/$', 'view', name='view'),
-    url(r'^(?P<slug>[-\w]+)/edit/$', views.EditDocumentView.as_view(), name='edit'),
+    url(r'^(?P<slug>[-\w]+)/edit/$', 'edit', name='edit'),
 )
 
