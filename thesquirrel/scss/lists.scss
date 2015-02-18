@@ -28,17 +28,13 @@
         }
     }
     a.action {
-        @include button-secondary;
-        float: right;
-        padding: 0 1rem;
-        font-size: 1.4rem;
+        @include button(secondary, small);
         margin-top: 1.2rem;
+        float: right;
     }
     a.create {
         @include button;
         margin: 1.2rem 2rem 0 0;
-        padding: 0.2rem 2rem;
-        font-size: 1.6rem;
         float: right;
     }
     .emblem {

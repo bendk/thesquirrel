@@ -1,16 +1,34 @@
-$button-font-size: 1.8rem;
-$button-line-height: 2.4rem;
-$button-vertical-padding: 0.6rem;
-$button-horizontal-padding: 4.4rem;
-$button-height: $button-line-height + $button-vertical-padding * 2;
+@function button-colors($size) {
+    // Returns button colors in the form of
+    // (background, color, border, hover-background)
+    @if $size == primary {
+        @return ($primary, $white, $primary, lighten($primary, 10%));
+    } @else if $size == secondary {
+        @return ($white, $dark-gray, $gray, lighten($primary, 30%));
+    }
+}
 
-@mixin button-base {
+@function button-sizing($size) {
+    // Returns button size info in the form of
+    // (font-size, line-height, x-padding)
+    @if $size == large {
+        @return (1.8rem, 3.6rem, 4.0rem);
+    } @else if $size == normal {
+        @return (1.6rem, 2.8rem, 2.0rem);
+    } @else if $size == small {
+        @return (1.4rem, 2.4rem, 1.0rem);
+    }
+}
+
+@function button-height($size) {
+    @return nth(button-sizing($size), 2);
+}
+
+%button {
     display: inline-block;
-    font-size: $button-font-size;
-    line-height: $button-line-height;
-    padding: $button-vertical-padding $button-horizontal-padding;
     text-align: center;
     border-radius: 5px;
+    border: 1px solid black;
     cursor: pointer;
     margin-right: 2rem;
 
@@ -19,26 +37,34 @@ $button-height: $button-line-height + $button-vertical-padding * 2;
     }
 }
 
-@mixin button {
-    @include button-base;
-    background: $primary;
-    color: $white;
-    border: 1px solid $primary;
-    &:hover {
-        background-color: lighten($primary, 10%);
+@each $size in large, normal, small {
+    %button-#{$size} {
+        $sizing: button-sizing($size);
+        font-size: nth($sizing, 1);
+        line-height: nth($sizing, 2);
+        padding: 0 nth($sizing, 3);
     }
 }
 
-@mixin button-secondary {
-    @include button-base;
-    border: 1px solid $gray;
-    background: $white;
-    color: $dark-gray;
-    &:hover {
-        background: lighten($primary, 40%);
+@each $style in primary, secondary {
+    %button-#{$style} {
+        $colors: button-colors($style);
+        background-color: nth($colors, 1);
+        color: nth($colors, 2);
+        border-color: nth($colors, 3);
+        &:hover {
+            background-color: nth($colors, 4);
+        }
     }
+}
+
+@mixin button($style: primary, $size: normal) {
+    @extend %button;
+    @extend %button-#{$style};
+    @extend %button-#{$size};
 }
 
 button {
-    @include button;
+    @include button(primary, large);
 }
+

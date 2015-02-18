@@ -52,7 +52,7 @@ form {
         margin: 0;
     }
     button.cancel {
-        @include button-secondary;
+        @include button(secondary, large);
     }
 
 }

@@ -20,8 +20,6 @@
     margin-top: 4rem;
 
     a {
-        @include button-secondary;
+        @include button(secondary, large);
     }
 }
-
-

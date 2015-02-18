@@ -102,7 +102,7 @@
     .callout {
         display: table-cell;
         width: 400px;
-        padding: 0 1rem $button-height + 1.6rem 1rem;
+        padding: 0 1rem button-height(large) + 1.6rem 1rem;
         background: $white;
         border-radius: 5px;
         border: 1px solid $gray;
@@ -126,7 +126,7 @@
             margin: 0 auto;
 
             a {
-                @include button;
+                @include button(primary, large);
                 display: block;
             }
         }
