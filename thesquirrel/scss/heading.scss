@@ -13,7 +13,9 @@
     }
 
     .top, .extra {
-        max-width: 1200px;
+        // 1240px max-width because the content is based on 1200px max width
+        // with 20px padding on both sides.
+        max-width: 1240px;
         margin: 0 auto;
     }
 
