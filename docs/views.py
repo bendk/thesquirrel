@@ -17,8 +17,9 @@
 from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from .forms import DocumentForm
@@ -40,12 +41,15 @@ def view(request, slug):
 class CreateDocumentView(generic.FormView):
     form_class = DocumentForm
     template_name = "docs/edit.html"
-
-    def title(self):
-        return _('Create New Document')
+    title = _('Create New Document')
+    submit_text = _('Create')
+    enable_delete = False
 
     def cancel(self):
-        return redirect('members')
+        try:
+            return HttpResponseRedirect(self.request.GET['from_url'])
+        except KeyError:
+            return redirect('docs:index')
 
     def form_valid(self, form):
         document = form.save()
@@ -58,7 +62,9 @@ class CreateDocumentView(generic.FormView):
 
     def get_context_data(self, form):
         return {
-            'title': self.title(),
+            'title': self.title,
+            'submit_text': self.submit_text,
+            'enable_delete': self.enable_delete,
             'form': form,
         }
 
@@ -68,14 +74,21 @@ class CreateDocumentView(generic.FormView):
         return super(CreateDocumentView, self).post(request, *args, **kwargs)
 
 class EditDocumentView(CreateDocumentView):
-    def cancel(self):
-        return redirect('docs:view', self.get_document().slug)
-
-    def title(self):
-        return _('Edit Document')
+    title = _('Edit Document')
+    submit_text = _('Update')
+    enable_delete = True
 
     def get_document(self):
         return get_object_or_404(Document, slug=self.kwargs['slug'])
+
+    def cancel(self):
+        return redirect('docs:view', self.get_document().slug)
+
+    def post(self, request, *args, **kwargs):
+        if 'delete' in request.POST:
+            self.get_document().delete()
+            return redirect('docs:index')
+        return super(Edit, self).post(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(EditDocumentView, self).get_form_kwargs()

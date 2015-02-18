@@ -12,7 +12,10 @@
   {% include "field.html" with field=form.body %}
   <div class="actions">
     <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
-    <button class="submit">{% trans "Create" %}</button>
+    {% if enable_delete %}
+    <button class="delete" name="delete" value="1">{% trans "Delete" %}</button>
+    {% endif %}
+    <button class="submit">{{ submit_text }}</button>
   </div>
 </form>
 {% endblock %}

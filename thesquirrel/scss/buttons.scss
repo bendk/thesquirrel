@@ -2,9 +2,11 @@
     // Returns button colors in the form of
     // (background, color, border, hover-background)
     @if $size == primary {
-        @return ($primary, $white, $primary, lighten($primary, 10%));
+        @return ($primary, $white, $primary, darken($primary, 8%));
     } @else if $size == secondary {
-        @return ($white, $dark-gray, $gray, lighten($primary, 30%));
+        @return ($white, $dark-gray, $gray, darken($white, 10%));
+    } @else if $size == delete {
+        @return ($dark-red, $white, $dark-red, darken($dark-red, 8%));
     }
 }
 
@@ -46,7 +48,7 @@
     }
 }
 
-@each $style in primary, secondary {
+@each $style in primary, secondary, delete {
     %button-#{$style} {
         $colors: button-colors($style);
         background-color: nth($colors, 1);

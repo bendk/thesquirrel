@@ -54,5 +54,7 @@ form {
     button.cancel {
         @include button(secondary, large);
     }
-
+    button.delete {
+        @include button(delete, large);
+    }
 }
