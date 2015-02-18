@@ -96,7 +96,7 @@ MEDIA_BUILDER = {
         'app.js': {
             'sources': [
                 'mediabuilder/downloads/jquery.js',
-                'thesquirrel/js/navmenu.js',
+                'thesquirrel/js/squirrelmenu.js',
             ],
         },
     },

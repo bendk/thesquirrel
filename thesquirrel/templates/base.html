@@ -29,7 +29,7 @@
           <li><a href="#">Calendar</a></li>
           <li><a href="#">Using the Space</a></li>
           {% if user.is_authenticated %}
-          <li><a href="{% url "docs:index" %}">Member Documents</a></li>
+          {% include "squirrel-menu.html" %}
           {% endif %}
         </ul>
       </nav>
