@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block "body-attrs" %} id="members"{% endblock %}
+{% block "content" %}
+<div class="documents-list">
+  <a href="{% url "docs:create" %}" class="create">{% trans "Create New Document" %}</a>
+  <h2>{% trans "Member Documents" %}</h2>
+  <ul>
+    {% for doc in documents %}
+    <li>
+    <a href="{% url "docs:edit" doc.slug %}" class="action">{% trans "edit" %}</a>
+    <h3><a href="{% url "docs:view" doc.slug %}">{{ doc.title }}</a></h3>
+    </li>
+    {% empty %}
+    <li class="empty">No documents created</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

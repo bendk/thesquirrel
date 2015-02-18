@@ -18,6 +18,7 @@ from django.conf.urls import patterns, include, url
 from docs import views
 
 urlpatterns = patterns('docs.views',
+    url(r'^$', 'index', name='index'),
     url(r'^create/$', views.CreateDocumentView.as_view(), name='create'),
     url(r'^(?P<slug>[-\w]+)/$', 'view', name='view'),
     url(r'^(?P<slug>[-\w]+)/edit/$', views.EditDocumentView.as_view(), name='edit'),

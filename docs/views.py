@@ -24,6 +24,13 @@ from django.views import generic
 from .forms import DocumentForm
 from .models import Document
 
+@login_required
+def index(request):
+    return render(request, 'docs/index.html', {
+        'documents': Document.objects.all(),
+    })
+
+
 def view(request, slug):
     document = get_object_or_404(Document, slug=slug)
     return render(request, 'docs/view.html', {

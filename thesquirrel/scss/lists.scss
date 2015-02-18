@@ -1,4 +1,4 @@
-@mixin big-list {
+.documents-list {
     margin-top: 2rem;
     border: 1px solid $gray;
     border-radius: 5px;
@@ -11,11 +11,11 @@
     ul {
         list-style-type: none;
         border-top: 1px solid $gray;
-        border-bottom: 1px solid $gray;
         padding: 0;
     }
 
     li {
+        @include group;
         padding: 0 1rem;
 
         &:nth-of-type(even) {
@@ -36,8 +36,10 @@
     }
     a.create {
         @include button;
-        margin: 1rem 2rem;
-        display: block;
+        margin: 1.2rem 2rem 0 0;
+        padding: 0.2rem 2rem;
+        font-size: 1.6rem;
+        float: right;
     }
     .emblem {
         font-size: 1.4rem;
