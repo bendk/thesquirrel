@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block "body-attrs" %} id="homepage"{% endblock %}
+{% block body-attrs %} id="homepage"{% endblock %}
 
-{% block "nav" %}
+{% block nav %}
 {% if user.is_authenticated %}
 <nav>
   <ul>
@@ -11,7 +11,7 @@
 {% endif %}
 {% endblock %}
 
-{% block "header-extra" %}
+{% block header-extra %}
 <div class="callouts">
   <div class="callout">
       <h2>Who we are</h2>
@@ -68,7 +68,7 @@
 </div>
 {% endblock %}
 
-{% block "content" %}
+{% block content %}
 <article>
   <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
   <p>

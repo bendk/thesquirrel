@@ -7,7 +7,7 @@
     {% js_bundle "app.js" %}
     {% sass_bundle "app.css" %}
 </head>
-<body{% block "body-attrs" %}{% endblock %}>
+<body{% block body-attrs %}{% endblock %}>
 <div class="page">
   <div class="heading">
     <div class="top">
@@ -21,7 +21,7 @@
         </li>
         <li class="tel">585-678-6870</li>
       </ul>
-      {% block "nav" %}
+      {% block nav %}
       <nav>
         <ul>
           <li><a href="{% url "home" %}">Home</a></li>
@@ -35,9 +35,9 @@
       </nav>
       {% endblock %}
     </div>
-    <div class="extra">{% block "header-extra" %}{% endblock %}</div>
+    <div class="extra">{% block header-extra %}{% endblock %}</div>
   </div>
-  <div class="content">{% block "content" %}{% endblock %}</div>
+  <div class="content">{% block content %}{% endblock %}</div>
 </div>
 <div class="footer">
   <ul>

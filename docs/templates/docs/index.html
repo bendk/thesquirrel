@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% block "body-attrs" %} id="members"{% endblock %}
-{% block "content" %}
+{% block body-attrs %} id="members"{% endblock %}
+{% block content %}
 <div class="documents-list">
   <a href="{% url "docs:create" %}" class="create">{% trans "Create New Document" %}</a>
   <h2>{% trans "Member Documents" %}</h2>
