@@ -1,15 +1,20 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% block html-attrs %} class="document-editor"{% endblock %}
 {% block content %}
 <h2>{{ title }}</h2>
 <form method="POST">
   {% csrf_token %}
-  <fieldset>
+  <fieldset class="compact">
+    <legend>{% trans "Document Info" %}</legend>
     {% include "field.html" with field=form.title %}
     {% include "field.html" with field=form.slug %}
     {% include "field.html" with field=form.public %}
   </fieldset>
-  {% include "field.html" with field=form.body %}
+  <fieldset>
+    <legend>{% trans "Body" %}</legend>
+    {% include "field.html" with field=form.body %}
+  </fieldset>
   <div class="actions">
     <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
     {% if enable_delete %}

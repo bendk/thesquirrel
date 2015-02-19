@@ -1,5 +1,5 @@
 {% load i18n mediabuilder %}
-<html>
+<html{% block html-attrs %}{% endblock %}>
 <head>
     <title>Flying Squirrel Community Space</title>
     <meta name="viewport" content="width=device-width">
@@ -7,7 +7,7 @@
     {% js_bundle "app.js" %}
     {% sass_bundle "app.css" %}
 </head>
-<body{% block body-attrs %}{% endblock %}>
+<body>
 <div class="page">
   <div class="heading">
     <div class="top">

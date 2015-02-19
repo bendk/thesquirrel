@@ -28,6 +28,9 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = ( 'title', 'slug', 'public', 'body', )
+        labels = {
+            'body': '',
+        }
 
     def __init__(self, author, *args, **kwargs):
         self.author = author

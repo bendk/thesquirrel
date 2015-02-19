@@ -4,9 +4,14 @@ form {
     padding: 0 0 1em 0;
 
     fieldset {
-        border: 1px solid $gray;
+        border: 1px solid $light-gray;
         padding: 1rem;
         margin-bottom: 3rem;
+        background: $off-white;
+    }
+
+    legend {
+        font-size: 1.6rem;
     }
 
     label {
@@ -16,17 +21,40 @@ form {
     }
 
     input, select, textarea {
+        @include body-font;
         width: 100%;
         border: 1px solid $light-gray;
         background: $white;
         padding: 0.5em;
         border-radius: 5px;
         margin: 0.2rem 0 0 0;
+        font-size: 1.6rem;
+
+        &:focus {
+            border-color: $dark-gray;
+        }
+
+    }
+
+    .compact {
+        input, select, textarea {
+            width: 80%;
+            margin: 0 0 0 2.0rem;
+        }
+
+        label {
+            text-align: right;
+            @include group;
+        }
     }
 
     textarea {
-        //height: 30rem;
         resize: vertical;
+
+        &[name=body] {
+            height: 30rem;
+        }
+
     }
 
     option {
