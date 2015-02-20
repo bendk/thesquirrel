@@ -13,7 +13,7 @@ form {
     }
 
     legend {
-        font-size: 1.6rem;
+        @extend %medium-text;
     }
 
     label {
@@ -23,14 +23,14 @@ form {
     }
 
     input, select, textarea {
-        @include body-font;
+        @extend %body-font;
+        @extend %medium-text;
         width: 100%;
         border: 1px solid $light-gray;
         background: $white;
         padding: 0.5em;
         border-radius: 5px;
         margin: 0.2rem 0 0 0;
-        font-size: 1.6rem;
 
         &:focus {
             border-color: $dark-gray;
@@ -64,9 +64,9 @@ form {
     }
 
     ul.errorlist {
+        @extend %small-text;
         float: right;
         padding: 0;
-        font-size: 1.4rem;
         font-style: italic;
         list-style-type: none;
         margin-top: 0.8rem;
@@ -93,13 +93,13 @@ form {
 fieldset.editor {
     a.hint {
         float: right;
-        @include small-text;
+        @extend %small-text;
         padding-right: 1rem;
     }
 
     .add-media {
         padding: 0.6rem 0 0.6rem;
-        @include small-text;
+        @extend %small-text;
         span {
             margin: 0 1rem;
         }

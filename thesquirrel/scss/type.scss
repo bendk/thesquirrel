@@ -1,14 +1,14 @@
-@mixin body-font {
-    font-family: "Lato", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+%body-font {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
     font-weight: 400;
 }
 
-@mixin header-font {
+%header-font {
     font-family: "Alegreya", Georgia, Cambria, "Times New Roman", Times, serif;
     font-weight: bold;
 }
 
-@mixin title-font {
+%title-font {
     font-family: "Alegreya Sans", Georgia, Cambria, "Times New Roman", Times, serif;
     font-weight: 300;
     font-size: 4.4rem;
@@ -21,9 +21,16 @@
     }
 }
 
-@mixin small-text {
-    font-size: 1.4rem;
+%medium-text {
+    font-size: 1.6rem;
+    line-height: 2.3rem;
 }
+
+%small-text {
+    font-size: 1.4rem;
+    line-height: 2.1rem;
+}
+
 
 html {
     // Make the root font size 10px by default, for easy sizing with rems
@@ -31,9 +38,9 @@ html {
 }
 
 body {
-    @include body-font;
-    font-size: 1.6rem;
-    line-height: 2.2rem;
+    @extend %body-font;
+    font-size: 1.8rem;
+    line-height: 2.5rem;
     color: $dark-gray;
 }
 
@@ -47,7 +54,7 @@ a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    @include header-font;
+    @extend %header-font;
     padding: 1.2rem 0;
     margin: 0;
 }

@@ -1,6 +1,7 @@
 .heading {
-    background: url($static-url + 'images/heading.png') center top no-repeat #ffc600;
     @include group;
+    @extend %medium-text;
+    background: url($static-url + 'images/heading.png') center top no-repeat #ffc600;
     border-bottom: 1px solid $gray;
 
     @include medium-screen {
@@ -28,7 +29,7 @@
         }
 
         h1 {
-            @include title-font;
+            @extend %title-font;
             margin: 0;
             position: absolute;
             top: 50px;
@@ -54,7 +55,7 @@
             margin: 0;
             padding: 0;
 
-            @include small-text;
+            @extend %small-text;
 
             li {
                 display: inline;
