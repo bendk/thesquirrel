@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block nav %}
 {% if user.is_authenticated %}
-<nav>
+<nav id="main">
+  <div id="expand-menu">
+    <button>{% trans "MENU" %}</button>
+  </div>
   <ul>
     {% include "squirrel-menu.html" %}
   </ul>
@@ -27,7 +31,7 @@
         </li>
         <li class="tel">585-678-6870</li>
       </ul>
-      <div class="next-step"><a href="#">More About Us</a></div>
+      <div class="next-step"><a href="{% url "docs:view" "about-us" %}">More About Us</a></div>
   </div>
 
   <div class="callout">

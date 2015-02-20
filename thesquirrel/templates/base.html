@@ -9,9 +9,25 @@
 </head>
 <body>
 <div class="page">
-  <div class="heading">
+  {% block nav %}
+  <nav id="main">
+    <div id="expand-menu">
+      <button>{% trans "MENU" %}</button>
+    </div>
+    <ul>
+      <li><a href="{% url "home" %}">Home</a></li>
+      <li><a href="{% url "docs:view" "about-us" %}">About Us</a></li>
+      <li><a href="#">Calendar</a></li>
+      <li><a href="#">Using the Space</a></li>
+      {% if user.is_authenticated %}
+      {% include "squirrel-menu.html" %}
+      {% endif %}
+    </ul>
+  </nav>
+  {% endblock %}
+  <div class="heading{% if request.user.is_authenticated %} member{% endif %}">
     <div class="top">
-      <h1><span>Flying Squirrel</span> <span>Community Space</span></h1>
+      <h1 class="title"><span>Flying Squirrel</span> <span>Community Space</span></h1>
       <ul class="vcard">
         <li class="adr">
           <span class="street-address">285 Clarissa St.</span>
@@ -21,19 +37,6 @@
         </li>
         <li class="tel">585-678-6870</li>
       </ul>
-      {% block nav %}
-      <nav>
-        <ul>
-          <li><a href="{% url "home" %}">Home</a></li>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Calendar</a></li>
-          <li><a href="#">Using the Space</a></li>
-          {% if user.is_authenticated %}
-          {% include "squirrel-menu.html" %}
-          {% endif %}
-        </ul>
-      </nav>
-      {% endblock %}
     </div>
     <div class="extra">{% block header-extra %}{% endblock %}</div>
   </div>
