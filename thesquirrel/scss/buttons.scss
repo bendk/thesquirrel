@@ -12,13 +12,13 @@
 
 @function button-sizing($size) {
     // Returns button size info in the form of
-    // (font-size, line-height, x-padding)
+    // (font-size, line-height, x-padding, margin)
     @if $size == large {
-        @return (1.8rem, 3.6rem, 4.0rem);
+        @return (1.8rem, 3.6rem, 4.0rem, 2rem);
     } @else if $size == normal {
-        @return (1.6rem, 2.8rem, 2.0rem);
+        @return (1.6rem, 2.8rem, 2.0rem, 2rem);
     } @else if $size == small {
-        @return (1.4rem, 2.4rem, 1.0rem);
+        @return (1.4rem, 2.4rem, 1.0rem, 1rem);
     }
 }
 
@@ -32,7 +32,6 @@
     border-radius: 5px;
     border: 1px solid black;
     cursor: pointer;
-    margin-right: 2rem;
 
     &:hover {
         text-decoration: none;
@@ -45,6 +44,7 @@
         font-size: nth($sizing, 1);
         line-height: nth($sizing, 2);
         padding: 0 nth($sizing, 3);
+        margin-right: nth($sizing, 4);
     }
 }
 

@@ -2,6 +2,8 @@ form {
     @include group;
     margin: 0;
     padding: 0 0 1em 0;
+    padding: 2rem 1rem;
+    border: 1px solid $light-gray;
 
     fieldset {
         border: 1px solid $light-gray;
@@ -75,14 +77,34 @@ form {
         margin-top: 3rem;
     }
 
-    button.submit {
+    button {
+        @include button(secondary);
+        &.submit {
+            float: right;
+            margin: 0;
+            @include button(primary);
+        }
+        &.delete {
+            @include button(delete);
+        }
+    }
+}
+
+fieldset.editor {
+    a.hint {
         float: right;
-        margin: 0;
+        @include small-text;
+        padding-right: 1rem;
     }
-    button.cancel {
-        @include button(secondary, large);
-    }
-    button.delete {
-        @include button(delete, large);
+
+    .add-media {
+        padding: 0.6rem 0 0.6rem;
+        @include small-text;
+        span {
+            margin: 0 1rem;
+        }
+        button {
+            @include button(secondary, small);
+        }
     }
 }
