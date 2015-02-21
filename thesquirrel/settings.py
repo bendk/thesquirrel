@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     # our apps
     'docs',
+    'editor',
     'mediabuilder',
     'thesquirrel',
 )

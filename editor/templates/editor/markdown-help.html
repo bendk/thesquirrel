@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n markdown %}
+
+{% block content %}
+<article>
+  <h1>{% trans "What is Markdown?" %}</h1>
+  <p>{% blocktrans %}Markdown as an easy-to-use syntax for formatting documents,
+  blog posts, and event.  It should only take a few minutes to pick it up.
+  {% endblocktrans %}</p>
+  <p>{% blocktrans %}Markdown is mostly just plain text with a few special
+  characters like <code>#</code> or <code>*</code> thrown in.  Those special
+  characters are used to format headers, bold text, lists, etc.  The easiest way to learn markdown is by example.{% endblocktrans %}</p>
+
+  <h2>{% trans "Text" %}</h2>
+
+  {% markdownexample %}
+  {% blocktrans %}
+# Use the hash symbol to create headings
+## Two hashes creates a subheading
+
+Most of the time you can just type plain text.  Use asterisks to make words
+**bold** or *italic*.
+
+Separate paragraphs with empty lines
+  {% endblocktrans %}
+  {% endmarkdownexample %}
+
+  <h2>{% trans "Lists" %}</h2>
+  {% markdownexample %}
+  {% blocktrans %}
+Use bullet points for lists:
+
+* apple
+* banana
+* orange
+
+Dashes also work:
+
+- juice
+- coffee
+- water
+
+Numbers can be used for ordered lists:
+
+1. one
+2. two
+3. three
+
+  {% endblocktrans %}
+  {% endmarkdownexample %}
+
+  <h2>{% trans "Links" %}</h2>
+  {% markdownexample %}
+  {% blocktrans %}
+URLs will be automatically converted into links: http://democracynow.org/.
+
+You can also set the link text:
+[Get your news here](http://democracynow.org/).
+  {% endblocktrans %}
+  {% endmarkdownexample %}
+
+  <h2>{% trans "Quotes" %}</h2>
+  {% markdownexample %}
+  {% blocktrans %}
+Use the "&gt;" char for quotations.
+
+> Without a struggle, there can be no progress. -Frederick Douglass
+
+  {% endblocktrans %}
+  {% endmarkdownexample %}
+
+</article>
+{% endblock %}

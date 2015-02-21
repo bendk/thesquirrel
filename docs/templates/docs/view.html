@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>{{ document.title }}</h2>
-{{ document.render_body }}
-{% if user.is_authenticated %}
-<div class="tools">
-  <a href="{% url "docs:edit" document.slug %}">Edit Document</a>
-</div>
+<article>
+  <h1>{{ document.title }}</h1>
+  {{ document.render_body }}
+  {% if user.is_authenticated %}
+  <div class="tools">
+    <a href="{% url "docs:edit" document.slug %}">Edit Document</a>
+  </div>
+</article>
 {% endif %}
 {% endblock %}
 

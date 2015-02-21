@@ -6,7 +6,6 @@
 # under the terms of the GNU Affero General Public License as published by the
 # Free Software Foundation, either version 3 of the License, or (at your
 # option) any later version.
-#
 # thesquirrel.org is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
@@ -15,24 +14,28 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime
-
-from django.contrib.auth.models import User
+from __future__ import absolute_import
+from django import template
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from django.db import models
 
-from editor import markdown
+from .. import markdown
 
-class Document(models.Model):
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
-    public = models.BooleanField(default=False)
-    body = models.TextField()
-    created = models.DateTimeField(default=datetime.now)
-    author = models.ForeignKey(User)
+register = template.Library()
 
-    def __unicode__(self):
-        return u'Document: {}'.format(self.title)
+@register.tag
+def markdownexample(parser, token):
+    nodelist = parser.parse(('endmarkdownexample',))
+    parser.delete_first_token()
+    return MarkdownExampleNode(nodelist)
 
-    def render_body(self):
-        return mark_safe(markdown.render(self.body))
+class MarkdownExampleNode(template.Node):
+    def __init__(self, nodelist):
+        self.nodelist = nodelist
+
+    def render(self, context):
+        source = unicode(self.nodelist.render(context)).strip()
+        return render_to_string('editor/markdown-example.html', {
+            'source': mark_safe(source.replace('\n', '<br>')),
+            'rendered': mark_safe(markdown.render(source)),
+        })

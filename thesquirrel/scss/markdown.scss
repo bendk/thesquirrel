@@ -1,0 +1,17 @@
+.markdown-example {
+    code {
+        display: block;
+        font-family: monospace;
+        border: 1px solid $gray;
+        padding: 1rem;
+        background: $lighter-gray;
+        border-radius: 5px 5px 0 0;
+    }
+    div.rendered {
+        border: 1px solid $gray;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        padding: 1rem;
+    }
+    padding-bottom: 4rem;
+}
