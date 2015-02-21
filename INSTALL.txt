@@ -12,9 +12,16 @@ This line should work on debian-based systems:
 
 apt-get install python python-virtualenv python-dev build-essential libmysqlclient-dev
 
-----------------------------------------
-Step 2: Setup a MySQL Database
-----------------------------------------
+---------------------------
+Step 2: Create a virtualenv
+---------------------------
+
+virtualenv env
+./env/bin/pip install -r requirements.txt
+
+------------------------------
+Step 3: Setup a MySQL Database
+------------------------------
 
 MySQL is the only supported DB at this time.
 
@@ -27,21 +34,21 @@ Create a user account and give it access to the DB:
 GRANT ALL PRIVILEGES ON <dbname>.* TO '<username>'@'%' IDENTIFIED BY '<password>';
 
 ----------------------------------------
-Step 3: Setup the local_settings.py file
+Step 4: Setup the local_settings.py file
 ----------------------------------------
 
   * Run generate-local-settings.py to create the initial file
   * Open that file in an editor and fill in the values
 
 ---------------------------
-Step 4: Run setup-server.py
+Step 5: Run setup-server.py
 ---------------------------
 
 setup-server.py does all the work to make sure things are set up for
 deployment.  You can also use it to update things after updating the code.
 
 --------------
-Step 5: Deploy
+Step 6: Deploy
 --------------
 
 We use the standard django processes here:
