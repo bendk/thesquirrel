@@ -46,6 +46,13 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
 INSTALLED_APPS = (
+    # our apps
+    'docs',
+    'editor',
+    'mediabuilder',
+    'thesquirrel',
+    # third-party-apps
+    'django_nose',
     # django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,11 +60,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.contenttypes',
-    # our apps
-    'docs',
-    'editor',
-    'mediabuilder',
-    'thesquirrel',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -88,6 +90,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = ['--logging-filter=-django.db.backends.schema']
 
 MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,
