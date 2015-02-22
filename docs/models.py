@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime
-
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 from django.db import models
+from django.utils import timezone
+
 
 from editor import markdown
 
@@ -28,7 +28,7 @@ class Document(models.Model):
     slug = models.SlugField(unique=True)
     public = models.BooleanField(default=False)
     body = models.TextField()
-    created = models.DateTimeField(default=datetime.now)
+    created = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User)
 
     def __unicode__(self):

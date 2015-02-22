@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import datetime
+import django.utils.timezone
 from django.conf import settings
 
 
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('slug', models.SlugField(unique=True)),
                 ('public', models.BooleanField(default=False)),
                 ('body', models.TextField()),
-                ('created', models.DateTimeField(default=datetime.datetime.now)),
+                ('created', models.DateTimeField(default=django.utils.timezone.now)),
                 ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
             options={
