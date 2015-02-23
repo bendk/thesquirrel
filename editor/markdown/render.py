@@ -33,12 +33,12 @@ class Token(object):
         pass
 
 class Heading(Token):
-    rule = re.compile(r'#+(.*)$')
+    rule = re.compile(r'#(?!#)(.*)$')
     def __init__(self, match):
         self.text = match.group(1).strip()
 
 class SubHeading(Token):
-    rule = re.compile(r'##+(.*)$')
+    rule = re.compile(r'##(?!#)(.*)$')
     def __init__(self, match):
         self.text = match.group(1).strip()
 
@@ -84,8 +84,8 @@ class Lexer(object):
 
     # token in order of matching precedence
     token_classes = [
-        SubHeading,
         Heading,
+        SubHeading,
         Quote,
         ListItem,
         OrderedListItem,
@@ -157,14 +157,14 @@ class Renderer(object):
         self.append_text(lexer, output)
         while isinstance(lexer.next_token, Heading):
             self.continue_text(lexer, output)
-        output.append('</h2>')
+        output.append('</h2>\n')
 
     def render_subheading(self, lexer, output):
         output.append('<h3>')
         self.append_text(lexer, output)
         while isinstance(lexer.next_token, SubHeading):
             self.continue_text(lexer, output)
-        output.append('</h3>')
+        output.append('</h3>\n')
 
     def render_quote(self, lexer, output):
         # skip over any blank lines
@@ -175,7 +175,7 @@ class Renderer(object):
         if not isinstance(lexer.next_token, Quote):
             output.append('<blockquote></blockquote>')
             return
-        output.append('<blockquote>\n  <p>')
+        output.append('<blockquote>\n<p>')
 
         while True:
             # write out consecutive lines with content
@@ -189,7 +189,7 @@ class Renderer(object):
                 lexer.pop_next()
             if isinstance(lexer.next_token, Quote):
                 # if there is more, start a new <p>
-                output.append('</p>\n  <p>')
+                output.append('</p>\n<p>')
             else:
                 # if not, break out
                 break
@@ -204,17 +204,16 @@ class Renderer(object):
 
     def render_listitem(self, lexer, output):
         output.append('<ul>\n')
-        self.render_list_items(lexer, output,  '  ')
+        self.render_list_items(lexer, output)
         output.append('</ul>\n')
 
     def render_orderedlistitem(self, lexer, output):
         output.append('<ol>\n')
-        self.render_list_items(lexer, output,  '  ')
+        self.render_list_items(lexer, output)
         output.append('</ol>\n')
 
-    def render_list_items(self, lexer, output, indent):
+    def render_list_items(self, lexer, output):
         start_token = lexer.next_token
-        item_start = indent + '<li>'
         while isinstance(lexer.next_token, ListItem):
             next_token = lexer.next_token
             # check if the next item is the same as the first.  Note that we
@@ -222,7 +221,7 @@ class Renderer(object):
             # unordered list items
             if (next_token.__class__ == start_token.__class__ and
                 next_token.leading == start_token.leading):
-                output.append(item_start)
+                output.append('<li>')
                 self.append_text(lexer, output)
                 while (isinstance(lexer.next_token, Text) and
                        lexer.next_token.can_continue_list):
@@ -231,9 +230,9 @@ class Renderer(object):
             elif next_token.leading > start_token.leading:
                 # more leading space, start a nested list
                 nester = lexer.next_token
-                output.extend((item_start, nester.open_tag, '\n'))
-                self.render_list_items(lexer, output, indent + '  ')
-                output.extend((indent, nester.close_tag, '</li>\n'))
+                output.extend(('<li>', nester.open_tag, '\n'))
+                self.render_list_items(lexer, output)
+                output.extend((nester.close_tag, '</li>\n'))
             else:
                 break
 

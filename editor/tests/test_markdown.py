@@ -16,6 +16,8 @@
 
 from __future__ import absolute_import
 import itertools
+import os
+import re
 
 from django.test import TestCase
 from nose.tools import *
@@ -136,224 +138,57 @@ class InlineMarkdownTest(TestCase):
             '<a href="http://example.com">example.com</a> '
             '<strong><a href="http://example.com/link">Text</a></strong>')
 
-def lines(*text_list):
-    """Make a bunch of lines."""
-    return '\n'.join(text_list) + '\n'
+class MarkdownTestCaseReader(object):
+    def __init__(self, path):
+        self.lines = iter(open(path).read().split('\n'))
+        self.section = None
 
-class BlockMarkdownTestBase(TestCase):
-    def check_render_markdown(self, source, correct_output):
-        output = render.render_markdown(source)
-        if output != correct_output:
-            raise AssertionError(
-                '\n--- source ---\n{}\n--- output ---\n{}'
-                '\n--- correct ---\n{}\n--------------'.format(
-                    source, output, correct_output))
+    def read_body(self):
+        read_lines = []
+        while True:
+            line = self.lines.next()
+            if line == '.':
+                return read_lines
+            else:
+                read_lines.append(line)
 
-class TestText(BlockMarkdownTestBase):
-    def check_text_render(self, source, paragraphs):
-        self.check_render_markdown(source, lines(
-            *tuple('<p>{}</p>'.format(p) for p in paragraphs)))
+    def read_comment(self):
+        last_line = '<none>'
+        while True:
+            line = self.lines.next()
+            if line == '.':
+                return last_line
+            elif line.startswith('#'):
+                # Section start.
+                self.section = line[1:].strip()
+            else:
+                last_line = line
 
-    def test_text(self):
-        self.check_text_render(lines('first',
-                                      '',
-                                      'second'),
-                               ['first', 'second'])
+def test_markdown_cases():
+    reader = MarkdownTestCaseReader(os.path.join(os.path.dirname(__file__),
+                                                 'markdown-test-cases.txt'))
+    while True:
+        try:
+            comment = reader.read_comment()
+        except StopIteration:
+            break
+        source = '\n'.join(reader.read_body())
+        correct_output = '\n'.join(reader.read_body())
+        yield (check_markdown_case,
+               reader.section, comment, source, correct_output)
 
-    def test_multiline_text(self):
-        self.check_text_render(lines('first',
-                                     'second'),
-                               ['first second'])
-
-    def test_empty_lines_ignored(self):
-        self.check_text_render(lines('first',
-                                     '', '', '', '',
-                                     'second'),
-                               ['first', 'second'])
-
-    def test_inline_render(self):
-        self.check_text_render(lines('one *one*',
-                                     'two **two**'),
-                               ['one <em>one</em> two <strong>two</strong>'])
-
-class TestQuotes(BlockMarkdownTestBase):
-    def check_quote_render(self, source, quote_parts):
-        correct_parts = ['<blockquote>']
-        correct_parts.extend('  <p>{}</p>'.format(q) for q in quote_parts)
-        correct_parts.append('</blockquote>')
-        self.check_render_markdown(source, lines(*correct_parts))
-
-    def test_quote(self):
-        self.check_quote_render(lines('> my',
-                                      '>quote'),
-                                ['my quote'])
-
-    def test_multi_paragraph_quote(self):
-        self.check_quote_render(lines('> my',
-                                      '>',
-                                      '>quote'),
-                                ['my', 'quote'])
-
-    def test_leading_space_ignored(self):
-        self.check_quote_render(lines('>',
-                                      '> ',
-                                      '> quote'),
-                                ['quote'])
-
-    def test_trailing_space_ignored(self):
-        self.check_quote_render(lines('> quote',
-                                      '> ',
-                                      '>'),
-                                ['quote'])
-
-    def test_extra_middle_space_ignored(self):
-        self.check_quote_render(lines('> one',
-                                      '> ',
-                                      '>',
-                                      '> ',
-                                      '>two'),
-                                ['one', 'two'])
-
-    def test_extra_crocs_ignored(self):
-        self.check_quote_render(lines('>>> one',
-                                      '>>> ',
-                                      '>>>two'),
-                                ['one', 'two'])
-
-    def test_inline_render(self):
-        self.check_quote_render(lines('> *one*',
-                                      '> *two*',
-                                      '>',
-                                      '> *three*'),
-                                ['<em>one</em> <em>two</em>', '<em>three</em>'])
-
-class TestHeadings(BlockMarkdownTestBase):
-    def test_heading(self):
-        self.check_render_markdown('# heading', '<h2>heading</h2>')
-
-    def test_subheading(self):
-        self.check_render_markdown('## heading', '<h3>heading</h3>')
-
-    def test_extra_hashes_ignored(self):
-        self.check_render_markdown('### heading', '<h3>heading</h3>')
-        self.check_render_markdown('####### heading', '<h3>heading</h3>')
-
-    def test_multiline(self):
-        self.check_render_markdown(lines('# one', '# two'),
-                                   '<h2>one two</h2>')
-
-    def test_inline_render(self):
-        self.check_render_markdown(lines('# *heading*'),
-                                   '<h2><em>heading</em></h2>')
-        self.check_render_markdown(lines('## *heading*'),
-                                   '<h3><em>heading</em></h3>')
-
-class TestList(BlockMarkdownTestBase):
-    def check_list(self, source, correct_items, ordered=False):
-        if ordered:
-            tag_name = 'ol'
-        else:
-            tag_name = 'ul'
-        correct_parts = ['<{}>'.format(tag_name)]
-        correct_parts.extend('  <li>{}</li>'.format(i) for i in correct_items)
-        correct_parts.append('</{}>'.format(tag_name))
-        self.check_render_markdown(source, lines(*correct_parts))
-
-    def test_list(self):
-        self.check_list(lines('* one',
-                              '*two',
-                              '*  three'),
-                        ['one', 'two', 'three'])
-
-    def test_dash(self):
-        self.check_list(lines('- one',
-                              '-two',
-                              '-  three'),
-                        ['one', 'two', 'three'])
-
-    def test_ordered_list(self):
-        self.check_list(lines('1. one',
-                              '2.two',
-                              '3.  three'),
-                        ['one', 'two', 'three'],
-                        ordered=True)
-
-    def test_any_number_works(self):
-        self.check_list(lines('1. one',
-                              '1.two',
-                              '1.  three'),
-                        ['one', 'two', 'three'],
-                        ordered=True)
-
-    def test_list_continuation(self):
-        self.check_list(lines('* one',
-                              '  two',
-                              ' three',
-                              '* four'),
-                        ['one two three', 'four'])
-
-    def test_nested_list(self):
-        self.check_render_markdown(
-            lines('* one',
-                  '*  two',
-                  '  * two a',
-                  '  * two',
-                  '    b',
-                  '  * two',
-                  ' c',
-                  # c should continue the nested list even though there's
-                  # one 1 space
-                  '* three'
-                 ),
-            lines('<ul>',
-                  '  <li>one</li>',
-                  '  <li>two</li>',
-                  '  <li><ul>',
-                  '    <li>two a</li>',
-                  '    <li>two b</li>',
-                  '    <li>two c</li>',
-                  '  </ul></li>',
-                  '  <li>three</li>',
-                  '</ul>'))
-
-    def test_type_switch(self):
-        self.check_render_markdown(
-            lines('* one',
-                  '*  two',
-                  '1. three',
-                  '2. four',
-                 ),
-            lines('<ul>',
-                  '  <li>one</li>',
-                  '  <li>two</li>',
-                  '</ul>',
-                  '<ol>',
-                  '  <li>three</li>',
-                  '  <li>four</li>',
-                  '</ol>'))
-
-    def test_mixed_nested_list(self):
-        self.check_render_markdown(
-            lines('* one',
-                  '* two',
-                  '  1. two a',
-                  '  2. two b',
-                  '* three'),
-            lines('<ul>',
-                  '  <li>one</li>',
-                  '  <li>two</li>',
-                  '  <li><ol>',
-                  '    <li>two a</li>',
-                  '    <li>two b</li>',
-                  '  </ol></li>',
-                  '  <li>three</li>',
-                  '</ul>'))
-
-    def test_inline_render(self):
-        self.check_render_markdown(
-            lines('* **one**',
-                  '* _two_'),
-            lines('<ul>',
-                  '  <li><strong>one</strong></li>',
-                  '  <li><em>two</em></li>',
-                  '</ul>'))
+def check_markdown_case(section, comment, source, correct_output):
+    output = render.render_markdown(source)
+    if output.endswith('\n'):
+        output = output[:-1]
+    if output != correct_output:
+        raise AssertionError(
+            '\n'.join([
+                '{}: {}',
+                '-- source --',
+                '{}',
+                '-- output--',
+                '{}',
+                '-- correct --',
+                '{}']).format(
+                    section, comment, source, output, correct_output))

@@ -1,0 +1,307 @@
+# Text
+
+paragraphs
+.
+first
+
+second
+.
+<p>first</p>
+<p>second</p>
+.
+
+continuations
+.
+first
+second
+.
+<p>first second</p>
+.
+
+ignore extra empty lines
+.
+first
+
+
+
+
+second
+.
+<p>first</p>
+<p>second</p>
+.
+
+inline rendering
+.
+one *one*
+two **two**
+.
+<p>one <em>one</em> two <strong>two</strong></p>
+.
+
+# Headings
+
+heading
+.
+# heading
+.
+<h2>heading</h2>
+.
+
+subheading
+.
+## heading
+.
+<h3>heading</h3>
+.
+
+extra hashes don't create a heading
+.
+### non-heading
+.
+<p>### non-heading</p>
+.
+
+multiple lines are joined
+.
+# one
+# two
+.
+<h2>one two</h2>
+.
+
+inline rendering
+.
+# *heading*
+.
+<h2><em>heading</em></h2>
+.
+
+inline rendering on a subheading
+.
+## *heading*
+.
+<h3><em>heading</em></h3>
+.
+
+# Blockquotes
+
+quote
+.
+> my
+>quote
+.
+<blockquote>
+<p>my quote</p>
+</blockquote>
+.
+
+quote with multiple paragraphs
+.
+> my
+>
+> quote
+.
+<blockquote>
+<p>my</p>
+<p>quote</p>
+</blockquote>
+.
+
+leading empty lines are ignored
+.
+>
+> 
+> quote
+.
+<blockquote>
+<p>quote</p>
+</blockquote>
+.
+
+trailing empty lines are ignored
+.
+> quote
+> 
+>
+.
+<blockquote>
+<p>quote</p>
+</blockquote>
+.
+
+empty lines in the middle are merged
+.
+> one
+> 
+>
+> 
+>two
+.
+<blockquote>
+<p>one</p>
+<p>two</p>
+</blockquote>
+.
+
+inline rendering
+.
+> *one*
+> *two*
+>
+> *three*
+.
+<blockquote>
+<p><em>one</em> <em>two</em></p>
+<p><em>three</em></p>
+</blockquote>
+.
+
+# Lists
+
+unordered list
+.
+* one
+* two
+* three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ul>
+.
+
+extra space after the list marker is okay
+.
+* one
+*  two
+*     three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ul>
+.
+
+dashes work
+.
+- one
+- two
+- three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ul>
+.
+
+numbers create an ordered list
+.
+1. one
+2. two
+3. three
+.
+<ol>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ol>
+.
+
+any number works for the ordered list
+.
+1. one
+1. two
+1. three
+.
+<ol>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ol>
+.
+
+lists are continued by a lines with spaces at the begining
+.
+* one
+  two
+  three
+* four
+.
+<ul>
+<li>one two three</li>
+<li>four</li>
+</ul>
+.
+
+lists can be nested
+.
+* one
+*  two
+  * two a
+  * two b
+  * two
+    c
+* three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+<li><ul>
+<li>two a</li>
+<li>two b</li>
+<li>two c</li>
+</ul></li>
+<li>three</li>
+</ul>
+.
+
+switching list type creates a new list
+.
+* one
+* two
+1. three
+2. four
+.
+<ul>
+<li>one</li>
+<li>two</li>
+</ul>
+<ol>
+<li>three</li>
+<li>four</li>
+</ol>
+.
+
+nested lists can use a different type
+.
+* one
+* two
+  1. two a
+  2. two b
+* three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+<li><ol>
+<li>two a</li>
+<li>two b</li>
+</ol></li>
+<li>three</li>
+</ul>
+.
+
+inline rendering
+.
+* **one**
+* _two_
+.
+<ul>
+<li><strong>one</strong></li>
+<li><em>two</em></li>
+</ul>
+.
