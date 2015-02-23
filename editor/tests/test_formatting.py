@@ -51,7 +51,7 @@ class InlineMarkdownTest(TestCase):
 
     def test_multiple_elements(self):
         self.check_inline_render(
-            '_one_ **two** *three*',
+            '*one* **two** *three*',
             '<em>one</em> <strong>two</strong> <em>three</em>')
 
     # that wasn't too bad, now time to test the corner cases
@@ -98,20 +98,6 @@ class InlineMarkdownTest(TestCase):
         self.check_inline_render('***one*two*three***',
                                  '<strong><em>one</em>two'
                                  '<em>three</em></strong>')
-
-    def test_mix_underscore_asterisk(self):
-        # We should allow underscores and asterisks to be mixed in any way,
-        # including open with one and closing with the other, or even "*_" for
-        # strong.  Create a semi-complex case and test all permutations
-        source = '***one**two*three'
-        correct_output = '<em><strong>one</strong>two</em>three'
-        source_parts = source.split('*')
-        for delims in itertools.product('*_', repeat=len(source_parts)-1):
-            case_parts = []
-            for p, d in zip(source_parts, delims):
-                case_parts.extend((p, d))
-            case_parts.append(source_parts[-1])
-            self.check_inline_render(''.join(case_parts), correct_output)
 
     # link rendering
     def test_auto_link(self):

@@ -23,9 +23,9 @@ from django.utils.html import urlize
 
 link_re = re.compile(r'\[([^\]]+)]\(([^)]+)\)')
 em_strong_delimiter_re = re.compile(
-    r'(?<![*_])' # no delimiters before the match
-    r'([*_]{1,3})' # 1-3 delimiters make up the match
-    r'(?![*_])' # no delimiters after the match
+    r'(?<![*])' # no delimiters before the match
+    r'([*]{1,3})' # 1-3 delimiters make up the match
+    r'(?![*])' # no delimiters after the match
 )
 def chunked_render(source_parts, join_str=' '):
     """Low-level rendering

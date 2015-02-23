@@ -427,7 +427,7 @@ nested lists can use a different type
 inline rendering
 .
 * **one**
-* _two_
+* *two*
 .
 <ul>
 <li><strong>one</strong></li>
