@@ -138,6 +138,10 @@ class InlineMarkdownTest(TestCase):
             '<a href="http://example.com">example.com</a> '
             '<strong><a href="http://example.com/link">Text</a></strong>')
 
+    def test_chunked_render(self):
+        output = inline.chunked_render(['*one', 'two*'])
+        assert_equals(''.join(output), '<em>one two</em>')
+
 class MarkdownTestCaseReader(object):
     def __init__(self, path):
         self.lines = iter(open(path).read().split('\n'))
@@ -153,7 +157,7 @@ class MarkdownTestCaseReader(object):
                 read_lines.append(line)
 
     def read_comment(self):
-        last_line = '<none>'
+        last_line = None
         while True:
             line = self.lines.next()
             if line == '.':
@@ -167,11 +171,14 @@ class MarkdownTestCaseReader(object):
 def test_formatting_cases():
     reader = MarkdownTestCaseReader(os.path.join(os.path.dirname(__file__),
                                                  'formatting-test-cases.txt'))
+    comment = '<none>'
     while True:
         try:
-            comment = reader.read_comment()
+            new_comment = reader.read_comment()
         except StopIteration:
             break
+        if new_comment:
+            comment = new_comment
         source = '\n'.join(reader.read_body())
         correct_output = '\n'.join(reader.read_body())
         yield (check_formatting_case,

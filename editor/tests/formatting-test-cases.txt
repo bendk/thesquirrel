@@ -39,6 +39,14 @@ two **two**
 <p>one <em>one</em> two <strong>two</strong></p>
 .
 
+inline rendering works across lines
+.
+I *really
+like* pizza
+.
+<p>I <em>really like</em> pizza</p>
+.
+
 # Headings
 
 heading
@@ -84,6 +92,14 @@ inline rendering on a subheading
 <h3><em>heading</em></h3>
 .
 
+inline rendering works across lines
+.
+# *one
+# two*
+.
+<h2><em>one two</em></h2>
+.
+
 # Blockquotes
 
 quote
@@ -107,6 +123,41 @@ quote with multiple paragraphs
 <p>quote</p>
 </blockquote>
 .
+
+more crocs make nested quotes
+.
+> how are you?
+>> good
+> okay
+.
+<blockquote>
+<p>how are you?</p>
+<blockquote>
+<p>good</p>
+</blockquote>
+<p>okay</p>
+</blockquote>
+.
+
+nesting can decrease multiple levels
+.
+> one
+>> two
+>>> three
+> back to one
+.
+<blockquote>
+<p>one</p>
+<blockquote>
+<p>two</p>
+<blockquote>
+<p>three</p>
+</blockquote>
+</blockquote>
+<p>back to one</p>
+</blockquote>
+.
+
 
 leading empty lines are ignored
 .
@@ -157,6 +208,16 @@ inline rendering
 </blockquote>
 .
 
+inline rendering works across lines
+.
+> *one
+> two*
+.
+<blockquote>
+<p><em>one two</em></p>
+</blockquote>
+.
+
 # Lists
 
 unordered list
@@ -198,7 +259,7 @@ dashes work
 </ul>
 .
 
-numbers create an ordered list
+numbers followed by a dot or ")" create an ordered list
 .
 1. one
 2. two
@@ -211,6 +272,19 @@ numbers create an ordered list
 </ol>
 .
 
+.
+1) one
+2) two
+3) three
+.
+<ol>
+<li>one</li>
+<li>two</li>
+<li>three</li>
+</ol>
+.
+
+
 any number works for the ordered list
 .
 1. one
@@ -222,19 +296,6 @@ any number works for the ordered list
 <li>two</li>
 <li>three</li>
 </ol>
-.
-
-lists are continued by a lines with spaces at the begining
-.
-* one
-  two
-  three
-* four
-.
-<ul>
-<li>one two three</li>
-<li>four</li>
-</ul>
 .
 
 lists can be nested
@@ -259,12 +320,53 @@ lists can be nested
 </ul>
 .
 
+lists are continued by lines without a list item
+.
+* one
+two
+three
+* four
+.
+<ul>
+<li>one two three</li>
+<li>four</li>
+</ul>
+.
+
+An empty line ends all lists
+.
+* one
+* two
+
+three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+</ul>
+<p>three</p>
+.
+
+.
+* one
+  * two
+
+three
+.
+<ul>
+<li>one</li>
+<li><ul>
+<li>two</li>
+</ul></li>
+</ul>
+<p>three</p>
+.
+
 switching list type creates a new list
 .
 * one
 * two
 1. three
-2. four
 .
 <ul>
 <li>one</li>
@@ -272,7 +374,34 @@ switching list type creates a new list
 </ul>
 <ol>
 <li>three</li>
-<li>four</li>
+</ol>
+.
+
+.
+* one
+* two
+- three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+</ul>
+<ul>
+<li>three</li>
+</ul>
+.
+
+.
+1. one
+2. two
+3) three
+.
+<ol>
+<li>one</li>
+<li>two</li>
+</ol>
+<ol>
+<li>three</li>
 </ol>
 .
 
@@ -303,5 +432,15 @@ inline rendering
 <ul>
 <li><strong>one</strong></li>
 <li><em>two</em></li>
+</ul>
+.
+
+inline renderer works across lines
+.
+* *one
+  two*
+.
+<ul>
+<li><em>one two</em></li>
 </ul>
 .

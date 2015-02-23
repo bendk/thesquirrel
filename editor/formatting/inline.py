@@ -27,24 +27,55 @@ em_strong_delimiter_re = re.compile(
     r'([*_]{1,3})' # 1-3 delimiters make up the match
     r'(?![*_])' # no delimiters after the match
 )
-def render(source):
-    source = escape(source, quote=True)
-    source = sub_em_and_strong(source)
-    source = link_re.sub(r'<a href="\2">\1</a>', source)
-    source = urlize(source)
-    return source
+def chunked_render(source_parts, join_str=' '):
+    """Low-level rendering
 
-def sub_em_and_strong(source):
-    parts = em_strong_delimiter_re.split(source)
-    # parts is [<text>, <delim>, <text>, <delim>, <text>, ...]
+    This method is used by the block renderer, which splits up the input
+    string into lines.  This method works with lists of strings to complement
+    that.
+
+    Note:
+        em and strong will be matched between different lines, but URLs won't
+
+    Args:
+        source_parts: list of strings to render inline
+        join_str: between each string in the list, we will insert this string
+
+    Returns:
+        list of strings that should be joined together to make the output
+
+    """
+    formatted_source_parts = []
+    formatted_source_parts.append(urlize_escape_and_link(source_parts[0]))
+    for part in source_parts[1:]:
+        formatted_source_parts.append(join_str)
+        formatted_source_parts.append(urlize_escape_and_link(part))
+
+    return sub_em_and_strong(formatted_source_parts)
+
+def urlize_escape_and_link(source):
+    source = escape(source, quote=True)
+    source = link_re.sub(r'<a href="\2">\1</a>', source)
+    return urlize(source)
+
+def sub_em_and_strong(source_parts):
+    delimiter_positions = []
+    parts = []
+    for source_part in source_parts:
+        split_part = em_strong_delimiter_re.split(source_part)
+        old_len = len(parts)
+        parts.extend(split_part)
+        delimiter_positions.extend(xrange(old_len + 1, len(parts), 2))
+
     # we will iterate through the delimiters and replace them
+
     open_em = open_strong = open_both = None
     # "open" means we've seen 1 of the delimiters, but haven't seen the
     # second to close it.
     insert_before = {}
     # triple delimiters get replaced with 2 tags, insert_before is used
     # to handle the extra tag
-    for pos in xrange(1, len(parts), 2):
+    for pos in delimiter_positions:
         count = len(parts[pos])
         if count == 1:
             # single delimiter handles <em>
@@ -114,4 +145,7 @@ def sub_em_and_strong(source):
         if i in insert_before:
             combined.append(insert_before[i])
         combined.append(part)
-    return ''.join(combined)
+    return combined
+
+def render(source):
+    return ''.join(chunked_render([source]))

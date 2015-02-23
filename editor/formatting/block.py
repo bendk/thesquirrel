@@ -42,23 +42,31 @@ class SubHeading(Token):
         self.text = match.group(1).strip()
 
 class Quote(Token):
-    rule = re.compile(r'>+(.*)$')
+    rule = re.compile(r'(>+)(.*)$')
     def __init__(self, match):
-        self.text = match.group(1).strip()
+        self.count = len(match.group(1))
+        self.text = match.group(2).strip()
 
     def is_empty(self):
         return not self.text
 
 class ListItem(Token):
-    rule = re.compile(r'( *)[*-](.*)$')
+    rule = re.compile(r'( *)([*-])(.*)$')
     open_tag = '<ul>'
     close_tag = '</ul>'
     def __init__(self, match):
         self.leading = len(match.group(1))
-        self.text = match.group(2).strip()
+        self.list_char = match.group(2)
+        self.text = match.group(3).strip()
+
+    def continues_list(self, other_token):
+        # note that this comparison will always fail when compairing a
+        # ListItem to an OrderedListItem
+        return (self.list_char == other_token.list_char and
+                self.leading == other_token.leading)
 
 class OrderedListItem(ListItem):
-    rule = re.compile(r'( *)\d+\.(.*)$')
+    rule = re.compile(r'( *)\d+([\.)])(.*)$')
     open_tag = '<ol>'
     close_tag = '</ol>'
 
@@ -67,10 +75,9 @@ class EmptyLine(Token):
 
 class Text(Token):
     # this has the lowest precedence, so match anything
-    rule = re.compile(r'( *)(.*)$')
+    rule = re.compile(r'(.*)$')
     def __init__(self, match):
-        self.can_continue_list = bool(match.group(1))
-        self.text = match.group(2).rstrip()
+        self.text = match.group(1).strip()
 
 class EOS(object):
     """Signals the end of the token stream."""
@@ -153,9 +160,10 @@ class Renderer(object):
 
     def render_heading(self, lexer, output):
         output.append('<h2>')
-        self.append_text(lexer, output)
+        text_parts = [lexer.pop_next().text]
         while isinstance(lexer.next_token, Heading):
-            self.continue_text(lexer, output)
+            text_parts.append(lexer.pop_next().text)
+        output.extend(inline.chunked_render(text_parts))
         output.append('</h2>\n')
 
     def render_subheading(self, lexer, output):
@@ -166,39 +174,49 @@ class Renderer(object):
         output.append('</h3>\n')
 
     def render_quote(self, lexer, output):
-        # skip over any blank lines
-        while (isinstance(lexer.next_token, Quote) and
-               lexer.next_token.is_empty()):
-            lexer.pop_next()
-        # check for the corner case of no quote at all
-        if not isinstance(lexer.next_token, Quote):
-            output.append('<blockquote></blockquote>')
-            return
-        output.append('<blockquote>\n<p>')
-
-        while True:
-            # write out consecutive lines with content
-            self.append_text(lexer, output)
-            while (isinstance(lexer.next_token, Quote) and
-                   not lexer.next_token.is_empty()):
-                self.continue_text(lexer, output)
-            # skip over any blank lines
-            while (isinstance(lexer.next_token, Quote) and
-                   lexer.next_token.is_empty()):
-                lexer.pop_next()
-            if isinstance(lexer.next_token, Quote):
-                # if there is more, start a new <p>
-                output.append('</p>\n<p>')
+        nesting_level = 0
+        text_parts = []
+        while isinstance(lexer.next_token, Quote):
+            token = lexer.pop_next()
+            if token.is_empty():
+                # blank line, create a paragraph
+                if text_parts:
+                    output.append('<p>')
+                    output.extend(inline.chunked_render(text_parts))
+                    output.append('</p>\n')
+                    text_parts = []
+                continue
+            if token.count != nesting_level:
+                # new nesting level
+                if text_parts:
+                    output.append('<p>')
+                    output.extend(inline.chunked_render(text_parts))
+                    output.append('</p>\n')
+                    text_parts = []
+                for i in xrange(token.count - nesting_level):
+                    output.append('<blockquote>\n')
+                for i in xrange(nesting_level - token.count):
+                    output.append('</blockquote>\n')
+                nesting_level = token.count
+                if token.text:
+                    text_parts.append(token.text)
             else:
-                # if not, break out
-                break
-        output.append('</p>\n</blockquote>\n')
+                text_parts.append(token.text)
+
+        # done with the list, write out text and close our tags
+        if text_parts:
+            output.append('<p>')
+            output.extend(inline.chunked_render(text_parts))
+            output.append('</p>\n')
+        for i in xrange(nesting_level):
+            output.append('</blockquote>\n')
 
     def render_text(self, lexer, output):
         output.append('<p>')
-        self.append_text(lexer, output)
+        text_parts = [lexer.pop_next().text]
         while isinstance(lexer.next_token, Text):
-            self.continue_text(lexer, output)
+            text_parts.append(lexer.pop_next().text)
+        output.extend(inline.chunked_render(text_parts))
         output.append('</p>\n')
 
     def render_listitem(self, lexer, output):
@@ -214,19 +232,17 @@ class Renderer(object):
     def render_list_items(self, lexer, output):
         start_token = lexer.next_token
         while isinstance(lexer.next_token, ListItem):
-            next_token = lexer.next_token
             # check if the next item is the same as the first.  Note that we
             # need to compare __class__ directly to avoid mixing ordered and
             # unordered list items
-            if (next_token.__class__ == start_token.__class__ and
-                next_token.leading == start_token.leading):
+            if lexer.next_token.continues_list(start_token):
                 output.append('<li>')
-                self.append_text(lexer, output)
-                while (isinstance(lexer.next_token, Text) and
-                       lexer.next_token.can_continue_list):
-                    self.continue_text(lexer, output)
+                text_parts = [lexer.pop_next().text]
+                while isinstance(lexer.next_token, Text):
+                    text_parts.append(lexer.pop_next().text)
+                output.extend(inline.chunked_render(text_parts))
                 output.append('</li>\n')
-            elif next_token.leading > start_token.leading:
+            elif lexer.next_token.leading > start_token.leading:
                 # more leading space, start a nested list
                 nester = lexer.next_token
                 output.extend(('<li>', nester.open_tag, '\n'))
