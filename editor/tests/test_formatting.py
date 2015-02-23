@@ -99,6 +99,9 @@ class InlineMarkdownTest(TestCase):
                                  '<strong><em>one</em>two'
                                  '<em>three</em></strong>')
 
+    def test_escape_star(self):
+        self.check_inline_render('\*one\*', '*one*')
+
     # link rendering
     def test_auto_link(self):
         self.check_inline_render(
@@ -116,6 +119,22 @@ class InlineMarkdownTest(TestCase):
 
     def test_escaping(self):
         self.check_inline_render(""" "<>& """, ' &quot;&lt;&gt;&amp; ')
+
+    # replacing simple chars with entities
+    def test_em_dash(self):
+        self.check_inline_render('one--two', 'one&mdash;two')
+
+    def test_double_quotes(self):
+        self.check_inline_render('"hello"', '&ldquo;hello&rdquo;')
+
+    def test_single_quotes(self):
+        self.check_inline_render("'hello'", '&lsquo;hello&rsquo;')
+
+    def test_single_quotes_not_used_for_apostrophe(self):
+        self.check_inline_render("alice's dog's food", "alice's dog's food")
+
+    def test_elipsis(self):
+        self.check_inline_render("hmm...", 'hmm&hellip;')
 
     # everything together
     def test_mixed_markup(self):

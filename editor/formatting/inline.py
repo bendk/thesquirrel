@@ -21,7 +21,6 @@ from cgi import escape
 
 from django.utils.html import urlize
 
-link_re = re.compile(r'\[([^\]]+)]\(([^)]+)\)')
 em_strong_delimiter_re = re.compile(
     r'(?<![*])' # no delimiters before the match
     r'([*]{1,3})' # 1-3 delimiters make up the match
@@ -46,16 +45,41 @@ def chunked_render(source_parts, join_str=' '):
 
     """
     formatted_source_parts = []
-    formatted_source_parts.append(urlize_escape_and_link(source_parts[0]))
+    formatted_source_parts.append(format_part(source_parts[0]))
     for part in source_parts[1:]:
         formatted_source_parts.append(join_str)
-        formatted_source_parts.append(urlize_escape_and_link(part))
+        formatted_source_parts.append(format_part(part))
 
     return sub_em_and_strong(formatted_source_parts)
 
-def urlize_escape_and_link(source):
+puncuation_or_space = r'[\w.,:;\-]'
+format_substitutions = [
+    # links
+    (re.compile(r'\[([^\]]+)]\(([^)]+)\)'), r'<a href="\2">\1</a>'),
+    # quotes
+    (re.compile(
+        r'(?<![^\s\.,:;\-])' # preceded by whitespace or puncuation
+        r'\'(.*)\'' # the quote content
+        r'(?![^\s\.,:;\-])' # followed whitespace or puncuation
+    ), # followed by whitespace or puncuation
+        r'&lsquo;\1&rsquo;'),
+    (re.compile(
+        r'(?<![^\s\.,:;\-])' # preceded by whitespace or puncuation
+        r'&quot;(.*)&quot;' # the quote content
+        r'(?![^\s\.,:;\-])' # followed whitespace or puncuation
+    ), # followed by whitespace or puncuation
+        r'&ldquo;\1&rdquo;'),
+    # dashes
+    (re.compile(r'(?<!-)-{2}(?!-)'), '&mdash;'),
+    # ellipsis
+    (re.compile(r'(?<!\.)\.{3}(?!\.)'), '&hellip;'),
+]
+def format_part(source):
+    """Handles link substitution, html entities replacement, etc.
+    """
     source = escape(source, quote=True)
-    source = link_re.sub(r'<a href="\2">\1</a>', source)
+    for regex, repl in format_substitutions:
+        source = regex.sub(repl, source)
     return urlize(source)
 
 def sub_em_and_strong(source_parts):
@@ -76,6 +100,10 @@ def sub_em_and_strong(source_parts):
     # triple delimiters get replaced with 2 tags, insert_before is used
     # to handle the extra tag
     for pos in delimiter_positions:
+        # handle escaping
+        if parts[pos-1] and parts[pos-1][-1] == '\\':
+            parts[pos-1] = parts[pos-1][:-1]
+            continue
         count = len(parts[pos])
         if count == 1:
             # single delimiter handles <em>
