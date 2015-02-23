@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-"""editor.markdown.inline -- Render inline text """
+"""editor.formatting.inline -- Render inline text """
 
 import re
 from cgi import escape

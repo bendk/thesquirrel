@@ -14,8 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-"""editor.markdown.render -- Block-level markdown rendering
-"""
+"""editor.formatting.render -- Markdown-style formatting """
 
 from __future__ import absolute_import
 import collections
@@ -240,6 +239,6 @@ class Renderer(object):
         lexer.pop_next()
 
 _renderer = Renderer()
-def render_markdown(input_string):
+def render(input_string):
     lexer = Lexer(input_string)
     return _renderer.render(lexer)

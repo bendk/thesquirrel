@@ -22,8 +22,8 @@ import re
 from django.test import TestCase
 from nose.tools import *
 
-from editor.markdown import inline
-from editor.markdown import render
+from editor.formatting import inline
+from editor.formatting import block
 
 class InlineMarkdownTest(TestCase):
     def check_inline_render(self, source, correct_output):
@@ -164,9 +164,9 @@ class MarkdownTestCaseReader(object):
             else:
                 last_line = line
 
-def test_markdown_cases():
+def test_formatting_cases():
     reader = MarkdownTestCaseReader(os.path.join(os.path.dirname(__file__),
-                                                 'markdown-test-cases.txt'))
+                                                 'formatting-test-cases.txt'))
     while True:
         try:
             comment = reader.read_comment()
@@ -174,11 +174,11 @@ def test_markdown_cases():
             break
         source = '\n'.join(reader.read_body())
         correct_output = '\n'.join(reader.read_body())
-        yield (check_markdown_case,
+        yield (check_formatting_case,
                reader.section, comment, source, correct_output)
 
-def check_markdown_case(section, comment, source, correct_output):
-    output = render.render_markdown(source)
+def check_formatting_case(section, comment, source, correct_output):
+    output = block.render(source)
     if output.endswith('\n'):
         output = output[:-1]
     if output != correct_output:

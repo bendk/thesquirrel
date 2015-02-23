@@ -19,13 +19,13 @@ from django import template
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
-from .. import markdown
+from .. import formatting
 
 register = template.Library()
 
 @register.tag
-def markdownexample(parser, token):
-    nodelist = parser.parse(('endmarkdownexample',))
+def formattingexample(parser, token):
+    nodelist = parser.parse(('endformattingexample',))
     parser.delete_first_token()
     return MarkdownExampleNode(nodelist)
 
@@ -35,7 +35,7 @@ class MarkdownExampleNode(template.Node):
 
     def render(self, context):
         source = unicode(self.nodelist.render(context)).strip()
-        return render_to_string('editor/markdown-example.html', {
+        return render_to_string('editor/formatting-example.html', {
             'source': mark_safe(source.replace('\n', '<br>')),
-            'rendered': mark_safe(markdown.render(source)),
+            'rendered': mark_safe(formatting.render(source)),
         })

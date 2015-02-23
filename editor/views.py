@@ -18,5 +18,5 @@ from __future__ import absolute_import
 
 from django.shortcuts import render
 
-def markdown_help(request):
-    return render(request, 'editor/markdown-help.html')
+def formatting_help(request):
+    return render(request, 'editor/formatting-help.html')

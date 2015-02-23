@@ -18,6 +18,6 @@ from django.conf.urls import patterns, url
 from django.views.generic import TemplateView
 
 urlpatterns = patterns('editor.views',
-    url(r'^markdown-help/$', 'markdown_help', name='markdown-help'),
+    url(r'^formatting-help/$', 'formatting_help', name='formatting-help'),
 )
 
