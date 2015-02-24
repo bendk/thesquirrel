@@ -4,71 +4,95 @@
 {% block content %}
 <article>
   <h1>{% trans "Formatting Text" %}</h1>
-  <p>{% blocktrans %}We use an easy-to-use syntax for formatting documents,
-  blog posts, and event.  It should only take a few minutes to pick it up.
+  <p>{% blocktrans %}We use a simple syntax for formatting documents,
+  blog posts, and events.  It should only take a few minutes to pick it up.
   {% endblocktrans %}</p>
-  <p>{% blocktrans %}To format articles, use mostly plain text with a few
-  special characters like <code>#</code> or <code>*</code> thrown in.  Those
-  special characters are used to format headers, bold text, lists, etc.  The
-  easiest way to learn is by example.{% endblocktrans %}</p>
+  <p>{% blocktrans %}The syntax is mostly regular text with a few special
+  characters like <code>#</code> or <code>*</code> thrown in.  Those special
+  characters are used to format headers, bold text, lists, etc.  The easiest
+  way to learn is by example.{% endblocktrans %}</p>
 
   <h2>{% trans "Text" %}</h2>
 
-  {% formattingexample %}
-  {% blocktrans %}
-# Use the hash symbol to create headings
-## Two hashes creates a subheading
-
-Most of the time you can just type plain text.  Use asterisks to make words
-**bold** or *italic*.
+{% formattingexample %}
+{% blocktrans %}
+Most of the time you can just type plain text.  Use asterisks to make
+words **bold** or *italic*. 
 
 Separate paragraphs with empty lines
-  {% endblocktrans %}
-  {% endformattingexample %}
+
+"Smart Quotes" and 'other characters' will automatically be--inserted...
+{% endblocktrans %}
+{% endformattingexample %}
+
+  <h2>{% trans "Headings" %}</h2>
+
+{% formattingexample %}
+{% blocktrans %}
+# Use the hash symbol to create headings
+## Two hashes creates a subheading
+{% endblocktrans %}
+{% endformattingexample %}
 
   <h2>{% trans "Lists" %}</h2>
-  {% formattingexample %}
-  {% blocktrans %}
+{% formattingexample %}
+{% blocktrans %}
 Use bullet points for lists:
 
-* apple
-* banana
-* orange
+* Apple
+* Banana
+* Orange
 
 Dashes also work:
 
-- juice
-- coffee
-- water
+- Juice
+- Coffee
+- Water
+{% endblocktrans %}
+{% endformattingexample %}
 
+<h2>{% trans "Ordered Lists" %}</h2>
+{% formattingexample %}
+{% blocktrans %}
 Numbers can be used for ordered lists:
 
-1. one
-2. two
-3. three
+1. One
+2. Two
+3. Three
 
-  {% endblocktrans %}
-  {% endformattingexample %}
+You can use any number for ordered lists.  This makes for easy re-ordering:
+
+1. One
+1. Two
+1. Three
+{% endblocktrans %}
+{% endformattingexample %}
 
   <h2>{% trans "Links" %}</h2>
-  {% formattingexample %}
-  {% blocktrans %}
+{% formattingexample %}
+{% blocktrans %}
 URLs will be automatically converted into links: http://democracynow.org/.
 
 You can also set the link text:
 [Get your news here](http://democracynow.org/).
-  {% endblocktrans %}
-  {% endformattingexample %}
+{% endblocktrans %}
+{% endformattingexample %}
 
   <h2>{% trans "Quotes" %}</h2>
-  {% formattingexample %}
-  {% blocktrans %}
-Use the "&gt;" char for quotations.
+{% formattingexample %}
+{% blocktrans %}
+Use the ">" char for quotations:
 
-> Without a struggle, there can be no progress. -Frederick Douglass
+> If there is no struggle there is no progress.
+>
+> - Frederick Douglass
 
-  {% endblocktrans %}
-  {% endformattingexample %}
+You can nest quotes as well:
 
+> Hi, how are you doing?
+>> I'm great, how are you?
+> Hunky Dory!
+{% endblocktrans %}
+{% endformattingexample %}
 </article>
 {% endblock %}

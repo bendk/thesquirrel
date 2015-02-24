@@ -15,6 +15,8 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from cgi import escape
+
 from django import template
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -36,6 +38,6 @@ class MarkdownExampleNode(template.Node):
     def render(self, context):
         source = unicode(self.nodelist.render(context)).strip()
         return render_to_string('editor/formatting-example.html', {
-            'source': mark_safe(source.replace('\n', '<br>')),
+            'source': mark_safe(escape(source).replace('\n', '<br>')),
             'rendered': mark_safe(formatting.render(source)),
         })

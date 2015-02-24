@@ -46,3 +46,13 @@
         margin-left: 1rem;
     }
 }
+
+ul.jump {
+    list-style-type: none;
+    display: inline;
+    li {
+        @extend %small-text;
+        display: inline;
+        margin-right: 0.6rem;
+    }
+}

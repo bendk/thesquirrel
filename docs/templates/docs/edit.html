@@ -13,7 +13,7 @@
   </fieldset>
   <fieldset class="editor">
     <legend>{% trans "Body" %}</legend>
-    <a href="{% url "editor:markdown-help" %}" class="hint" target="_blank"><i class="fa fa-info-circle"></i> markdown enabled</a>
+    <a href="{% url "editor:formatting-help" %}" class="hint" target="_blank"><i class="fa fa-question-circle"></i> formatting help</a>
     {% include "field.html" with field=form.body %}
     <div class="add-media"><span>{% trans "Add Media:" %}</span>
       <button><i class="fa fa-camera"></i> {% trans "Image" %}</button>
