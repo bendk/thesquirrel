@@ -45,22 +45,23 @@
 <div class="footer">
   <ul>
     <li>
-    <a href="#"><span class="fa fa-envelope"></span> Email List</a>
+      <a href="#"><span class="fa fa-envelope"></span> Email List</a>
     </li>
     <li>
-    <a href="#"><span class="fa fa-facebook-square"></span> Facebook Page</a>
+      <a href="#"><span class="fa fa-facebook-square"></span> Facebook Page</a>
     </li>
     <li>
-    <a href="#"><span class="fa fa-money"></span> Donate</a>
+      <a href="#"><span class="fa fa-money"></span> Donate</a>
     </li>
     <li class="last">
-    {% if user.is_anonymous %}
-    <a href="{% url "login" %}"><span class="fa fa-sign-in"></span> Member Login</a>
-    {% else %}
-    <a href="{% url "logout" %}"><span class="fa fa-sign-out"></span> Logout</a>
-    {% endif %}
+      {% if user.is_anonymous %}
+      <a href="{% url "login" %}"><span class="fa fa-sign-in"></span> Member Login</a>
+      {% else %}
+      <a href="{% url "logout" %}"><span class="fa fa-sign-out"></span> Logout</a>
+      {% endif %}
     </li>
   </ul>
 </div>
+{% block bodyextra %}{% endblock %}
 </body>
 </html>
