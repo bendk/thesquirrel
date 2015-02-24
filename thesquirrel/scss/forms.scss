@@ -73,6 +73,11 @@ form {
         color: $red;
     }
 
+    .compact ul.errorlist {
+        float: none;
+        margin-left: 20%;
+    }
+
     .actions {
         margin-top: 3rem;
     }
@@ -86,25 +91,6 @@ form {
         }
         &.delete {
             @include button(delete);
-        }
-    }
-}
-
-fieldset.editor {
-    a.hint {
-        float: right;
-        @extend %small-text;
-        padding-right: 1rem;
-    }
-
-    .add-media {
-        padding: 0.6rem 0 0.6rem;
-        @extend %small-text;
-        span {
-            margin: 0 1rem;
-        }
-        button {
-            @include button(secondary, small);
         }
     }
 }

@@ -1,0 +1,23 @@
+fieldset.editor {
+    a.hint {
+        float: right;
+        @extend %small-text;
+        padding-right: 1rem;
+    }
+
+    ul.errorlist {
+        margin-top: 0;
+        float: left;
+    }
+
+    .add-media {
+        padding: 0.6rem 0 0.6rem;
+        @extend %small-text;
+        span {
+            margin: 0 1rem;
+        }
+        button {
+            @include button(secondary, small);
+        }
+    }
+}
