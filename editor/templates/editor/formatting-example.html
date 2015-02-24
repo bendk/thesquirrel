@@ -1,4 +1,11 @@
+{% load i18n %}
 <div class="editor-formatting-example">
-  <code>{{ source }}</code>
-  <div class="rendered">{{ rendered }}</div>
+  <code>
+    <div class="label">{% trans "source" %}</div>
+    {{ source }}
+  </code>
+  <div class="rendered">
+    {{ rendered }}
+    <div class="label"> {% trans "output" %}</div>
+  </div>
 </div>

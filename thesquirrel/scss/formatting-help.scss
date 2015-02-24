@@ -3,7 +3,7 @@
         display: block;
         font-family: monospace;
         border: 1px solid $gray;
-        padding: 1rem;
+        padding: 0 1rem 1rem 1rem;
         background: $lighter-gray;
         border-radius: 5px 5px 0 0;
     }
@@ -11,7 +11,14 @@
         border: 1px solid $gray;
         border-top: none;
         border-radius: 0 0 5px 5px;
-        padding: 1rem;
+        padding: 1rem 1rem 0 1rem;
     }
     padding-bottom: 4rem;
+
+    .label {
+        @extend %medium-text;
+        text-align: right;
+        color: $darkish-gray;
+    }
+
 }
