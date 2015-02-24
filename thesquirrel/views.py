@@ -17,7 +17,9 @@
 
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.utils.http import is_safe_url
 
 from docs.models import Document
 
@@ -29,7 +31,11 @@ def login(request):
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             auth.login(request, form.get_user())
-            return redirect("home")
+            next_url = request.GET.get('next')
+            if next_url and is_safe_url(next_url):
+                return HttpResponseRedirect(next_url)
+            else:
+                return redirect("home")
     else:
         form = AuthenticationForm(request)
     return render(request, 'registration/login.html', {
