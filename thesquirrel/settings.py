@@ -97,6 +97,7 @@ MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,
     'DOWNLOADS': {
         'jquery.js': 'http://code.jquery.com/jquery-2.1.3.js',
+        'jquery.form.js': 'http://malsup.github.com/jquery.form.js',
         'fontawesome': ('http://fortawesome.github.io/'
                         'Font-Awesome/assets/font-awesome-4.3.0.zip'),
     },
