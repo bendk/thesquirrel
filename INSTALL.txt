@@ -7,10 +7,11 @@ You'll need the following
   * gcc and other basic build tools
   * python development headers
   * MySQL development headers
+  * libjpeg development headers (for JPEG image support)
 
 This line should work on debian-based systems:
 
-apt-get install python python-virtualenv python-dev build-essential libmysqlclient-dev
+apt-get install python python-virtualenv python-dev build-essential libmysqlclient-dev libjpeg-dev
 
 ---------------------------
 Step 2: Create a virtualenv

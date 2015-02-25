@@ -31,7 +31,8 @@ DATABASES = {
         'PORT': MYSQL_PORT,
         'OPTIONS': {
             'init_command': 'SET storage_engine=INNODB',
-        }
+        },
+        'TEST_SERIALIZE': False,
     },
 }
 
@@ -91,7 +92,8 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_ARGS = ['--logging-filter=-django.db.backends.schema']
+NOSE_PLUGINS = ['thesquirrel.nose.TestPlugin']
+NOSE_ARGS = ['--logging-filter=-django.db.backends.schema,-factory']
 
 MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,
@@ -126,6 +128,8 @@ MEDIA_BUILDER = {
 # Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/user-media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'user-media')
 
 # Last step is to exec settings_override.py  This allows it to change any
 # settings defined here.
