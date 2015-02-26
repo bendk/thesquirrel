@@ -27,6 +27,13 @@ from PIL import Image
 
 ImageFileInfo = collections.namedtuple("ImageFileInfo", "path width")
 
+class EditorImageManager(models.Manager):
+    def create_from_file(self, fp):
+        pil_image = Image.open(fp)
+        instance = self.create(image_type=pil_image.format.lower())
+        instance.write_files(pil_image)
+        return instance
+
 class EditorImage(models.Model):
     """An image that's been uploaded into the editor.  """
     mtime = models.DateTimeField(default=timezone.now)
@@ -38,6 +45,8 @@ class EditorImage(models.Model):
         ('small', 250),
     ]
 
+    objects = EditorImageManager()
+
     def __unicode__(self):
         return 'EditorImage-{}.{}'.format(self.id, self.image_type)
 
@@ -47,27 +56,21 @@ class EditorImage(models.Model):
             yield ImageFileInfo(path, width)
 
     def filename(self):
-        return '{}.{}'.format(self.id, self.image_type)
+        return '{}.{}'.format(self.id, self.image_type.lower())
 
-    def write_files(self, stream):
-        """Write files to the user media directory
-
-        Args:
-            stream: input file stream
-        """
+    def write_files(self, pil_image):
+        """Write files to the user media directory """
         self._ensure_media_directories_exist()
-        stream.seek(0)
-        image = Image.open(stream)
         for image_info in self.image_files():
-            self.write_resized_image(image, image_info)
+            self.write_resized_image(pil_image, image_info)
 
-    def write_resized_image(self, image, image_info):
+    def write_resized_image(self, pil_image, image_info):
         if image_info.width is None:
-            image.save(open(image_info.path, 'w'), self.image_type)
+            pil_image.save(open(image_info.path, 'w'), self.image_type)
         else:
-            scale_factor = image_info.width / float(image.size[0])
-            height = int(round(image.size[1] * scale_factor))
-            resized = image.resize((image_info.width, height))
+            scale_factor = image_info.width / float(pil_image.size[0])
+            height = int(round(pil_image.size[1] * scale_factor))
+            resized = pil_image.resize((image_info.width, height))
             resized.save(open(image_info.path, 'w'), self.image_type)
 
     def delete(self):

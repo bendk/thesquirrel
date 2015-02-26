@@ -55,5 +55,9 @@ class TestPlugin(Plugin):
             (app_name, "migrations_not_used_in_tests")
             for app_name in settings.INSTALLED_APPS
         )
+        # Use a simple password hasher.  The default one is slow by design
+        settings.PASSWORD_HASHERS = [
+            'django.contrib.auth.hashers.MD5PasswordHasher'
+        ]
         settings.MEDIA_ROOT = os.path.join(settings.BASE_DIR, 'user-media',
                                            'test')

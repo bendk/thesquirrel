@@ -14,27 +14,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
-import json
+from factory.django import DjangoModelFactory
+import factory
 
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render
-from .models import EditorImage
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 
-@login_required
-def upload_image(request):
-    if 'file' not in request.FILES:
-        response_data = {
-            'error': 'no file given',
-        }
-    else:
-        image = EditorImage.objects.create_from_file(request.FILES['file'])
-        response_data = {
-            'imageId': image.id,
-        }
-    return HttpResponse(json.dumps(response_data),
-                        content_type='application/json')
+class UserFactory(DjangoModelFactory):
+    username = factory.Sequence(lambda n: 'user{}'.format(n))
+    email = factory.Sequence(lambda n: 'user{}@example.com'.format(n))
+    password = make_password('password')
 
-def formatting_help(request):
-    return render(request, 'editor/formatting-help.html')
+    class Meta:
+        model = User
+
+__all__ = [
+    name
+    for name, value in globals().items()
+    if isinstance(value, type) and issubclass(value, DjangoModelFactory)
+]

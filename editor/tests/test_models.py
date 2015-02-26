@@ -40,7 +40,8 @@ class EditorImageTest(TestCase):
         assert_false(os.path.exists(path))
 
     def test_image_creation(self):
-        image = EditorImageFactory(write_files=True)
+        image = EditorImage.objects.create_from_file(
+            make_image_file((1400, 1000), 'png'))
         # source image should be the size of the input image
         self.check_image_file('source/{}.png'.format(image.id), (1400, 1000))
         # full image is resized to 700px width max
@@ -49,7 +50,7 @@ class EditorImageTest(TestCase):
         self.check_image_file('small/{}.png'.format(image.id), (250, 179))
 
     def test_delete_object_removes_file(self):
-        image = EditorImageFactory(write_files=True)
+        image = EditorImage.objects.create_from_file(make_image_file())
         old_id = image.id
         image.delete()
         # source image should be the size of the input image

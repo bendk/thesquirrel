@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from cStringIO import StringIO
-
-import factory
+from django.core.files.base import ContentFile
 from factory.django import DjangoModelFactory
 from PIL import Image
+import factory
 
 from django.db import models
 from .fields import EditorTextField
@@ -33,12 +32,11 @@ class EditorImageFactory(DjangoModelFactory):
     class Meta:
         model = EditorImage
 
-    @factory.post_generation
-    def write_files(obj, create, extracted, **kwargs):
-        if extracted:
-            stream = StringIO()
-            Image.new('RGB', (1400, 1000)).save(stream, obj.image_type)
-            obj.write_files(stream)
+def make_image_file(size=(1000, 1000), image_type='png'):
+    fp = ContentFile('', 'image.' + image_type)
+    Image.new('RGB', size).save(fp, image_type)
+    fp.seek(0)
+    return fp
 
 class TestDocumentFactory(DjangoModelFactory):
     body = 'test-body'
@@ -52,3 +50,10 @@ class TestDocumentFactory(DjangoModelFactory):
                 EditorImageReference.objects.create(
                     image=image, content_object=obj)
 
+__all__ = [
+    name for name, value in globals().items()
+    if isinstance(value, type) and issubclass(value, factory.Factory)
+]
+__all__.extend([
+    'make_image_file',
+])
