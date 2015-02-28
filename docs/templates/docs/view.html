@@ -3,11 +3,11 @@
 <article>
   <h1>{{ document.title }}</h1>
   {{ document.render_body }}
+</article>
   {% if user.is_authenticated %}
   <div class="tools">
     <a href="{% url "docs:edit" document.slug %}">Edit Document</a>
   </div>
-</article>
 {% endif %}
 {% endblock %}
 

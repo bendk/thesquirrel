@@ -16,6 +16,7 @@
 
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 
 urlpatterns = patterns('',
@@ -30,4 +31,4 @@ urlpatterns = patterns('',
 if settings.DEV:
     urlpatterns += patterns('',
         url(r'^mediabuilder/', include('mediabuilder.urls', 'mediabuilder')),
-    )
+    ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

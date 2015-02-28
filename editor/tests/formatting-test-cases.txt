@@ -444,3 +444,47 @@ inline renderer works across lines
 <li><em>one two</em></li>
 </ul>
 .
+
+# Images
+
+basic image
+.
+#image-1-full
+.
+<figure class="full">
+<img src="/user-media/full/1.png">
+</figure>
+.
+
+other style
+.
+#image-1-left
+.
+<figure class="left">
+<img src="/user-media/small/1.png">
+</figure>
+.
+
+captions
+.
+#image-1-left
+#caption Caption Text
+.
+<figure class="left">
+<img src="/user-media/small/1.png">
+<figcaption>Caption Text</figcaption>
+</figure>
+.
+
+invalid id
+.
+#image-1000-full
+.
+.
+
+caption without image
+.
+#caption Caption
+.
+<p>Caption</p>
+.

@@ -10,8 +10,11 @@
 
 }
 
-article h1 {
-    border-bottom: 1px solid $light-gray;
+article {
+    @include group;
+    h1 {
+        border-bottom: 1px solid $light-gray;
+    }
 }
 
 code {

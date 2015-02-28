@@ -1,0 +1,18 @@
+figure {
+    margin: 0;
+    padding: 0 0 1em 0;
+
+    &.left {
+        float: left;
+        margin-right: 1em;
+    }
+
+    &.right {
+        float: right;
+        margin-left: 1em;
+    }
+
+    figcaption {
+        @extend %medium-text;
+    }
+}

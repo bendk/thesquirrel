@@ -58,6 +58,14 @@ class EditorImage(models.Model):
     def filename(self):
         return '{}.{}'.format(self.id, self.image_type.lower())
 
+    def url(self, style):
+        if style in ('left', 'right'):
+            directory = 'small'
+        else:
+            directory = 'full'
+        return '{}{}/{}'.format(settings.MEDIA_URL, directory,
+                                self.filename())
+
     def write_files(self, pil_image):
         """Write files to the user media directory """
         self._ensure_media_directories_exist()

@@ -21,6 +21,7 @@ import collections
 import re
 
 from . import inline
+from ..models import EditorImage
 
 # The first step of the processes is lexing.  We split the input string into a
 # list of tokens -- one per line.
@@ -70,6 +71,17 @@ class OrderedListItem(ListItem):
     open_tag = '<ol>'
     close_tag = '</ol>'
 
+class Image(ListItem):
+    rule = re.compile(r'#image-(\d+)-(\w+)\s*$')
+    def __init__(self, match):
+        self.image_id = match.group(1)
+        self.style = match.group(2)
+
+class Caption(ListItem):
+    rule = re.compile(r'#caption *(.*)$')
+    def __init__(self, match):
+        self.text = match.group(1)
+
 class EmptyLine(Token):
     rule = re.compile(r'\s*$')
 
@@ -90,6 +102,8 @@ class Lexer(object):
 
     # token in order of matching precedence
     token_classes = [
+        Image,
+        Caption,
         Heading,
         SubHeading,
         Quote,
@@ -250,6 +264,24 @@ class Renderer(object):
                 output.extend((nester.close_tag, '</li>\n'))
             else:
                 break
+
+    def render_image(self, lexer, output):
+        image_token = lexer.pop_next()
+        try:
+            image = EditorImage.objects.get(id=image_token.image_id)
+        except EditorImage.DoesNotExist:
+            return
+        output.append('<figure class="{}">\n'.format(image_token.style))
+        output.append('<img src="{}">\n'.format(image.url(image_token.style)))
+        if isinstance(lexer.next_token, Caption):
+            output.append('<figcaption>{}</figcaption>\n'.format(
+                lexer.pop_next().text))
+        output.append('</figure>\n')
+
+    def render_caption(self, lexer, output):
+        # We shouldn't get here since captions should be paired with images.
+        # If we do, just output a <p> tag.
+        output.append('<p>{}</p>\n'.format(lexer.pop_next().text))
 
     def render_emptyline(self, lexer, output):
         lexer.pop_next()

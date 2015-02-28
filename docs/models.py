@@ -20,19 +20,16 @@ from django.utils.safestring import mark_safe
 from django.db import models
 from django.utils import timezone
 
-
 from editor import formatting
+from editor.fields import EditorTextField
 
 class Document(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
     public = models.BooleanField(default=False)
-    body = models.TextField()
+    body = EditorTextField()
     created = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User)
 
     def __unicode__(self):
         return u'Document: {}'.format(self.title)
-
-    def render_body(self):
-        return mark_safe(formatting.render(self.body))

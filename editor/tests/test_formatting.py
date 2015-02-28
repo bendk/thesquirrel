@@ -22,6 +22,7 @@ import re
 from django.test import TestCase
 from nose.tools import *
 
+from editor.factories import *
 from editor.formatting import inline
 from editor.formatting import block
 
@@ -173,6 +174,10 @@ class MarkdownTestCaseReader(object):
             else:
                 last_line = line
 
+def setup_formatting_cases():
+    EditorImageFactory(id=1, image_type='png')
+
+@with_setup(setup_formatting_cases)
 def test_formatting_cases():
     reader = MarkdownTestCaseReader(os.path.join(os.path.dirname(__file__),
                                                  'formatting-test-cases.txt'))
