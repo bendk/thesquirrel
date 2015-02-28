@@ -15,7 +15,7 @@
     }
 
     li {
-        @include group;
+        @extend %group;
         padding: 0 1rem;
 
         &:nth-of-type(even) {

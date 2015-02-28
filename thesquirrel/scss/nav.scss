@@ -1,5 +1,5 @@
 nav#main {
-    @include group;
+    @extend %group;
     @extend %medium-text;
 
     top: 0;

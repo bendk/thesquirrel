@@ -1,5 +1,5 @@
 form {
-    @include group;
+    @extend %group;
     margin: 0;
     padding: 0 0 1em 0;
     padding: 2rem 1rem;
@@ -46,7 +46,7 @@ form {
 
         label {
             text-align: right;
-            @include group;
+            @extend %group;
         }
     }
 

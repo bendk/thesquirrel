@@ -1,5 +1,5 @@
 .heading {
-    @include group;
+    @extend %group;
     @extend %medium-text;
     background: url($static-url + 'images/heading.png') center top no-repeat #ffc600;
     border-bottom: 1px solid $gray;
@@ -76,7 +76,7 @@
             font-size: 1.4rem;
         }
         ul {
-            @include group;
+            @extend %group;
             list-style-type: none;
             float: right;
         }
