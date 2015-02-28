@@ -20,4 +20,32 @@ fieldset.editor {
             @include button(secondary, small);
         }
     }
+    .add-media-progress {
+        display: none;
+        position: relative;
+        height: 3.6rem;
+        border-radius: 5px;
+        border: 1px solid $light-gray;
+
+        .bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background: $light-yellow;
+            border-radius: 4px;
+        }
+        .text {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            @extend %medium-text;
+            text-align: center;
+            line-height: 3.6rem;
+        }
+    }
 }

@@ -100,6 +100,8 @@ MEDIA_BUILDER = {
     'DOWNLOADS': {
         'jquery.js': 'http://code.jquery.com/jquery-2.1.3.js',
         'jquery.form.js': 'http://malsup.github.com/jquery.form.js',
+        'jquery.cookie': ('https://github.com/carhartl/'
+                          'jquery-cookie/archive/v1.4.1.tar.gz'),
         'fontawesome': ('http://fortawesome.github.io/'
                         'Font-Awesome/assets/font-awesome-4.3.0.zip'),
     },
@@ -116,7 +118,10 @@ MEDIA_BUILDER = {
         'app.js': {
             'sources': [
                 'mediabuilder/downloads/jquery.js',
+                'mediabuilder/downloads/jquery.form.js',
+                'mediabuilder/downloads/jquery.cookie/jquery.cookie.js',
                 'thesquirrel/js/menus.js',
+                'editor/js/editor.js',
             ],
         },
     },
