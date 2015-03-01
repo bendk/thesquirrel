@@ -77,7 +77,7 @@ You can also set the link text:
 {% blocktrans %}
 Use the ">" char for quotations:
 
-> If there is no struggle there is no progress.
+> Those who profess to favor freedom and yet depreciate agitation, are people who want crops without ploughing the ground; they want rain without thunder and lightning; they want the ocean without the roar of its many waters. The struggle may be a moral one, or it may be a physical one, or it may be both. But it must be a struggle. Power concedes nothing without a demand. It never did and it never will.
 >
 > - Frederick Douglass
 
@@ -86,6 +86,23 @@ You can nest quotes as well:
 > Hi, how are you doing?
 >> I'm great, how are you?
 > Hunky Dory!
+{% endblocktrans %}
+{% endformattingexample %}
+
+  <h2>{% trans "Images" %}</h2>
+
+{% formattingexample %}
+{% blocktrans %}
+To add images, place the cursor where you want the image to appear then click one of the add media buttons.  This will insert something like this:
+
+#image-123-full
+
+* You can move the image using cut and paste
+* You can float the image left or right using the Preview / Adjust Images button
+* You can also add a caption:
+
+#image-123-full
+#caption A cute squirrel
 {% endblocktrans %}
 {% endformattingexample %}
 </article>

@@ -21,7 +21,7 @@ from django import template
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
-from .. import formatting
+from ..formatting import block
 
 register = template.Library()
 
@@ -31,6 +31,20 @@ def formattingexample(parser, token):
     parser.delete_first_token()
     return MarkdownExampleNode(nodelist)
 
+class ExampleRenderer(block.Renderer):
+    def render_image(self, lexer, output):
+        lexer.pop_next()
+        output.append('<figure class="full">\n')
+        output.append('<img src="/static/editor/squirrel.jpg">\n')
+        if isinstance(lexer.next_token, block.Caption):
+            output.append('<figcaption>{}</figcaption>\n'.format(
+                lexer.pop_next().text))
+        output.append('</figure>')
+
+def render_example(input_string):
+    lexer = block.Lexer(input_string)
+    return ExampleRenderer().render(lexer)
+
 class MarkdownExampleNode(template.Node):
     def __init__(self, nodelist):
         self.nodelist = nodelist
@@ -39,5 +53,5 @@ class MarkdownExampleNode(template.Node):
         source = unicode(self.nodelist.render(context)).strip()
         return render_to_string('editor/formatting-example.html', {
             'source': mark_safe(escape(source).replace('\n', '<br>')),
-            'rendered': mark_safe(formatting.render(source)),
+            'rendered': mark_safe(render_example(source)),
         })
