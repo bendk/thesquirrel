@@ -15,26 +15,25 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-import json
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from .models import EditorImage
+from . import formatting
 
 @login_required
 def upload_image(request):
     if 'file' not in request.FILES:
-        response_data = {
-            'error': 'no file given',
-        }
+        return JsonResponse({'error': 'no file given'})
     else:
         image = EditorImage.objects.create_from_file(request.FILES['file'])
-        response_data = {
-            'imageId': image.id,
-        }
-    return HttpResponse(json.dumps(response_data),
-                        content_type='application/json')
+        return JsonResponse({'imageId': image.id})
 
 def formatting_help(request):
     return render(request, 'editor/formatting-help.html')
+
+@login_required
+def preview(request):
+    body = request.GET.get('body', '')
+    return JsonResponse({'body': formatting.render(body)})

@@ -19,6 +19,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = patterns('editor.views',
     url(r'^upload-image/$', 'upload_image', name='upload-image'),
+    url(r'^preview/$', 'preview', name='preview'),
     url(r'^formatting-help/$', 'formatting_help', name='formatting-help'),
 )
 

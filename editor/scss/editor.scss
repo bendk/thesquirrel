@@ -11,13 +11,18 @@ fieldset.editor {
     }
 
     .add-media {
-        padding: 0.6rem 0 0.6rem;
+        padding: 0.6rem 0 0.6rem 0;
         @extend %small-text;
         span {
-            margin: 0 1rem;
+            margin-right: 1em;
         }
         button {
             @include button(secondary, small);
+
+            &.preview {
+                float: right;
+                margin-right: 0;
+            }
         }
     }
     .add-media-progress {
@@ -47,5 +52,37 @@ fieldset.editor {
             text-align: center;
             line-height: 3.6rem;
         }
+    }
+}
+
+#editor-preview-modal {
+    @extend %modal;
+    top: 10%;
+    left: 50%;
+    margin-left: -400px;
+
+    h2.title {
+        text-align: center;
+    }
+
+    button.close {
+        @include button(secondary, medium);
+        position: absolute;
+        right: 10px;
+        margin: 0;
+        top: 10px;
+        padding: 0.5rem;
+        border: none;
+    }
+    div.content {
+        overflow-y: auto;
+        height: 400px;
+        margin: 1rem 0;
+        padding: 0 50px;
+    }
+
+    div.body {
+        width: 700px;
+        margin: 0 auto;
     }
 }

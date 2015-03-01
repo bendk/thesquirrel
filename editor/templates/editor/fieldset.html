@@ -1,11 +1,12 @@
 {% load i18n %}
 <fieldset class="editor">
   <legend>{% trans "Body" %}</legend>
-  <a href="{% url "editor:formatting-help" %}" class="hint" target="_blank"><i class="fa fa-question-circle"></i> {% trans "formatting help" %}</a>
+  <a href="{% url "editor:formatting-help" %}" class="hint" target="_blank"><i class="fa fa-question-circle"></i>{% trans "formatting help" %}</a>
   {% include "field.html" with field=form.body %}
   <div class="add-media"><span>{% trans "Add Media:" %}</span>
     <button class="add-image"><i class="fa fa-camera"></i> {% trans "Image" %}</button>
     <button><i class="fa fa-film"></i> {% trans "Video" %}</button>
+    <button class="preview"><i class="fa fa-eye"></i> {% trans "Preview / Adjust Images" %}</button>
   </div>
   <div class="add-media-progress">
     <div class="bar"></div>
