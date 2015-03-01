@@ -24,8 +24,6 @@ from django.utils import timezone
 from .models import EditorImage, EditorImageReference
 from . import formatting
 
-find_image_re = re.compile('^#image(\d+)-', re.M)
-
 class EditorTextField(models.TextField):
     def contribute_to_class(self, cls, name):
         super(EditorTextField, self).contribute_to_class(cls, name)
@@ -34,13 +32,7 @@ class EditorTextField(models.TextField):
                 lambda self: safestring.mark_safe(
                     formatting.render(getattr(self, name))))
 
-    def find_images(self, text):
-        if text is None:
-            return []
-        else:
-            return [int(id_str) for id_str in find_image_re.findall(text)]
-
     def _on_post_save(self, sender, instance, created, **kwargs):
         text = getattr(instance, self.attname, None)
         EditorImageReference.update_for_content_object(
-            instance, self.find_images(text), created)
+            instance, text, created)

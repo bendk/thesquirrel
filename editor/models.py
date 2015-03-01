@@ -25,6 +25,8 @@ from django.db import models
 from django.utils import timezone
 from PIL import Image
 
+from .formatting.utils import find_images
+
 ImageFileInfo = collections.namedtuple("ImageFileInfo", "path width")
 
 class EditorImageManager(models.Manager):
@@ -130,8 +132,9 @@ class EditorImageReference(models.Model):
     objects = models.Manager.from_queryset(EditorImageReferenceQuerySet)()
 
     @staticmethod
-    def update_for_content_object(content_object, new_image_ids,
+    def update_for_content_object(content_object, text,
                                   just_created=False):
+        new_image_ids = find_images(text)
         if just_created:
             old_image_ids = set([])
         else:
