@@ -27,7 +27,10 @@ def upload_image(request):
     if 'file' not in request.FILES:
         return JsonResponse({'error': 'no file given'})
     else:
-        image = EditorImage.objects.create_from_file(request.FILES['file'])
+        try:
+            image = EditorImage.objects.create_from_file(request.FILES['file'])
+        except Exception, e:
+            return JsonResponse({'error': str(e)})
         return JsonResponse({'imageId': image.id})
 
 def formatting_help(request):
