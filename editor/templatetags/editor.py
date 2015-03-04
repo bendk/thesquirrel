@@ -41,10 +41,7 @@ class ExampleRenderer(block.Renderer):
                 lexer.pop_next().text))
         output.append('</figure>')
 
-def render_example(input_string):
-    lexer = block.Lexer(input_string)
-    return ExampleRenderer().render(lexer)
-
+_example_renderer = ExampleRenderer()
 class MarkdownExampleNode(template.Node):
     def __init__(self, nodelist):
         self.nodelist = nodelist
@@ -53,5 +50,5 @@ class MarkdownExampleNode(template.Node):
         source = unicode(self.nodelist.render(context)).strip()
         return render_to_string('editor/formatting-example.html', {
             'source': mark_safe(escape(source).replace('\n', '<br>')),
-            'rendered': mark_safe(render_example(source)),
+            'rendered': mark_safe(_example_renderer.render(source)),
         })
