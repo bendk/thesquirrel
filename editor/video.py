@@ -56,6 +56,7 @@ class HTML5VideoRule(object):
 
 video_rules = [
     VideoHostRule('youtube', 'youtube.com', r'.*?v=(?P<video_id>[\w-]+)'),
+    VideoHostRule('youtube', 'youtu.be', r'/(?P<video_id>[\w-]+)'),
     VideoHostRule('vimeo', 'vimeo.com', r'/(channels/\w+/)?(?P<video_id>\d+)'),
     VideoHostRule('dailymotion', 'dailymotion.com',
                   r'/video/(?P<video_id>[\w-]+)'),
