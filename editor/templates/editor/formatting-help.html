@@ -25,13 +25,15 @@ Separate paragraphs with empty lines
 {% blocktrans %}
 # Use the hash symbol to create headings
 ## Two hashes creates a subheading
+
+Make sure to put at least one space after the "#"
 {% endblocktrans %}
 {% endformattingexample %}
 
   <h2>{% trans "Lists" %}</h2>
 {% formattingexample %}
 {% blocktrans %}
-Use bullet points for lists:
+Use "*" for lists:
 
 * Apple
 * Banana
@@ -42,6 +44,8 @@ Dashes also work:
 - Juice
 - Coffee
 - Water
+
+Make sure to put at least one space after the list character.
 {% endblocktrans %}
 {% endformattingexample %}
 
@@ -105,5 +109,6 @@ To add images, place the cursor where you want the image to appear then click on
 #caption A cute squirrel
 {% endblocktrans %}
 {% endformattingexample %}
+
 </article>
 {% endblock %}
