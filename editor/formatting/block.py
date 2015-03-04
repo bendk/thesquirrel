@@ -21,6 +21,7 @@ import collections
 import re
 
 from . import inline
+from .. import video
 from ..models import EditorImage
 
 # The first step of the processes is lexing.  We split the input string into a
@@ -82,6 +83,11 @@ class Caption(ListItem):
     def __init__(self, match):
         self.text = match.group(1)
 
+class Video(ListItem):
+    rule = re.compile(r'#video-([^\s]+)\s*$')
+    def __init__(self, match):
+        self.url = match.group(1)
+
 class EmptyLine(Token):
     rule = re.compile(r'\s*$')
 
@@ -104,6 +110,7 @@ class Lexer(object):
     token_classes = [
         Image,
         Caption,
+        Video,
         Heading,
         SubHeading,
         Quote,
@@ -288,6 +295,9 @@ class Renderer(object):
 
     def render_image_extra(self, image, image_token, output):
         pass
+
+    def render_video(self, lexer, output):
+        output.append(video.render_video_for_url(lexer.pop_next().url))
 
     def render_emptyline(self, lexer, output):
         lexer.pop_next()
