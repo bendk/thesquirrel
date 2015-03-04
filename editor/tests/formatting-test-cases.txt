@@ -493,7 +493,7 @@ caption without image
 
 HTML5 video
 .
-#video-http://example.com/1.mp4
+[http://example.com/1.mp4]
 .
 <video id="ce9804b6e0614cdd046189d6f16f4431" class="video-js vjs-default-skin" controls>
   <source src="http://example.com/1.mp4" />
@@ -502,7 +502,7 @@ HTML5 video
 
 Youtube Video
 .
-#video-http://www.youtube.com/?v=123
+[http://www.youtube.com/?v=123]
 .
 <div class="video-iframe-wrapper">
   <iframe src="http://www.youtube.com/embed/123" frameborder="0" allowfullscreen></iframe>
@@ -511,7 +511,7 @@ Youtube Video
 
 Youtu.be Video
 .
-#video-http://www.youtu.be/123
+[http://www.youtu.be/123]
 .
 <div class="video-iframe-wrapper">
   <iframe src="http://www.youtube.com/embed/123" frameborder="0" allowfullscreen></iframe>
@@ -520,7 +520,7 @@ Youtu.be Video
 
 Vimeo Video
 .
-#video-https://vimeo.com/channels/staffpicks/123
+[https://vimeo.com/channels/staffpicks/123]
 .
 <div class="video-iframe-wrapper">
   <iframe src="//player.vimeo.com/video/123" frameborder="0" allowfullscreen></iframe>
@@ -529,10 +529,9 @@ Vimeo Video
 
 Dailymotion Video
 .
-#video-http://www.dailymotion.com/video/video-id
+[http://www.dailymotion.com/video/video-id]
 .
 <div class="video-iframe-wrapper">
   <iframe src="//www.dailymotion.com/embed/video/video-id" frameborder="0" allowfullscreen></iframe>
 </div>
 .
-

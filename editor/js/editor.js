@@ -14,12 +14,12 @@ function editorUploadImage(fieldset, textarea) {
     var addMedia = $('.add-media', fieldset);
     var addMediaProgress = $('.add-media-progress', fieldset);
     var addMediaProgressBar = $('.bar', addMediaProgress);
-    var addImage = $('button.add-image', fieldset);
+    var uploadImage = $('button.upload-image', fieldset);
     var uploadFile = $('<input type="file" name="file">');
     var uploadFileForm = $('<form>').append(uploadFile);
     body.append(uploadFileForm);
 
-    addImage.click(function() {
+    uploadImage.click(function() {
         uploadFile.click();
         return false;
     });

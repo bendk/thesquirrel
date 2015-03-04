@@ -84,7 +84,7 @@ class Caption(ListItem):
         self.text = match.group(1)
 
 class Video(ListItem):
-    rule = re.compile(r'#video-([^\s]+)\s*$')
+    rule = re.compile(r'\[ *([^\s]+) *]$')
     def __init__(self, match):
         self.url = match.group(1)
 
@@ -121,7 +121,7 @@ class Lexer(object):
     ]
 
     def __init__(self, input_string):
-        self.lines = input_string.split('\n')
+        self.lines = input_string.splitlines()
         self.pos = 0
         self.calc_next()
 
