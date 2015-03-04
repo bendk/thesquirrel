@@ -53,6 +53,13 @@ fieldset.editor {
             line-height: 3.6rem;
         }
     }
+
+    @media screen and (max-width: $content-width + 150px) {
+        button.preview {
+            display: none;
+        }
+
+    }
 }
 
 #editor-preview-modal {
@@ -82,7 +89,7 @@ fieldset.editor {
     }
 
     div.body {
-        width: 700px;
+        width: $content-width;
         margin: 0 auto;
     }
 
@@ -122,5 +129,4 @@ fieldset.editor {
             margin-right: 0;
         }
     }
-
 }
