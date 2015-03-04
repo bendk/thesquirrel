@@ -41,10 +41,26 @@ class EditorImage(models.Model):
     mtime = models.DateTimeField(default=timezone.now)
     image_type = models.CharField(max_length=16)
 
-    IMAGE_RESIZE_INFO = [
+    # Info on how to resize images in the form of (size, width) tuples
+    IMAGE_SIZES = [
         ('source', None),
         ('full', 700),
         ('small', 250),
+    ]
+    # Info on image styles
+    IMAGE_STYLES = [
+        {
+            'class': 'full',
+            'size': 'full',
+        },
+        {
+            'class': 'left',
+            'size': 'small',
+        },
+        {
+            'class': 'right',
+            'size': 'small',
+        },
     ]
 
     objects = EditorImageManager()
@@ -53,20 +69,23 @@ class EditorImage(models.Model):
         return 'EditorImage-{}.{}'.format(self.id, self.image_type)
 
     def image_files(self):
-        for name, width in self.IMAGE_RESIZE_INFO:
+        for name, width in self.IMAGE_SIZES:
             path = os.path.join(settings.MEDIA_ROOT, name, self.filename())
             yield ImageFileInfo(path, width)
 
     def filename(self):
         return '{}.{}'.format(self.id, self.image_type.lower())
 
-    def url(self, style):
-        if style in ('left', 'right'):
-            directory = 'small'
-        else:
-            directory = 'full'
+    def url(self, style_name):
+        directory = self.image_size(style_name)
         return '{}{}/{}'.format(settings.MEDIA_URL, directory,
                                 self.filename())
+
+    def image_size(self, style_name):
+        for style in self.IMAGE_STYLES:
+            if style['class'] == style_name:
+                return style['size']
+        raise ValueError("Unkwnown style: {}".format(style))
 
     def write_files(self, pil_image):
         """Write files to the user media directory """
@@ -102,7 +121,7 @@ class EditorImage(models.Model):
             obj.delete()
 
     def _ensure_media_directories_exist(self):
-        for name, width in self.IMAGE_RESIZE_INFO:
+        for name, width in self.IMAGE_SIZES:
             path = os.path.join(settings.MEDIA_ROOT, name)
             if not os.path.exists(path):
                 os.makedirs(path)

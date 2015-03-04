@@ -85,4 +85,42 @@ fieldset.editor {
         width: 700px;
         margin: 0 auto;
     }
+
+    figure {
+        position: relative;
+        ul.adjustments {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0;
+
+            li {
+                display: inline;
+            }
+        }
+        &:hover ul.adjustments {
+            display: block;
+        }
+        button {
+            @include button('secondary', 'small');
+            border-radius: 0;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: $white;
+            margin-right: 0;
+            &:hover {
+                background: lighten($primary, 8%);
+            }
+            &.active {
+                background: $primary;
+                border-color: $primary;
+                color: $white;
+            }
+        }
+        li:last-of-type button {
+            margin-right: 0;
+        }
+    }
+
 }

@@ -75,7 +75,7 @@ class Image(ListItem):
     rule = re.compile(r'#image-(\d+)-(\w+)\s*$')
     def __init__(self, match):
         self.image_id = match.group(1)
-        self.style = match.group(2)
+        self.style_class = match.group(2)
 
 class Caption(ListItem):
     rule = re.compile(r'#caption *(.*)$')
@@ -151,7 +151,8 @@ class Renderer(object):
         return getattr(self, 'render_{}'.format(
             token_class.__name__.lower()))
 
-    def render(self, lexer):
+    def render(self, input_string):
+        lexer = Lexer(input_string)
         output = []
         while not isinstance(lexer.next_token, EOS):
             self.render_map[lexer.next_token.__class__](lexer, output)
@@ -271,11 +272,13 @@ class Renderer(object):
             image = EditorImage.objects.get(id=image_token.image_id)
         except EditorImage.DoesNotExist:
             return
-        output.append('<figure class="{}">\n'.format(image_token.style))
-        output.append('<img src="{}">\n'.format(image.url(image_token.style)))
+        output.append('<figure class="{}">\n'.format(image_token.style_class))
+        output.append('<img src="{}">\n'.format(image.url(
+            image_token.style_class)))
         if isinstance(lexer.next_token, Caption):
             output.append('<figcaption>{}</figcaption>\n'.format(
                 lexer.pop_next().text))
+        self.render_image_extra(image, image_token, output)
         output.append('</figure>\n')
 
     def render_caption(self, lexer, output):
@@ -283,10 +286,12 @@ class Renderer(object):
         # If we do, just output a <p> tag.
         output.append('<p>{}</p>\n'.format(lexer.pop_next().text))
 
+    def render_image_extra(self, image, image_token, output):
+        pass
+
     def render_emptyline(self, lexer, output):
         lexer.pop_next()
 
 _renderer = Renderer()
 def render(input_string):
-    lexer = Lexer(input_string)
-    return _renderer.render(lexer)
+    return _renderer.render(input_string)

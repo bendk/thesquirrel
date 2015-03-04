@@ -50,10 +50,11 @@ $(document).ready(function() {
 
     function editorPreview(fieldset, textarea) {
         var preview = $('button.preview', fieldset);
+        var modal = $('#editor-preview-modal');
+        var modalBody = $('div.body', modal);
         preview.click(function() {
             var overlay = $('<div id="overlay">');
             $('body').append(overlay);
-            var modal = $('#editor-preview-modal');
             modal.show();
             $('button.close', modal).click(function() {
                 modal.hide();
@@ -70,10 +71,25 @@ $(document).ready(function() {
                 },
                 success: function(responseData) {
                     $('i.fa-spinner', modal).hide();
-                    $('div.body', modal).html(responseData['body']);
+                    modalBody.html(responseData['body']);
+                    $('figure', modalBody).each(function(i) {
+                        editorPreviewImage(this, textarea, i);
+                    });
                 }
             });
             return false;
+        });
+    }
+
+    var imageRE = /^(#image-\d+-\w+ *)$/m;
+    function editorPreviewImage(figureElt, textarea, index) {
+        $('button', figureElt).click(function() {
+            figureElt.className = $(this).data('class');
+            $('img', figureElt).attr('src', $(this).data('url'));
+            // Insert tag in our textarea
+            var textParts = textarea.val().split(imageRE);
+            textParts[1 + index * 2] = $(this).data('tag');
+            textarea.val(textParts.join(""));
         });
     }
 

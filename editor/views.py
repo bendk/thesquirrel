@@ -19,8 +19,10 @@ from __future__ import absolute_import
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.utils.translation import gettext as _
+
 from .models import EditorImage
-from . import formatting
+from .formatting import block
 
 @login_required
 def upload_image(request):
@@ -36,7 +38,26 @@ def upload_image(request):
 def formatting_help(request):
     return render(request, 'editor/formatting-help.html')
 
+class PreviewRenderer(block.Renderer):
+    def render_image_extra(self, image, image_token, output):
+        output.append('<ul class="adjustments">\n')
+        for style in EditorImage.IMAGE_STYLES:
+            output.append('<li>')
+            output.append('<button ')
+            if image_token.style_class == style['class']:
+                output.append('class="active" ')
+            output.append('data-class="{}" '.format(style['class']))
+            output.append('data-url="{}" '.format(image.url(style['class'])))
+            output.append('data-tag="#image-{}-{}">'.format(
+                image.id, style['class']))
+            output.append(style['class'])
+            output.append('</button></li>')
+        output.append('</ul>\n')
+
+_preview_renderer = PreviewRenderer()
 @login_required
 def preview(request):
     body = request.GET.get('body', '')
-    return JsonResponse({'body': formatting.render(body)})
+    return JsonResponse({
+        'body': _preview_renderer.render(body),
+    })
