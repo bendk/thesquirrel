@@ -41,12 +41,42 @@ function editorUploadImage(fieldset, textarea) {
                     addMedia.show();
                     addMediaProgress.hide();
                     textarea.prop('disabled', false);
-                    insertAtCaret(textarea, '#image-' + 
-                        responseData['imageId'] + '-full\n\n');
+                    insertImageTag(responseData['imageId']);
                 }
             });
         }
     });
+
+    function insertImageTag(imageId) {
+        var toInsert = '#image-' + imageId + '-full';
+        var text = textarea.val();
+        if(textarea[0].selectionStart) {
+            var pos = textarea[0].selectionStart;
+        } else {
+            var pos = 0;
+        }
+        function lineStartAt(pos) {
+            return (pos < 1 || pos > text.length || text[pos-1] == "\n");
+        }
+        // Move back until we find a newline
+        while(!lineStartAt(pos)) {
+            pos--;
+        }
+        // Check if we need to add newline before
+        if(!lineStartAt(pos-1)) {
+            toInsert = '\n' + toInsert;
+        }
+        // Check if we need to add a newline or two after
+        if(!lineStartAt(pos+2)) {
+            toInsert += '\n';
+            if(!lineStartAt(pos+1)) {
+                toInsert += '\n';
+            }
+        }
+        textarea.val(text.substring(0, pos) + toInsert +
+                text.substring(pos, text.length));
+        textarea[0].selectionStart = textarea[0].selectionEnd = pos;
+    }
 }
 
 function editorPreview(fieldset, textarea) {
@@ -92,30 +122,6 @@ function editorPreviewImage(figureElt, textarea, index) {
         textParts[1 + index * 2] = $(this).data('tag');
         textarea.val(textParts.join(""));
     });
-}
-
-function insertAtCaret(textarea, insertText) {
-    textarea = textarea[0];
-    if (document.selection) {
-        textarea.focus();
-        sel = document.selection.createRange();
-        sel.text = insertText;
-        textarea.focus();
-    } else if (textarea.selectionStart || textarea.selectionStart == '0') {
-        var startPos = textarea.selectionStart;
-        var endPos = textarea.selectionEnd;
-        var scrollTop = textarea.scrollTop;
-        textarea.value = (textarea.value.substring(0, startPos) +
-                insertText +
-                textarea.value.substring(endPos,textarea.value.length));
-        textarea.focus();
-        textarea.selectionStart = startPos + insertText.length;
-        textarea.selectionEnd = startPos + insertText.length;
-        textarea.scrollTop = scrollTop;
-    } else {
-        textarea.value += insertText;
-        textarea.focus();
-    }
 }
 
 });
