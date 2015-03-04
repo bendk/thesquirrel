@@ -24,6 +24,9 @@ class DocumentForm(forms.ModelForm):
         (False, 'Members Only'),
         (True, 'Public'),
     ))
+    slug = forms.CharField(label=_('URL'), widget=forms.TextInput(attrs={
+        'data-slug-for': 'title'
+    }))
 
     class Meta:
         model = Document

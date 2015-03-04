@@ -23,9 +23,9 @@ urlpatterns = patterns('',
     url(r'^$', 'thesquirrel.views.home', name='home'),
     url(r'^login/$', 'thesquirrel.views.login', name='login'),
     url(r'^logout/$', 'thesquirrel.views.logout', name='logout'),
-    url(r'^docs/', include('docs.urls', 'docs')),
     url(r'^editor/', include('editor.urls', 'editor')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('docs.urls', 'docs')),
 )
 
 if settings.DEV:
