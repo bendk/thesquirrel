@@ -21,6 +21,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 
+from . import config
 from .models import EditorImage
 from .formatting import block
 
@@ -41,7 +42,7 @@ def formatting_help(request):
 class PreviewRenderer(block.Renderer):
     def render_image_extra(self, image, image_token, output):
         output.append('<ul class="adjustments">\n')
-        for style in EditorImage.IMAGE_STYLES:
+        for style in config.IMAGE_STYLES:
             output.append('<li>')
             output.append('<button ')
             if image_token.style_class == style['class']:

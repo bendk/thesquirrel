@@ -26,6 +26,7 @@ from django.utils import timezone
 from PIL import Image
 
 from .formatting.utils import find_images
+from . import config
 
 ImageFileInfo = collections.namedtuple("ImageFileInfo", "path width")
 
@@ -41,35 +42,13 @@ class EditorImage(models.Model):
     mtime = models.DateTimeField(default=timezone.now)
     image_type = models.CharField(max_length=16)
 
-    # Info on how to resize images in the form of (size, width) tuples
-    IMAGE_SIZES = [
-        ('source', None),
-        ('full', 700),
-        ('small', 250),
-    ]
-    # Info on image styles
-    IMAGE_STYLES = [
-        {
-            'class': 'full',
-            'size': 'full',
-        },
-        {
-            'class': 'left',
-            'size': 'small',
-        },
-        {
-            'class': 'right',
-            'size': 'small',
-        },
-    ]
-
     objects = EditorImageManager()
 
     def __unicode__(self):
         return 'EditorImage-{}.{}'.format(self.id, self.image_type)
 
     def image_files(self):
-        for name, width in self.IMAGE_SIZES:
+        for name, width in config.IMAGE_SIZES:
             path = os.path.join(settings.MEDIA_ROOT, name, self.filename())
             yield ImageFileInfo(path, width)
 
@@ -82,7 +61,7 @@ class EditorImage(models.Model):
                                 self.filename())
 
     def image_size(self, style_name):
-        for style in self.IMAGE_STYLES:
+        for style in config.IMAGE_STYLES:
             if style['class'] == style_name:
                 return style['size']
         raise ValueError("Unkwnown style: {}".format(style))
@@ -121,7 +100,7 @@ class EditorImage(models.Model):
             obj.delete()
 
     def _ensure_media_directories_exist(self):
-        for name, width in self.IMAGE_SIZES:
+        for name, width in config.IMAGE_SIZES:
             path = os.path.join(settings.MEDIA_ROOT, name)
             if not os.path.exists(path):
                 os.makedirs(path)
