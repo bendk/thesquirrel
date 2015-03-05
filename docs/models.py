@@ -16,11 +16,9 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.contrib.auth.models import User
-from django.utils.safestring import mark_safe
 from django.db import models
 from django.utils import timezone
 
-from editor import formatting
 from editor.fields import EditorTextField
 
 class Document(models.Model):
