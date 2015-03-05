@@ -58,13 +58,16 @@ function editorUploadImage(fieldset, textarea) {
         function lineStartAt(pos) {
             return (pos < 1 || pos > text.length || text[pos-1] == "\n");
         }
-        // Move back until we find a newline
+        // Move forward until we find a newline
         while(!lineStartAt(pos)) {
-            pos--;
+            pos++;
         }
         // Check if we need to add newline before
         if(!lineStartAt(pos-1)) {
             toInsert = '\n' + toInsert;
+            if(!lineStartAt(pos-2)) {
+                toInsert = '\n' + toInsert;
+            }
         }
         // Check if we need to add a newline or two after
         if(!lineStartAt(pos+2)) {

@@ -27,5 +27,8 @@ class Article(models.Model):
     created = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User)
 
+    class Meta:
+        ordering = ['-id']
+
     def __unicode__(self):
         return u'Article: {}'.format(self.title)
