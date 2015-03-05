@@ -17,6 +17,7 @@
 import collections
 from datetime import timedelta
 import os
+import re
 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -25,8 +26,15 @@ from django.db import models
 from django.utils import timezone
 from PIL import Image
 
-from .formatting.utils import find_images
 from . import config
+
+find_image_re = re.compile('^#image(\d+)-', re.M)
+def find_images(text):
+    """Get the list of image ids in a text block."""
+    if text is None:
+        return []
+    else:
+        return [int(id_str) for id_str in find_image_re.findall(text)]
 
 ImageFileInfo = collections.namedtuple("ImageFileInfo", "path width")
 
