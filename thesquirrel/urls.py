@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'thesquirrel.views.logout', name='logout'),
     url(r'^editor/', include('editor.urls', 'editor')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^articles/', include('articles.urls', 'articles')),
     url(r'^', include('docs.urls', 'docs')),
 )
 

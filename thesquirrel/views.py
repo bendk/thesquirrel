@@ -21,10 +21,17 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
 
+from articles.models import Article
 from docs.models import Document
 
 def home(request):
-    return render(request, 'home.html')
+    try:
+        topstory = Article.objects.all()[0]
+    except IndexError:
+        topstory = None
+    return render(request, 'home.html', {
+        'topstory': topstory
+    })
 
 def login(request):
     if request.method == 'POST':

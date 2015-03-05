@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans "Title" %}</legend>
+    {% include "field.html" with field=form.title %}
+  </fieldset>
+  {% include "editor/fieldset.html" %}
+  <div class="actions">
+    <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
+    {% if enable_delete %}
+    <button class="delete" name="delete" value="1">{% trans "Delete" %}</button>
+    {% endif %}
+    <button class="submit">{{ submit_text }}</button>
+  </div>
+</form>
+{% endblock %}
+{% block bodyextra %}{% include "editor/preview-modal.html" %}{% endblock %}

@@ -5,7 +5,7 @@
   <ul aria-hidden="true">
     <li><a href="#"><i class="fa fa-fw fa-calendar"></i> add event</a></li>
     <li><a href="{% url "docs:create" %}?return_url={{ request.path }}"><i class="fa fa-fw fa-file-text"></i> add document</a></li>
-    <li><a href="#"><i class="fa fa-fw fa-newspaper-o"></i> add blog post</a></li>
+    <li><a href="{% url "articles:create" %}"><i class="fa fa-fw fa-newspaper-o"></i> write blog post</a></li>
     <li><a href="{% url "docs:index" %}"><i class="fa fa-fw fa-folder"></i> member docs</a></li>
     <li><a href="#"><i class="fa fa-fw fa-user-plus"></i> invite member</a></li>
     <li><a href="#"><i class="fa fa-fw fa-user"></i> my account</a></li>

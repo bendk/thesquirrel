@@ -48,6 +48,7 @@ LOGIN_REDIRECT_URL = 'home'
 
 INSTALLED_APPS = (
     # our apps
+    'articles',
     'docs',
     'editor',
     'mediabuilder',

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<article>
+  <h1>{{ article.title }}</h1>
+  {{ article.render_body }}
+</article>
+  {% if user.is_authenticated %}
+  <div class="tools">
+    <a href="{% url "articles:edit" article.id %}">Edit Article</a>
+  </div>
+{% endif %}
+{% endblock %}
+

@@ -72,43 +72,13 @@
 {% endblock %}
 
 {% block content %}
+{% if topstory %}
 <article>
-  <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
-  <p>
-  Integer vestibulum efficitur eros vitae lacinia. Nam sagittis nec tellus ac
-  faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada
-  fames ac turpis egestas. Maecenas sit amet velit tortor. Phasellus non augue
-  sit amet ante suscipit pulvinar. Cum sociis natoque penatibus et magnis dis
-  parturient montes, nascetur ridiculus mus. Praesent sed semper orci. Cras ac
-  erat placerat, gravida enim a, vehicula ex. Sed lectus enim, vehicula a felis
-  et, egestas tempor velit. Integer vel diam sit amet mauris consectetur
-  imperdiet. Etiam laoreet rutrum porttitor. Aliquam et magna quis mi ultrices
-  blandit. Sed sit amet dui id massa tincidunt consectetur. In quis sodales erat,
-  convallis dignissim ex.
-  </p>
-  <p>
-  Integer vestibulum efficitur eros vitae lacinia. Nam sagittis nec tellus ac
-  faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada
-  fames ac turpis egestas. Maecenas sit amet velit tortor. Phasellus non augue
-  sit amet ante suscipit pulvinar. Cum sociis natoque penatibus et magnis dis
-  parturient montes, nascetur ridiculus mus. Praesent sed semper orci. Cras ac
-  erat placerat, gravida enim a, vehicula ex. Sed lectus enim, vehicula a felis
-  et, egestas tempor velit. Integer vel diam sit amet mauris consectetur
-  imperdiet. Etiam laoreet rutrum porttitor. Aliquam et magna quis mi ultrices
-  blandit. Sed sit amet dui id massa tincidunt consectetur. In quis sodales erat,
-  convallis dignissim ex.
-  </p>
-  <p>
-  Integer vestibulum efficitur eros vitae lacinia. Nam sagittis nec tellus ac
-  faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada
-  fames ac turpis egestas. Maecenas sit amet velit tortor. Phasellus non augue
-  sit amet ante suscipit pulvinar. Cum sociis natoque penatibus et magnis dis
-  parturient montes, nascetur ridiculus mus. Praesent sed semper orci. Cras ac
-  erat placerat, gravida enim a, vehicula ex. Sed lectus enim, vehicula a felis
-  et, egestas tempor velit. Integer vel diam sit amet mauris consectetur
-  imperdiet. Etiam laoreet rutrum porttitor. Aliquam et magna quis mi ultrices
-  blandit. Sed sit amet dui id massa tincidunt consectetur. In quis sodales erat,
-  convallis dignissim ex.
-  </p>
+  <h2>{{ topstory.title }}</h2>
+  {{ topstory.render_body }}
 </article>
+<a class="button" href="{% url "articles:index" %}">All Blog Posts</a>
+{% else %}
+<h2>{% trans "No blog posts" %}</h2>
+{% endif %}
 {% endblock %}
