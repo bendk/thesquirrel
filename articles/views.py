@@ -17,21 +17,36 @@
 from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
 from .forms import ArticleForm
 from .models import Article
 
-@login_required
 def index(request):
+    paginator = Paginator(Article.objects.all(), 10)
+    try:
+        articles = paginator.page(request.GET.get('page', 1))
+    except PageNotAnInteger:
+        articles = paginator.page(1)
+    except EmptyPage:
+        articles = paginator.page(paginator.num_pages)
+
+    if request.is_ajax():
+        return JsonResponse({
+            'page': render_to_string('articles/_page.html', {
+                'articles': articles
+            }),
+            'has_next': articles.has_next(),
+        })
     return render(request, 'articles/index.html', {
-        'articles': Article.objects.all(),
+        'articles': articles
     })
 
-@login_required
 def view(request, id):
     article = get_object_or_404(Article, id=id)
     return render(request, 'articles/view.html', {

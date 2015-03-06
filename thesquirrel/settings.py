@@ -125,6 +125,7 @@ MEDIA_BUILDER = {
                 'mediabuilder/downloads/jquery.form.js',
                 'mediabuilder/downloads/jquery.cookie/jquery.cookie.js',
                 'mediabuilder/downloads/video.js',
+                'thesquirrel/js/pagination.js',
                 'thesquirrel/js/urlify.js',
                 'thesquirrel/js/autoslug.js',
                 'thesquirrel/js/menus.js',

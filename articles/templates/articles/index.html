@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-{% for article in articles %}
-<article>
-  <h2><a href="{% url "articles:view" article.id %}">{{ article.title }}</a></h2>
-  {{ article.render_body }}
-</article>
-{% endfor %}
+{% include "articles/_page.html" %}
+{% if articles.has_next %}
+<button class="show-more">{% trans "Show More" %}</button>
+{% endif %}
 {% endblock %}

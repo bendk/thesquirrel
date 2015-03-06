@@ -1,0 +1,6 @@
+{% for article in articles %}
+<article>
+  <h2><a href="{% url "articles:view" article.id %}">{{ article.title }}</a></h2>
+  {{ article.render_body }}
+</article>
+{% endfor %}
