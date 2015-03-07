@@ -52,6 +52,18 @@ class Bundle(object):
     def source_path(self, source):
         return os.path.normpath(os.path.join(settings.BASE_DIR, source))
 
+    def source_paths(self):
+        paths = []
+        already_added = set()
+        for source in self.bundle_info['sources']:
+            glob_paths = glob.glob(self.source_path(source))
+            if glob_paths:
+                paths.extend(p for p in glob_paths if p not in already_added)
+                already_added.update(glob_paths)
+            else:
+                raise ValueError("no files matching {}".format(source))
+        return paths
+
     def dest_path(self):
         return mediabuilder.path('static', self.name)
 
@@ -73,16 +85,6 @@ class Bundle(object):
 class JSBundle(Bundle):
     settings_key = 'JS_BUNDLES'
 
-    def source_paths(self):
-        paths = []
-        for source in self.bundle_info['sources']:
-            glob_paths = glob.glob(self.source_path(source))
-            if glob_paths:
-                paths.extend(glob_paths)
-            else:
-                raise ValueError("no files matching {}".format(source))
-        return paths
-
     def build_content(self):
         js_source = [open(path).read() for path in self.source_paths()]
         return slimit.minify(''.join(js_source), mangle=True,
@@ -90,9 +92,6 @@ class JSBundle(Bundle):
 
 class SassBundle(Bundle):
     settings_key = 'SASS_BUNDLES'
-
-    def source_paths(self):
-        return [self.source_path(self.bundle_info['source'])]
 
     def sass_source(self):
         # start with some code to set $static-url inside the scss files

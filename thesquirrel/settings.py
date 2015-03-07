@@ -104,17 +104,19 @@ MEDIA_BUILDER = {
         'jquery.cookie': ('https://github.com/carhartl/'
                           'jquery-cookie/archive/v1.4.1.tar.gz'),
         'video.js': 'http://vjs.zencdn.net/4.12/video.js',
-        'video-js.scss': 'http://vjs.zencdn.net/4.12/video-js.css',
+        'video-js.css': 'http://vjs.zencdn.net/4.12/video-js.css',
         'fontawesome': ('http://fortawesome.github.io/'
                         'Font-Awesome/assets/font-awesome-4.3.0.zip'),
     },
     'SASS_BUNDLES': {
         'app.css': {
-            'source': 'thesquirrel/scss/app.scss',
+            'sources': [
+                'thesquirrel/scss/app.scss',
+                'mediabuilder/downloads/video-js.css',
+                'mediabuilder/downloads/fontawesome/scss/font-awesome.scss',
+            ],
             'include_paths': [
                 'editor/scss',
-                'mediabuilder/downloads/',
-                'mediabuilder/downloads/fontawesome/scss/',
             ],
         },
     },
