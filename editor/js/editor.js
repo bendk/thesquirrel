@@ -17,7 +17,7 @@ function editorUploadImage(fieldset, textarea) {
     var uploadImage = $('button.upload-image', fieldset);
     var uploadFile = $('<input type="file" name="file">');
     var uploadFileForm = $('<form>').append(uploadFile);
-    body.append(uploadFileForm);
+    body.append(uploadFileForm.hide());
 
     uploadImage.click(function() {
         uploadFile.click();
