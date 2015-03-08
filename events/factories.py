@@ -15,19 +15,23 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from datetime import date, time
 
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
 import factory
 
+from thesquirrel.factories import *
+from .models import Event
 
-class UserFactory(factory.DjangoModelFactory):
-    username = factory.Sequence(lambda i: 'user-{}'.format(i))
-    email = factory.Sequence(lambda i: 'user-{}@example.com'.format(i))
-    password = make_password('password')
+class EventFactory(factory.DjangoModelFactory):
+    title = 'test-event'
+    body = 'test-event-body'
+    date = date(2015, 1, 1)
+    start_time = time(12, 0)
+    end_time = time(14, 0)
+    author = UserFactory()
 
     class Meta:
-        model = User
+        model = Event
 
 __all__ = [
     name for name, value in globals().items()

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST" class="events">
+  {% csrf_token %}
+  <fieldset class="compact">
+    <legend>{% trans "Event Info" %}</legend>
+    {% include "field.html" with field=form.title %}
+    {% include "field.html" with field=form.date %}
+    {% include "field.html" with field=form.start_time %}
+    {% include "field.html" with field=form.end_time %}
+  </fieldset>
+  <fieldset>
+    <legend>{% trans "Repeat" %}</legend>
+    {% include "field.html" with field=form.repeat_type %}
+    {% include "field.html" with field=form.repeat_until %}
+    {% include "field.html" with field=form.repeat_mo %}
+    {% include "field.html" with field=form.repeat_tu %}
+    {% include "field.html" with field=form.repeat_we %}
+    {% include "field.html" with field=form.repeat_th %}
+    {% include "field.html" with field=form.repeat_fr %}
+    {% include "field.html" with field=form.repeat_sa %}
+    {% include "field.html" with field=form.repeat_su %}
+  </fieldset>
+  {% include "editor/fieldset.html" %}
+  <div class="actions">
+    <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
+    {% if enable_delete %}
+    <button class="delete" name="delete" value="1">{% trans "Delete" %}</button>
+    {% endif %}
+    <button class="submit">{{ submit_text }}</button>
+  </div>
+</form>
+{% endblock %}
+{% block bodyextra %}{% include "editor/preview-modal.html" %}{% endblock %}

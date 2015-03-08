@@ -14,22 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import absolute_import
+from django.conf.urls import patterns, include, url
 
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
-import factory
-
-
-class UserFactory(factory.DjangoModelFactory):
-    username = factory.Sequence(lambda i: 'user-{}'.format(i))
-    email = factory.Sequence(lambda i: 'user-{}@example.com'.format(i))
-    password = make_password('password')
-
-    class Meta:
-        model = User
-
-__all__ = [
-    name for name, value in globals().items()
-    if isinstance(value, type) and issubclass(value, factory.Factory)
-]
+urlpatterns = patterns('events.views',
+    url(r'^create/$', 'create', name='create'),
+    url(r'^(?P<id>\d+)/edit/$', 'edit', name='edit'),
+)

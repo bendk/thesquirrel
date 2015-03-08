@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'articles',
     'docs',
     'editor',
+    'events',
     'mediabuilder',
     'thesquirrel',
     # third-party-apps
@@ -88,13 +89,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 ROOT_URLCONF = 'thesquirrel.urls'
 WSGI_APPLICATION = 'wsgi.application'
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_PLUGINS = ['thesquirrel.nose.TestPlugin']
-NOSE_ARGS = ['--logging-filter=-django.db.backends.schema,-factory']
+NOSE_ARGS = ['--logging-filter=-django.db.backends,-factory']
 
 MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,
@@ -104,7 +105,7 @@ MEDIA_BUILDER = {
         'jquery.cookie': ('https://github.com/carhartl/'
                           'jquery-cookie/archive/v1.4.1.tar.gz'),
         'video.js': 'http://vjs.zencdn.net/4.12/video.js',
-        'video-js.css': 'http://vjs.zencdn.net/4.12/video-js.css',
+        'video-js.scss': 'http://vjs.zencdn.net/4.12/video-js.css',
         'fontawesome': ('http://fortawesome.github.io/'
                         'Font-Awesome/assets/font-awesome-4.3.0.zip'),
     },

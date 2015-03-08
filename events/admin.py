@@ -6,6 +6,7 @@
 # under the terms of the GNU Affero General Public License as published by the
 # Free Software Foundation, either version 3 of the License, or (at your
 # option) any later version.
+#
 # thesquirrel.org is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
@@ -16,20 +17,9 @@
 
 from __future__ import absolute_import
 
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
-import factory
+from django.contrib import admin
+from .models import Event
 
-
-class UserFactory(factory.DjangoModelFactory):
-    username = factory.Sequence(lambda i: 'user-{}'.format(i))
-    email = factory.Sequence(lambda i: 'user-{}@example.com'.format(i))
-    password = make_password('password')
-
-    class Meta:
-        model = User
-
-__all__ = [
-    name for name, value in globals().items()
-    if isinstance(value, type) and issubclass(value, factory.Factory)
-]
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    pass
