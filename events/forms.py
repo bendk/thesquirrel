@@ -24,7 +24,8 @@ from . import repeat
 
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
-        kwargs['widget'] = forms.DateInput(attrs={'class': 'date'})
+        kwargs['widget'] = forms.DateInput(attrs={'class': 'pikaday'},
+                                           format='%m/%d/%y')
         super(forms.DateField, self).__init__(*args, **kwargs)
 
 class TimeField(forms.TimeField):
@@ -33,6 +34,8 @@ class TimeField(forms.TimeField):
         super(forms.TimeField, self).__init__(*args, **kwargs)
 
 class EventForm(forms.ModelForm):
+    date = DateField()
+
     class Meta:
         model = Event
         fields = (
@@ -65,6 +68,7 @@ class EventRepeatForm(forms.ModelForm):
     ] + repeat.CHOICES
 
     type = forms.ChoiceField(choices=TYPE_CHOICES)
+    until = DateField()
 
     class Meta:
         model = EventRepeat

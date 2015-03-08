@@ -104,6 +104,7 @@ MEDIA_BUILDER = {
         'jquery.form.js': 'http://malsup.github.com/jquery.form.js',
         'jquery.cookie': ('https://github.com/carhartl/'
                           'jquery-cookie/archive/v1.4.1.tar.gz'),
+        'Pikaday': 'https://github.com/dbushell/Pikaday/archive/1.3.2.zip',
         'video.js': 'http://vjs.zencdn.net/4.12/video.js',
         'video-js.scss': 'http://vjs.zencdn.net/4.12/video-js.css',
         'fontawesome': ('http://fortawesome.github.io/'
@@ -112,9 +113,11 @@ MEDIA_BUILDER = {
     'SASS_BUNDLES': {
         'app.css': {
             'sources': [
-                'thesquirrel/scss/app.scss',
-                'mediabuilder/downloads/video-js.css',
+                'mediabuilder/downloads/Pikaday/css/pikaday.css',
                 'mediabuilder/downloads/fontawesome/scss/font-awesome.scss',
+                'mediabuilder/downloads/video-js.css',
+                'thesquirrel/scss/app.scss',
+                'events/scss/events.scss',
             ],
             'include_paths': [
                 'editor/scss',
@@ -127,12 +130,14 @@ MEDIA_BUILDER = {
                 'mediabuilder/downloads/jquery.js',
                 'mediabuilder/downloads/jquery.form.js',
                 'mediabuilder/downloads/jquery.cookie/jquery.cookie.js',
+                'mediabuilder/downloads/Pikaday/pikaday.js',
                 'mediabuilder/downloads/video.js',
                 'thesquirrel/js/pagination.js',
                 'thesquirrel/js/urlify.js',
                 'thesquirrel/js/autoslug.js',
                 'thesquirrel/js/menus.js',
                 'editor/js/editor.js',
+                'events/js/events.js',
             ],
         },
     },

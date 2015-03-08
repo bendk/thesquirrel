@@ -1,0 +1,36 @@
+.pika-button, .pika-label, .pika-table th {
+    font-size: 1.8rem;
+    line-height: 2.4rem;
+    background: none;
+    text-align: center;
+}
+
+.pika-table th {
+    padding-bottom: 0.5rem;
+}
+
+.pika-button, .pika-label {
+    color: $dark-gray;
+}
+
+.pika-table abbr {
+    cursor: default;
+}
+
+.pika-button {
+    padding: 0;
+    line-height: 3.2rem;
+    &:hover {
+        background: $light-yellow !important;
+    }
+}
+
+.pika-lendar {
+    width: 100%;
+    margin: 0;
+}
+
+.pika-single {
+    border-radius: 5px;
+    border-color: $gray;
+}
