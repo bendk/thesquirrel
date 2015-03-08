@@ -26,6 +26,12 @@ from django.utils.translation import ugettext as _
 from .forms import EventWithRepeatForm
 from .models import Event
 
+def view(request, id):
+    event = get_object_or_404(Event, id=id)
+    return render(request, 'events/view.html', {
+        'event': event,
+    })
+
 @login_required
 def create(request):
     return edit_form(request, None, reverse('articles:index'))

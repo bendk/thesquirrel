@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<article>
+  <h1>{{ event.title }}</h1>
+  <ul>
+    <li> Date: {{ event.date }}</li>
+    <li> Start Time: {{ event.start_time }}</li>
+    <li> End Time: {{ event.end_time }}</li>
+  </ul>
+    
+  {{ event.render_body }}
+</article>
+  {% if user.is_authenticated %}
+  <div class="tools">
+    <a href="{% url "events:edit" event.id %}">Edit Event</a>
+  </div>
+{% endif %}
+{% endblock %}
+
