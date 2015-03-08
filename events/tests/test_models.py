@@ -24,8 +24,7 @@ from nose.tools import *
 import pytz
 
 from ..factories import *
-from ..models import Event, EventDate
-
+from ..models import Event, EventRepeat, EventDate
 
 class TestModels(TestCase):
     def check_dates(self, event, correct_dates):
@@ -38,10 +37,9 @@ class TestModels(TestCase):
         self.check_dates(event, [date(2015, 1, 1)])
 
     def test_create_dates_with_repeat(self):
-        event = EventFactory(date=date(2015, 1, 1),
-                             repeat_type='2W',
-                             repeat_until=date(2015, 2, 1),
-                             repeat_th=True)
+        event = EventFactory(date=date(2015, 1, 1))
+        EventRepeat.objects.create(event=event, type='2W', th=True,
+                                   until=date(2015, 2, 1))
         self.check_dates(event, [
             date(2015, 1, 1),
             date(2015, 1, 15),

@@ -6,24 +6,24 @@
   {% csrf_token %}
   <fieldset class="compact">
     <legend>{% trans "Event Info" %}</legend>
-    {% include "field.html" with field=form.title %}
-    {% include "field.html" with field=form.date %}
-    {% include "field.html" with field=form.start_time %}
-    {% include "field.html" with field=form.end_time %}
+    {% include "field.html" with field=event_form.title %}
+    {% include "field.html" with field=event_form.date %}
+    {% include "field.html" with field=event_form.start_time %}
+    {% include "field.html" with field=event_form.end_time %}
   </fieldset>
   <fieldset>
     <legend>{% trans "Repeat" %}</legend>
-    {% include "field.html" with field=form.repeat_type %}
-    {% include "field.html" with field=form.repeat_until %}
-    {% include "field.html" with field=form.repeat_mo %}
-    {% include "field.html" with field=form.repeat_tu %}
-    {% include "field.html" with field=form.repeat_we %}
-    {% include "field.html" with field=form.repeat_th %}
-    {% include "field.html" with field=form.repeat_fr %}
-    {% include "field.html" with field=form.repeat_sa %}
+    {% include "field.html" with field=repeat_form.type %}
+    {% include "field.html" with field=repeat_form.until %}
+    {% include "field.html" with field=repeat_form.mo %}
+    {% include "field.html" with field=repeat_form.tu %}
+    {% include "field.html" with field=repeat_form.we %}
+    {% include "field.html" with field=repeat_form.th %}
+    {% include "field.html" with field=repeat_form.fr %}
+    {% include "field.html" with field=repeat_form.sa %}
     {% include "field.html" with field=form.repeat_su %}
   </fieldset>
-  {% include "editor/fieldset.html" %}
+  {% include "editor/fieldset.html" with body=event_form.body %}
   <div class="actions">
     <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
     {% if enable_delete %}

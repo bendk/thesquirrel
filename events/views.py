@@ -23,7 +23,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import ugettext as _
 
-from .forms import EventForm
+from .forms import EventWithRepeatForm
 from .models import Event
 
 @login_required
@@ -43,12 +43,12 @@ def edit_form(request, instance, return_url):
         if instance and 'delete' in request.POST:
             instance.delete()
             return redirect('articles:index')
-        form = EventForm(data=request.POST, instance=instance)
+        form = EventWithRepeatForm(data=request.POST, instance=instance)
         if form.is_valid():
             event = form.save(request.user)
             return redirect('events:edit', event.id)
     else:
-        form = EventForm(instance=instance)
+        form = EventWithRepeatForm(instance=instance)
 
     if not instance:
         title = _('Create New Event')
@@ -60,7 +60,8 @@ def edit_form(request, instance, return_url):
         enable_delete = True
 
     return render(request, "events/edit.html", {
-        'form': form,
+        'event_form': form.event_form,
+        'repeat_form': form.repeat_form,
         'title': title,
         'submit_text': submit_text,
         'enable_delete': enable_delete,

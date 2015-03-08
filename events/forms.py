@@ -19,7 +19,7 @@ from __future__ import absolute_import
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Event, weekday_strings
+from .models import Event, EventRepeat, weekday_strings
 from . import repeat
 
 class DateField(forms.DateField):
@@ -37,39 +37,19 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = (
             'title', 'body', 'date', 'start_time', 'end_time',
-            'repeat_type', 'repeat_until',
-            'repeat_mo', 'repeat_tu', 'repeat_we', 'repeat_th', 'repeat_fr',
-            'repeat_sa', 'repeat_su',
         )
         labels = {
-            'repeat_mo': _('Mon'),
-            'repeat_tu': _('Tue'),
-            'repeat_we': _('Wed'),
-            'repeat_th': _('Thu'),
-            'repeat_fr': _('Fri'),
-            'repeat_sa': _('Sat'),
-            'repeat_sun': _('Sun'),
+            'body': '',
         }
 
     def clean(self):
         cleaned_data = super(EventForm, self).clean()
-        cleaned_data['repeat_weekdays'] = [
-            day for day in weekday_strings
-            if cleaned_data['repeat_{}'.format(day)]
-        ]
 
-        if cleaned_data['end_time'] < cleaned_data['start_time']:
+        if ('end_time' in cleaned_data and 'start_time' in cleaned_data and
+            cleaned_data['end_time'] < cleaned_data['start_time']):
             self.add_error('end_time', forms.ValidationError(
                 _('End time before starte time'), code='end-time-to-early'))
 
-
-        if cleaned_data.get('repeat_type'):
-            if not cleaned_data['repeat_weekdays']:
-                self.add_error('repeat_type', forms.ValidationError(
-                    _('No days selected'), code='no-weekdays'))
-            if not cleaned_data['repeat_until']:
-                self.add_error('repeat_until', forms.ValidationError(
-                    _('This field is required'), code='required'))
         return cleaned_data
 
     def save(self, user):
@@ -77,4 +57,79 @@ class EventForm(forms.ModelForm):
         event.author = user
         event.save()
         event.update_dates()
+        return event
+
+class EventRepeatForm(forms.ModelForm):
+    TYPE_CHOICES = [
+        ('', _("Don't Repeat")),
+    ] + repeat.CHOICES
+
+    type = forms.ChoiceField(choices=TYPE_CHOICES)
+
+    class Meta:
+        model = EventRepeat
+        fields = (
+            'type', 'until',
+            'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su',
+        )
+        labels = {
+            'mo': _('Mon'),
+            'tu': _('Tue'),
+            'we': _('Wed'),
+            'th': _('Thu'),
+            'fr': _('Fri'),
+            'sa': _('Sat'),
+            'su': _('Sun'),
+        }
+
+    def enabled(self):
+        return self.data['type'] != ''
+
+    def clean(self):
+        cleaned_data = super(EventRepeatForm, self).clean()
+        if not any(day for day in weekday_strings if cleaned_data[day]):
+            self.add_error('type', forms.ValidationError(
+                _('No days selected'), code='no-weekdays'))
+        return cleaned_data
+
+    def save(self, event):
+        repeat = super(EventRepeatForm, self).save(commit=False)
+        repeat.event = event
+        repeat.save()
+        return repeat
+
+class EventWithRepeatForm(object):
+    """Form-like object that handles both the EventForm and
+    EventRepeatForm.
+    """
+
+    def __init__(self, instance=None, data=None):
+        if instance and instance.has_repeat():
+            repeat = instance.repeat
+        else:
+            repeat = None
+        if data and data.get('repeat-type'):
+            repeat_data = data
+        else:
+            repeat_data = None
+        self.event_form = EventForm(instance=instance, data=data)
+        self.repeat_form = EventRepeatForm(prefix='repeat', instance=repeat,
+                                           data=repeat_data)
+
+    def is_valid(self):
+        if not self.repeat_form.is_bound:
+            # just need to validate the event form
+            return self.event_form.is_valid()
+        else:
+            # need to validate both forms, make sure we clean both
+            self.event_form.full_clean()
+            self.repeat_form.full_clean()
+            return self.event_form.is_valid() and self.repeat_form.is_valid()
+
+    def save(self, user):
+        event = self.event_form.save(user)
+        if self.repeat_form.is_bound:
+            self.repeat_form.save(event)
+        elif event.has_repeat():
+            event.repeat.delete()
         return event

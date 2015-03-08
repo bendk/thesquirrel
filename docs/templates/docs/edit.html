@@ -10,7 +10,7 @@
     {% include "field.html" with field=form.slug %}
     {% include "field.html" with field=form.public %}
   </fieldset>
-  {% include "editor/fieldset.html" %}
+  {% include "editor/fieldset.html" with body=form.body %}
   <div class="actions">
     <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
     {% if enable_delete %}

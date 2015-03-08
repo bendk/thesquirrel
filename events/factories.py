@@ -15,12 +15,12 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-from datetime import date, time
+from datetime import date, time, timedelta
 
 import factory
 
 from thesquirrel.factories import *
-from .models import Event
+from .models import Event, EventRepeat
 
 class EventFactory(factory.DjangoModelFactory):
     title = 'test-event'
@@ -29,6 +29,12 @@ class EventFactory(factory.DjangoModelFactory):
     start_time = time(12, 0)
     end_time = time(14, 0)
     author = UserFactory()
+
+    @factory.post_generation
+    def with_repeat(obj, create, extracted, **kwargs):
+        if extracted:
+            EventRepeat.objects.create(event=obj, type='2W', th=True,
+                                       until=obj.date + timedelta(days=30))
 
     class Meta:
         model = Event

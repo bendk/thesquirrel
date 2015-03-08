@@ -38,10 +38,6 @@ rrule_weekday_map = {
 weekday_strings = rrule_weekday_map.keys()
 
 class Event(models.Model):
-    REPEAT_CHOICES = [
-        ('', _("Don't Repeat")),
-    ] + repeat.CHOICES
-
     title = models.CharField(max_length=255)
     body = EditorTextField()
     created = models.DateTimeField(default=timezone.now)
@@ -49,42 +45,50 @@ class Event(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     author = models.ForeignKey(User)
-    repeat_type = models.CharField(max_length=3, choices=REPEAT_CHOICES,
-                                   blank=True)
-    repeat_until = models.DateField(null=True, blank=True)
-    repeat_su = models.BooleanField(default=False)
-    repeat_mo = models.BooleanField(default=False)
-    repeat_tu = models.BooleanField(default=False)
-    repeat_we = models.BooleanField(default=False)
-    repeat_th = models.BooleanField(default=False)
-    repeat_fr = models.BooleanField(default=False)
-    repeat_sa = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'Event: {}'.format(self.title)
 
-    def _repeat_weekdays(self):
-        return [
-            weekday
-            for field_name, weekday in rrule_weekday_map.items()
-            if getattr(self, 'repeat_' + field_name)
-        ]
-
-    def calc_repeat_rrule(self):
-        if self.repeat_until is None:
-            raise ValueError('repeat_until is None')
-        return repeat.get_rrule(self.repeat_type, self.date,
-                                self.repeat_until, self._repeat_weekdays())
-
     def update_dates(self):
         self.date_set.all().delete()
         dates = set([self.date])
-        if self.repeat_type:
-            dates.update(dt.date() for dt in self.calc_repeat_rrule())
+        if self.has_repeat():
+            dates.update(dt.date() for dt in self.repeat.calc_repeat_rrule())
         EventDate.objects.bulk_create([
             EventDate(event=self, date=date)
             for date in dates
         ])
+
+    def has_repeat(self):
+        try:
+            self.repeat
+        except EventRepeat.DoesNotExist:
+            return False
+        else:
+            return True
+
+class EventRepeat(models.Model):
+    event = models.OneToOneField(Event, related_name='repeat')
+    type = models.CharField(max_length=3, choices=repeat.CHOICES)
+    until = models.DateField()
+    su = models.BooleanField(default=False)
+    mo = models.BooleanField(default=False)
+    tu = models.BooleanField(default=False)
+    we = models.BooleanField(default=False)
+    th = models.BooleanField(default=False)
+    fr = models.BooleanField(default=False)
+    sa = models.BooleanField(default=False)
+
+    def _rrule_weekdays(self):
+        return [
+            weekday
+            for field_name, weekday in rrule_weekday_map.items()
+            if getattr(self, field_name)
+        ]
+
+    def calc_repeat_rrule(self):
+        return repeat.get_rrule(self.type, self.event.date,
+                                self.until, self._rrule_weekdays())
 
 class EventDate(models.Model):
     event = models.ForeignKey(Event, related_name='date_set')
