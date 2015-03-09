@@ -1,18 +1,24 @@
 {% extends "base.html" %}
+{% block html-attrs %} id="event"{% endblock %}
+{% load i18n %}
 {% block content %}
 <article>
-  <h1>{{ event.title }}</h1>
-  <ul>
-    <li> Date: {{ event.date }}</li>
-    <li> Start Time: {{ event.start_time }}</li>
-    <li> End Time: {{ event.end_time }}</li>
+  <h1>{% blocktrans with title=event.title %}Event: {{ title }}{% endblocktrans %}</h1>
+  <ul class="schedule">
+    {% if event.has_repeat %}
+    <li>{% blocktrans with repeat_type=event.repeat.get_type_display days=event.repeat.get_weekdays_display %}{{ repeat_type }}: {{ days }}{% endblocktrans %}</li>
+    {% else %}
+    <li>{{ event.date }}</li>
+    {% endif %}
+    <li>{{ event.get_start_time_display }} - {{ event.get_end_time_display }}</li>
   </ul>
   {{ event.render_description }}
 </article>
-  {% if user.is_authenticated %}
   <div class="tools">
+    <a href="{% url "events:calendar" %}">Full Calendar</a>
+    {% if user.is_authenticated %}
     <a href="{% url "events:edit" event.id %}">Edit Event</a>
+  {% endif %}
   </div>
-{% endif %}
 {% endblock %}
 

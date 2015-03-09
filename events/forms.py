@@ -21,7 +21,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
-from .models import Event, EventRepeat, weekday_strings
+from .models import Event, EventRepeat, weekday_fields
 from .utils import format_time
 
 class DateField(forms.DateField):
@@ -101,7 +101,7 @@ class EventRepeatForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(EventRepeatForm, self).clean()
-        if not any(day for day in weekday_strings if cleaned_data[day]):
+        if not any(day for day in weekday_fields if cleaned_data[day]):
             self.add_error('type', forms.ValidationError(
                 _('No days selected'), code='no-weekdays'))
         return cleaned_data

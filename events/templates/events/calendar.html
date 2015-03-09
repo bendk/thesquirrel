@@ -4,8 +4,8 @@
 {% block content %}
 <h1>{% trans "Flying Squirrel Event Calendar" %}</h1>
 <div class="month">
-  <a class="prev" href="{% url "events:month-calendar" year=prev_month.year month=prev_month.month %}"><i class="fa fa-arrow-left"></i> {% trans "prev" %}</a>
-  <a class="next" href="{% url "events:month-calendar" year=next_month.year month=next_month.month %}">{% trans "next" %} <i class="fa fa-arrow-right"></i></a>
+  <a class="prev" href="{% url "events:month-calendar" year=prev_month.year month=prev_month.month %}"><i class="fa fa-arrow-left"></i> {% trans "prev month" %}</a>
+  <a class="next" href="{% url "events:month-calendar" year=next_month.year month=next_month.month %}">{% trans "next month" %} <i class="fa fa-arrow-right"></i></a>
   <h2>{{ month_name }}</h2>
 </div>
 <table class="calendar">
@@ -28,8 +28,11 @@
         {% if events %}
         <ul>
           {% for event in events %}
-          <li><div class="time">{% blocktrans with start_time=event.get_start_time_display end_time=event.get_end_time_display %}{{ start_time }} - {{ end_time}} {% endblocktrans %}</div>
-          <a class="title" href="{% url "events:view" event.id %}">{{ event.title }}</a>
+          <li>
+            <a href="{% url "events:view" event.id %}">
+              <div class="time">{% blocktrans with start_time=event.get_start_time_display end_time=event.get_end_time_display %}{{ start_time }} - {{ end_time}} {% endblocktrans %}</div>
+              <div class="title" href="{% url "events:view" event.id %}">{{ event.title }}</div>
+            </a>
           </li>
           {% endfor %}
         </ul>

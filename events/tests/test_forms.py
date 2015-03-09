@@ -30,7 +30,7 @@ class EventFormTest(TestCase):
     def test_start_date_must_be_after_end_date(self):
         form = EventForm(data={
             'title': 'test-title',
-            'body': 'test-body',
+            'description': 'test-description',
             'date': '1/1/2015',
             'start_time': '18:30',
             'end_time': '16:30',
@@ -40,7 +40,7 @@ class EventFormTest(TestCase):
     def test_save(self):
         form = EventForm(data={
             'title': 'test-title',
-            'body': 'test-body',
+            'description': 'test-description',
             'date': '1/1/2015',
             'start_time': '18:30',
             'end_time': '19:30',
@@ -73,7 +73,7 @@ class EventWithRepeatFormTest(TestCase):
     def form_data(self):
         return {
             'title': 'test-title',
-            'body': 'test-body',
+            'description': 'test-description',
             'date': '1/1/2015',
             'start_time': '18:30',
             'end_time': '19:30',

@@ -24,7 +24,7 @@ from .models import Event, EventRepeat
 
 class EventFactory(factory.DjangoModelFactory):
     title = 'test-event'
-    body = 'test-event-body'
+    description = 'test-event-description'
     date = date(2015, 1, 1)
     start_time = time(12, 0)
     end_time = time(14, 0)

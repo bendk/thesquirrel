@@ -20,23 +20,12 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from dateutil import rrule
 
 from editor.fields import EditorTextField
 from . import repeat
 from .utils import format_time
-
-# map the strings we use for weekday fields to rrule classes
-rrule_weekday_map = {
-    'mo': rrule.MO,
-    'tu': rrule.TU,
-    'we': rrule.WE,
-    'th': rrule.TH,
-    'fr': rrule.FR,
-    'sa': rrule.SA,
-    'su': rrule.SU,
-}
-weekday_strings = rrule_weekday_map.keys()
 
 class Event(models.Model):
     title = models.CharField(max_length=255)
@@ -74,6 +63,18 @@ class Event(models.Model):
         else:
             return True
 
+# list of (field_name, rrule_class, display_string) tuples
+weekday_field_info = [
+    ('mo', rrule.MO, _('Monday')),
+    ('tu', rrule.TU, _('Tuesday')),
+    ('we', rrule.WE, _('Wednesday')),
+    ('th', rrule.TH, _('Thursday')),
+    ('fr', rrule.FR, _('Friday')),
+    ('sa', rrule.SA, _('Saturday')),
+    ('su', rrule.SU, _('Sunday')),
+]
+weekday_fields = [info[0] for info in weekday_field_info]
+
 class EventRepeat(models.Model):
     event = models.OneToOneField(Event, related_name='repeat')
     type = models.CharField(max_length=3, choices=repeat.CHOICES)
@@ -89,9 +90,17 @@ class EventRepeat(models.Model):
     def _rrule_weekdays(self):
         return [
             weekday
-            for field_name, weekday in rrule_weekday_map.items()
+            for field_name, weekday, _ in weekday_field_info
             if getattr(self, field_name)
         ]
+
+    def get_weekdays_display(self):
+        days = [
+            day_name
+            for field_name, weekday, day_name in weekday_field_info
+            if getattr(self, field_name)
+        ]
+        return ', '.join(unicode(d) for d in days)
 
     def calc_repeat_rrule(self):
         return repeat.get_rrule(self.type, self.event.date,

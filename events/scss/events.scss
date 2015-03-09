@@ -1,8 +1,13 @@
+#event {
+    ul.schedule {
+        @extend %medium-text;
+        padding-bottom: 5rem;
+    }
+}
 #calendar {
     .content {
         max-width: 1200px;
     }
-
 
     .month {
         margin-top: 4rem;
@@ -20,7 +25,6 @@
         }
     }
 }
-
 
 table.calendar {
     width: 100%;
@@ -59,6 +63,15 @@ table.calendar {
         font-weight: bold;
     }
 
+    a {
+        display: block;
+        color: inherit;
+
+        &:hover {
+            color: $primary;
+        }
+    }
+
     .time, .title {
         padding-left: 6px;
     }
@@ -69,6 +82,7 @@ table.calendar {
     }
 
 }
+
 form.events {
     .weekdays {
         width: 80%;
