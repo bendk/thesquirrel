@@ -39,7 +39,7 @@ weekday_strings = rrule_weekday_map.keys()
 
 class Event(models.Model):
     title = models.CharField(max_length=255)
-    body = EditorTextField()
+    description = EditorTextField()
     created = models.DateTimeField(default=timezone.now)
     date = models.DateField()
     start_time = models.TimeField()

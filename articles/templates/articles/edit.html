@@ -8,7 +8,7 @@
     <legend>{% trans "Title" %}</legend>
     {% include "field.html" with field=form.title %}
   </fieldset>
-  {% include "editor/fieldset.html" with body=form.body %}
+  {% include "editor/fieldset.html" with field=form.body %}
   <div class="actions">
     <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
     {% if enable_delete %}

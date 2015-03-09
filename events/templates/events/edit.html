@@ -11,19 +11,23 @@
     {% include "field.html" with field=event_form.start_time %}
     {% include "field.html" with field=event_form.end_time %}
   </fieldset>
-  <fieldset>
+  <fieldset class="compact">
     <legend>{% trans "Repeat" %}</legend>
     {% include "field.html" with field=repeat_form.type %}
-    {% include "field.html" with field=repeat_form.until %}
-    {% include "field.html" with field=repeat_form.mo %}
-    {% include "field.html" with field=repeat_form.tu %}
-    {% include "field.html" with field=repeat_form.we %}
-    {% include "field.html" with field=repeat_form.th %}
-    {% include "field.html" with field=repeat_form.fr %}
-    {% include "field.html" with field=repeat_form.sa %}
-    {% include "field.html" with field=form.repeat_su %}
+    <div class="details">
+      <div class="weekdays">
+        <label>{% trans "Mon" %}<br>{{ repeat_form.mo }}</label>
+        <label>{% trans "Tue" %}<br>{{ repeat_form.tu }}</label>
+        <label>{% trans "Wed" %}<br>{{ repeat_form.we }}</label>
+        <label>{% trans "Thu" %}<br>{{ repeat_form.th }}</label>
+        <label>{% trans "Fri" %}<br>{{ repeat_form.fr }}</label>
+        <label>{% trans "Sat" %}<br>{{ repeat_form.sa }}</label>
+        <label>{% trans "Sun" %}<br>{{ repeat_form.su }}</label>
+      </div>
+      {% include "field.html" with field=repeat_form.until %}
+    </div>
   </fieldset>
-  {% include "editor/fieldset.html" with body=event_form.body %}
+  {% include "editor/fieldset.html" with field=event_form.description %}
   <div class="actions">
     <button class="cancel" name="cancel" value="1">{% trans "Cancel" %}</button>
     {% if enable_delete %}

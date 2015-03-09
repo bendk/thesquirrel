@@ -1,3 +1,33 @@
+form.events {
+    .weekdays {
+        width: 80%;
+        margin-left: 20%;
+        float: right;
+        label {
+            display: block;
+            float: left;
+            text-align: center;
+            width: percentage(1/7);
+
+            &:last-of-type {
+                width: auto;
+                float: none;
+            }
+        }
+        input {
+            width: auto;
+            display: inline;
+            text-align: center;
+            margin: 0.4rem 0 0 0;
+        }
+    }
+
+    .details {
+        display: none;
+    }
+}
+
+
 .pika-button, .pika-label, .pika-table th {
     font-size: 1.8rem;
     line-height: 2.4rem;

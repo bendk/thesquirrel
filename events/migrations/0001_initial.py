@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=255)),
-                ('body', editor.fields.EditorTextField()),
+                ('description', editor.fields.EditorTextField()),
                 ('created', models.DateTimeField(default=django.utils.timezone.now)),
                 ('date', models.DateField()),
                 ('start_time', models.TimeField()),
