@@ -15,12 +15,14 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from datetime import time
 
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Event, EventRepeat, weekday_strings
 from . import repeat
+from .models import Event, EventRepeat, weekday_strings
+from .utils import format_time
 
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
@@ -32,16 +34,11 @@ class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
         choices = []
         for h in range(7, 23):
-            if h < 12:
-                period = 'am'
-            else:
-                period = 'pm'
-            h_12 = ((h-1) % 12) + 1
             for m in (0, 30):
-                choices.append(('{:0>2d}:{:0>2d}:00'.format(h, m),
-                                '{}:{:0>2d}{}'.format(h_12, m, period)))
+                t = time(h, m)
+                choices.append((t.strftime('%H:%M:00'), format_time(t)))
         kwargs['widget'] = forms.Select(choices=choices)
-        kwargs['initial'] = '18:00'
+        kwargs['initial'] = '18:00:00'
         super(TimeField, self).__init__(*args, **kwargs)
 
 class EventForm(forms.ModelForm):

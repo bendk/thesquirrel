@@ -24,6 +24,7 @@ from dateutil import rrule
 
 from editor.fields import EditorTextField
 from . import repeat
+from .utils import format_time
 
 # map the strings we use for weekday fields to rrule classes
 rrule_weekday_map = {
@@ -58,6 +59,12 @@ class Event(models.Model):
             EventDate(event=self, date=date)
             for date in dates
         ])
+
+    def get_start_time_display(self):
+        return format_time(self.start_time)
+
+    def get_end_time_display(self):
+        return format_time(self.end_time)
 
     def has_repeat(self):
         try:

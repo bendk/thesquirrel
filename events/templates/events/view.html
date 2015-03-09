@@ -7,8 +7,7 @@
     <li> Start Time: {{ event.start_time }}</li>
     <li> End Time: {{ event.end_time }}</li>
   </ul>
-    
-  {{ event.render_body }}
+  {{ event.render_description }}
 </article>
   {% if user.is_authenticated %}
   <div class="tools">

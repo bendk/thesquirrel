@@ -1,3 +1,74 @@
+#calendar {
+    .content {
+        max-width: 1200px;
+    }
+
+
+    .month {
+        margin-top: 4rem;
+        a {
+            @include button(primary, small);
+        }
+        a.next {
+            float: right;
+        }
+        a.prev {
+            float: left;
+        }
+        h2 {
+            text-align: center;
+        }
+    }
+}
+
+
+table.calendar {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+
+    td, th {
+        width: percentage(1/7);
+        vertical-align: top;
+        border: 1px solid $gray;
+    }
+
+    th {
+    }
+
+    td {
+        padding: 8px;
+        height: 20rem;
+
+        &.other-month {
+            background: $lighter-gray;
+        }
+    }
+
+
+    ul {
+        list-style-type: none;
+    }
+
+    li {
+        @extend %small-text;
+        margin-bottom: 2.1rem;
+    }
+
+    .time {
+        font-weight: bold;
+    }
+
+    .time, .title {
+        padding-left: 6px;
+    }
+
+    .day {
+        text-align: right;
+        color: $darkish-gray;
+    }
+
+}
 form.events {
     .weekdays {
         width: 80%;
@@ -26,7 +97,6 @@ form.events {
         display: none;
     }
 }
-
 
 .pika-button, .pika-label, .pika-table th {
     font-size: 1.8rem;

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block html-attrs %} id="calendar"{% endblock %}
+{% block content %}
+<h1>{% trans "Flying Squirrel Event Calendar" %}</h1>
+<div class="month">
+  <a class="prev" href="{% url "events:month-calendar" year=prev_month.year month=prev_month.month %}"><i class="fa fa-arrow-left"></i> {% trans "prev" %}</a>
+  <a class="next" href="{% url "events:month-calendar" year=next_month.year month=next_month.month %}">{% trans "next" %} <i class="fa fa-arrow-right"></i></a>
+  <h2>{{ month_name }}</h2>
+</div>
+<table class="calendar">
+  <thead>
+    <tr>
+      <th>{% trans "Mon" %}</th>
+      <th>{% trans "Tue" %}</th>
+      <th>{% trans "Wed" %}</th>
+      <th>{% trans "Thu" %}</th>
+      <th>{% trans "Fri" %}</th>
+      <th>{% trans "Sat" %}</th>
+      <th>{% trans "Sun" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for week in calendar %}
+    <tr>
+      {% for date, events in week %}
+      <td {% if date.month != start_date.month %} class="other-month"{% endif %}><div class="day">{{ date.day }}</div>
+        {% if events %}
+        <ul>
+          {% for event in events %}
+          <li><div class="time">{% blocktrans with start_time=event.get_start_time_display end_time=event.get_end_time_display %}{{ start_time }} - {{ end_time}} {% endblocktrans %}</div>
+          <a class="title" href="{% url "events:view" event.id %}">{{ event.title }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

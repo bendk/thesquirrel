@@ -1,16 +1,18 @@
 (function() {
     $(document).ready(function() {
         $('input.pikaday').each(handlePikaday);
-        $('form.events #id_repeat-type').change(onRepeatChange);
+        $('form.events #id_repeat-type').each(handleRepeatSelect);
     });
 
-    function onRepeatChange(evt) {
+    function handleRepeatSelect() {
         var input = $(this);
-        if(input.val()) {
-            $('form.events .details').show();
-        } else {
-            $('form.events .details').hide();
-        }
+        input.change(function() {
+            if(input.val()) {
+                $('form.events .details').show();
+            } else {
+                $('form.events .details').hide();
+            }
+        }).change();
     }
 
     function zeroPad(number, digits) {
@@ -30,7 +32,7 @@
             onSelect: function(date) {
                 var parts = [
             zeroPad(date.getMonth() + 1, 2),
-            zeroPad(date.getDay() + 1, 2),
+            zeroPad(date.getDate(), 2),
             date.getFullYear()
             ];
         input.val(parts.join('/'));

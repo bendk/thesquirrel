@@ -14,13 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
-
-urlpatterns = patterns('events.views',
-    url(r'^$', 'calendar', name='calendar'),
-    url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/$', 'calendar',
-        name='month-calendar'),
-    url(r'^create/$', 'create', name='create'),
-    url(r'^(?P<id>\d+)/$', 'view', name='view'),
-    url(r'^(?P<id>\d+)/edit/$', 'edit', name='edit'),
-)
+def format_time(time):
+    if time.hour < 12:
+        period = 'am'
+    else:
+        period = 'pm'
+    hour = ((time.hour-1) % 12) + 1
+    return '{}:{:0>2d}{}'.format(hour, time.minute, period)

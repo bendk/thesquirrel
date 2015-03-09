@@ -16,15 +16,20 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
+from calendar import Calendar
+from collections import defaultdict
+from datetime import date
 
+from dateutil.relativedelta import relativedelta
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from .forms import EventWithRepeatForm
-from .models import Event
+from .models import Event, EventDate
 
 def view(request, id):
     event = get_object_or_404(Event, id=id)
@@ -32,14 +37,55 @@ def view(request, id):
         'event': event,
     })
 
+def make_calendar(start_date):
+    qs = EventDate.objects.filter(
+        date__gte=start_date,
+        date__lt=start_date + relativedelta(months=1),
+    ).select_related('event')
+    events_by_date = defaultdict(list)
+    for event_date in qs:
+        events_by_date[event_date.date].append(event_date.event)
+
+    calendar = []
+    for week in Calendar().monthdatescalendar(start_date.year,
+                                              start_date.month):
+        week_with_events = []
+        for day_date in week:
+            events = events_by_date[day_date]
+            events.sort(key=lambda e: e.start_time)
+            week_with_events.append((day_date, events))
+        calendar.append(week_with_events)
+    return calendar
+
+def calendar(request, year=None, month=None):
+    now = timezone.now()
+    if year is None:
+        year = now.year
+    else:
+        year = int(year)
+    if month is None:
+        month = now.month
+    else:
+        month = int(month)
+
+    start_date = date(year, month, 1)
+
+    return render(request, 'events/calendar.html', {
+        'calendar': make_calendar(start_date),
+        'start_date': start_date,
+        'next_month': start_date + relativedelta(months=1),
+        'prev_month': start_date - relativedelta(months=1),
+        'month_name': start_date.strftime("%B %Y"),
+    })
+
 @login_required
 def create(request):
-    return edit_form(request, None, reverse('articles:index'))
+    return edit_form(request, None, reverse('events:calendar'))
 
 @login_required
 def edit(request, id):
     instance = get_object_or_404(Event, id=id)
-    return edit_form(request, instance, reverse('articles:index'))
+    return edit_form(request, instance, reverse('events:calendar'))
 
 def edit_form(request, instance, return_url):
     return_url = request.GET.get('return_url', return_url)
@@ -48,11 +94,11 @@ def edit_form(request, instance, return_url):
             return HttpResponseRedirect(return_url)
         if instance and 'delete' in request.POST:
             instance.delete()
-            return redirect('articles:index')
+            return redirect('events:calendar')
         form = EventWithRepeatForm(data=request.POST, instance=instance)
         if form.is_valid():
             event = form.save(request.user)
-            return redirect('events:edit', event.id)
+            return redirect('events:view', event.id)
     else:
         form = EventWithRepeatForm(instance=instance)
 
