@@ -17,7 +17,7 @@
     <ul>
       <li><a href="{% url "home" %}">Home</a></li>
       <li><a href="{% url "docs:view" "about-us" %}">About Us</a></li>
-      <li><a href="#">Calendar</a></li>
+      <li><a href="{% url "events:calendar" %}">Calendar</a></li>
       <li><a href="#">Using the Space</a></li>
       {% if user.is_authenticated %}
       {% include "squirrel-menu.html" %}
