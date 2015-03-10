@@ -4,7 +4,8 @@
     border-radius: 5px;
 
     h2 {
-        padding-left: 1rem;
+        padding: 0 1rem;
+        vertical-align: middl;
     }
 
 
@@ -29,13 +30,12 @@
     }
     a.action {
         @include button(secondary, small);
-        margin-top: 1.2rem;
         float: right;
     }
     a.create {
         @include button;
-        margin: 1.2rem 2rem 0 0;
         float: right;
+        margin-right: 0;
     }
     .emblem {
         font-size: 1.4rem;

@@ -2,8 +2,9 @@
 {% load i18n %}
 {% block content %}
 <div class="documents-list">
-  <a href="{% url "docs:create" %}" class="create">{% trans "Create New Document" %}</a>
-  <h2>{% trans "Member Documents" %}</h2>
+  <h2>
+    <a href="{% url "docs:create" %}" class="create">{% trans "Create" %}</a>
+    {% trans "Member Documents" %}</h2>
   <ul>
     {% for doc in documents %}
     <li>
