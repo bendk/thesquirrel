@@ -9,6 +9,12 @@ $medium-screen-width: 768px;
   }
 }
 
+@mixin not-small-screen {
+  @media only screen and (min-width: $medium-screen-width) {
+    @content;
+  }
+}
+
 @mixin medium-screen {
   @media only screen and (min-width: $medium-screen-width) and (max-width: $large-screen-width - 1) {
     @content;

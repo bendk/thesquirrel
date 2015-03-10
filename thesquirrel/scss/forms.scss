@@ -38,15 +38,17 @@ form {
 
     }
 
-    .compact {
-        input, select, textarea {
-            width: 80%;
-            margin: 0 0 0 2.0rem;
-        }
+    @include not-small-screen {
+        .compact {
+            input, select, textarea {
+                width: 80%;
+                margin: 0 0 0 2.0rem;
+            }
 
-        label {
-            text-align: right;
-            @extend %group;
+            label {
+                text-align: right;
+                @extend %group;
+            }
         }
     }
 

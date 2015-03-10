@@ -109,6 +109,18 @@ form.events {
         }
     }
 
+    @include small-screen {
+        .weekdays {
+            width: 100%;
+            margin-left: 0;
+            float: none;
+
+            label {
+                @include small-text;
+            }
+        }
+    }
+
     .details {
         display: none;
     }

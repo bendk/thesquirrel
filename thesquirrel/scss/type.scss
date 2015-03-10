@@ -21,14 +21,22 @@
     }
 }
 
-%medium-text {
+@mixin medium-text {
     font-size: 1.6rem;
     line-height: 2.3rem;
 }
 
-%small-text {
+@mixin small-text {
     font-size: 1.4rem;
     line-height: 2.1rem;
+}
+
+%medium-text {
+    @include medium-text;
+}
+
+%small-text {
+    @include small-text;
 }
 
 
