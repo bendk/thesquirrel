@@ -24,7 +24,7 @@
     {% for week in calendar %}
     <tr>
       {% for date, events in week %}
-      <td data-date-title="{{ date}}" {% if date.month != start_date.month %} class="other-month"{% endif %}>
+      <td data-date-title="{{ date|date:"l F jS, Y"}}" {% if date.month != start_date.month %} class="other-month"{% endif %}>
         <div class="day">{{ date.day }}</div>
         {% if events %}
         <ul>
