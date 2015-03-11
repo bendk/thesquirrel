@@ -2,6 +2,7 @@
     $(document).ready(function() {
         $('input.pikaday').each(handlePikaday);
         $('form.events #id_repeat-type').each(handleRepeatSelect);
+        $('table.calendar').each(handleCalendar);
     });
 
     function handleRepeatSelect() {
@@ -41,15 +42,42 @@
         });
         input.after(picker.el);
         picker.hide()
-            input.click(function() {
-                if(picker.isVisible()) {
-                    picker.hide();
-                } else {
-                    picker.show();
-                    picker.adjustPosition();
-                    $(picker.el).css('width', input.css('width'));
-                }
-            });
+        input.click(function() {
+            if(picker.isVisible()) {
+                picker.hide();
+            } else {
+                picker.show();
+                picker.adjustPosition();
+                $(picker.el).css('width', input.css('width'));
+            }
+        });
+    }
+
+    function handleCalendar() {
+        var calander = $(this);
+        var dateDetails = calander.next('div.date-details');
+
+        $('td', calander).click(function () {
+            // Only handle the click on small screens;
+            if($(window).width() >= 768) {
+                return;
+            }
+            var eventList = $('ul', this);
+            if(eventList.length > 0) {
+                replaceDateDetails($(this).data('date-title'), eventList);
+            }
+        });
+
+        function replaceDateDetails(dateTitle, eventList) {
+            if(dateDetails) {
+                dateDetails.remove();
+            }
+            var heading = $('<h3>').text(dateTitle);
+            dateDetails = $('<div class="date-details">')
+                .append(heading)
+                .append(eventList.clone());
+            calander.after(dateDetails);
+        }
     }
 
 }());

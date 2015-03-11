@@ -1,10 +1,11 @@
-#event {
+html#event {
     ul.schedule {
         @extend %medium-text;
         padding-bottom: 5rem;
     }
 }
-#calendar {
+
+html#calendar {
     .content {
         max-width: 1200px;
     }
@@ -24,14 +25,27 @@
             text-align: center;
         }
     }
+
+    .date-details {
+        p.help {
+            padding-top: 1rem;
+            font-style: italic;
+        }
+    }
+
+    @include not-small-screen {
+        .date-details {
+            display: none;
+        }
+    }
+
+
 }
 
-table.calendar {
+table.calendar, div.date-details {
     width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
-    width: 700px;
-    overflow-x: scroll;
 
     td, th {
         width: percentage(1/7);
@@ -39,25 +53,11 @@ table.calendar {
         border: 1px solid $gray;
     }
 
-    th {
-    }
-
-    td {
-        padding: 8px;
-        height: 20rem;
-
-        &.other-month {
-            background: $lighter-gray;
-        }
-    }
-
-
     ul {
         list-style-type: none;
     }
 
     li {
-        @extend %small-text;
         margin-bottom: 2.1rem;
     }
 
@@ -78,11 +78,37 @@ table.calendar {
         padding-left: 6px;
     }
 
+
+    td {
+        padding: 8px;
+        height: 20rem;
+
+        &.other-month {
+            background: $lighter-gray;
+        }
+    }
+
     .day {
         text-align: right;
         color: $darkish-gray;
     }
 
+}
+
+table.calendar {
+    li {
+        @extend %small-text;
+    }
+
+    @include small-screen {
+        td {
+            padding: 0 2px;
+            height: 4rem;
+        }
+        ul {
+            display: none;
+        }
+    }
 }
 
 form.events {

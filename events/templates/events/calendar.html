@@ -24,7 +24,8 @@
     {% for week in calendar %}
     <tr>
       {% for date, events in week %}
-      <td {% if date.month != start_date.month %} class="other-month"{% endif %}><div class="day">{{ date.day }}</div>
+      <td data-date-title="{{ date}}" {% if date.month != start_date.month %} class="other-month"{% endif %}>
+        <div class="day">{{ date.day }}</div>
         {% if events %}
         <ul>
           {% for event in events %}
@@ -43,5 +44,5 @@
     {% endfor %}
   </tbody>
 </table>
-
+<div class="date-details"><p class="help">{% trans "Tap on a day to see events" %}</p></div>
 {% endblock %}

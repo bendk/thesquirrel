@@ -49,8 +49,10 @@ nav#main {
     @include small-screen {
         position: static;
         text-align: left;
+        background: $dark-gray;
         > ul {
             display: none;
+            background: $white;
 
             &.active {
                 display: block;
