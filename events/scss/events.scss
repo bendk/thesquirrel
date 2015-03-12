@@ -143,6 +143,37 @@ table.space-requests {
     }
 }
 
+html#space-request {
+    div.status {
+        float: right;
+        padding: 6px 8px;
+        font-weight: bold;
+        color: $white;
+        border-radius: 5px;
+    }
+    div.approved {
+        background: $green;
+    }
+    div.denied {
+        background: $red;
+    }
+    .section {
+        border: 1px solid $gray;
+        border-radius: 5px;
+        margin-bottom: 2rem;
+        padding: 0 10px;
+
+        h2 {
+            margin: 0.5rem 0 1rem 20px;
+        }
+    }
+
+    form {
+        border: none;
+        padding: 0;
+    }
+}
+
 form.events {
     .weekdays {
         width: 80%;

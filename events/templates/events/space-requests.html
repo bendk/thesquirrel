@@ -18,7 +18,7 @@
   <tbody>
     {% for request in requests %}
     <tr>
-      <td>{{ request.title }}</td>
+      <td><a href="{{ request.get_absolute_url }}">{{ request.title }}</a></td>
       <td>{{ request.get_type_display }}</td>
       <td class="small-exclude">{{ request.name }}</td>
       <td class="small-exclude">{{ request.get_created_display }}</td>

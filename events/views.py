@@ -25,6 +25,7 @@ from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
@@ -142,4 +143,18 @@ def space_requests(request):
     requests.sort(key=lambda r: r.sort_key())
     return render(request, "events/space-requests.html", {
         'requests': requests,
+    })
+
+@login_required
+def space_request(request, id):
+    space_request = get_object_or_404(SpaceUseRequest, id=id)
+    if request.method == 'POST':
+        if 'approve' in request.POST:
+            space_request.approve()
+        elif 'deny' in request.POST:
+            space_request.deny()
+        return HttpResponseRedirect(space_request.get_absolute_url())
+
+    return render(request, "events/space-request.html", {
+        'space_request': space_request,
     })

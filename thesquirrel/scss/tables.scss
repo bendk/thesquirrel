@@ -22,3 +22,50 @@ td, th {
         padding-right: 0;
     }
 }
+
+dl {
+    @extend %group;
+    margin: 0 0 1rem 0;
+    padding: 0;
+}
+
+dt {
+    float: left;
+    clear: left;
+    width: 180px;
+    font-style: italic;
+    text-align: right;
+
+    &:after {
+        content: ":";
+    }
+}
+
+dd {
+    margin-left: 200px;
+}
+
+dt, dd {
+    padding: 1rem 0;
+    min-height: 2.5rem;
+}
+
+
+table.key-value {
+    border-spacing: 20px 0;
+
+    th, td {
+        border: none;
+        padding: 1rem 0;
+
+        &:first-of-type {
+            text-align: right;
+            width: 180px;
+            font-style: italic;
+            &:after {
+                content: ":";
+            }
+        }
+    }
+
+}

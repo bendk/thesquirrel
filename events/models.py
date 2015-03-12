@@ -20,6 +20,7 @@ from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -139,15 +140,32 @@ class SpaceUseRequestBase(models.Model):
     class Meta:
         abstract = True
 
+    def is_pending(self):
+        return self.state == self.PENDING
+
+    def is_approved(self):
+        return self.state == self.APPROVED
+
+    def is_denied(self):
+        return self.state == self.DENIED
+
     def sort_key(self):
         """Key to use to sort events.
 
         Puts pending events on top, then sorts by last changed time
         """
-        if self.state == self.PENDING:
+        if self.is_pending():
             return (0, (-t for t in self.changed.timetuple()))
         else:
             return (1, (-t for t in self.changed.timetuple()))
+
+    def approve(self):
+        self.state = self.APPROVED
+        self.save()
+
+    def deny(self):
+        self.state = self.DENIED
+        self.save()
 
 class SpaceUseRequest(SpaceUseRequestBase):
     event_type = models.CharField(max_length=255)
@@ -179,6 +197,9 @@ class SpaceUseRequest(SpaceUseRequestBase):
 
     def get_type_display(self):
         return _('Single use')
+
+    def get_absolute_url(self):
+        return reverse('events:space-request', args=(self.id,))
 
     def get_created_display(self):
         return '{d:%a} {d.month}/{d.day}, {t}'.format(

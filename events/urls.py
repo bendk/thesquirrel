@@ -26,4 +26,6 @@ urlpatterns = patterns('events.views',
     url(r'^space-request-form/$', 'space_request_form',
         name='space-request-form'),
     url(r'^space-requests/$', 'space_requests', name='space-requests'),
+    url(r'^space-requests/single/(?P<id>\d+)/$', 'space_request',
+        name='space-request'),
 )
