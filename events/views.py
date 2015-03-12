@@ -30,8 +30,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from .forms import EventWithRepeatForm, SpaceUserRequestForm
-from .models import Event, EventDate, SpaceUseRequest
+from .forms import (EventWithRepeatForm, SpaceRequestForm,
+                    OngoingSpaceRequestForm)
+from .models import Event, EventDate, SpaceUseRequest, OngoingSpaceUseRequest
 
 def view(request, id):
     event = get_object_or_404(Event, id=id)
@@ -122,8 +123,16 @@ def edit_form(request, instance, return_url):
     })
 
 def space_request_form(request):
+    return _space_request_form(request, SpaceRequestForm,
+                               'events/space-request-form.html')
+
+def ongoing_space_request_form(request):
+    return _space_request_form(request, OngoingSpaceRequestForm,
+                               'events/ongoing-space-request-form.html')
+
+def _space_request_form(request, form_class, template_name):
     if request.method == 'POST':
-        form = SpaceUserRequestForm(data=request.POST)
+        form = form_class(data=request.POST)
         if form.is_valid():
             form.save()
             messages.add_message(
@@ -132,29 +141,38 @@ def space_request_form(request):
                   "We'll get back to you soon."))
             return redirect('home')
     else:
-        form = SpaceUserRequestForm()
-    return render(request, "events/space-request-form.html", {
+        form = form_class()
+    return render(request, template_name, {
         'form': form,
     })
 
 @login_required
 def space_requests(request):
     requests = list(SpaceUseRequest.objects.current())
+    requests.extend(OngoingSpaceUseRequest.objects.current())
     requests.sort(key=lambda r: r.sort_key())
     return render(request, "events/space-requests.html", {
         'requests': requests,
     })
 
-@login_required
 def space_request(request, id):
-    space_request = get_object_or_404(SpaceUseRequest, id=id)
+    return _space_request(request, SpaceUseRequest, id,
+                          'events/space-request.html')
+
+def ongoing_space_request(request, id):
+    return _space_request(request, OngoingSpaceUseRequest, id,
+                          'events/ongoing-space-request.html')
+
+@login_required
+def _space_request(request, model, id, template_name):
+    space_request = get_object_or_404(model, id=id)
     if request.method == 'POST':
         if 'approve' in request.POST:
             space_request.approve()
         elif 'deny' in request.POST:
             space_request.deny()
-        return HttpResponseRedirect(space_request.get_absolute_url())
+        return redirect('events:space-requests')
 
-    return render(request, "events/space-request.html", {
+    return render(request, template_name, {
         'space_request': space_request,
     })

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block html-attrs %} id="space-request"{% endblock %}
+{% block content %}
+{% if not space_request.is_pending %}
+<div class="status {{ space_request.get_state_display|lower }}">{{ space_request.get_state_display }}</div>
+{% endif %}
+<h1>{% blocktrans with id=space_request.id %}Single Event Space Request #{{ id}}{% endblocktrans %}</h1>
+
+<div class="section">
+  <h2>{% trans "How do you want to use the space?" %}</h2>
+  <table class="key-value">
+    <tr>
+      <td>{% trans "Title" %}</td>
+      <td>{{ space_request.title }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Event Type" %}</td>
+      <td>{{ space_request.event_type }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Description" %}</td>
+      <td>{{ space_request.description }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Dates" %}</td>
+      <td>{{ space_request.dates }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Frequency" %}</td>
+      <td>{{ space_request.frequency }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Squirrel goals" %}</td>
+      <td>{{ space_request.squirrel_goals }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Space needs" %}</td>
+      <td>{{ space_request.space_needs }}</td>
+    </tr>
+  </table>
+</div>
+
+<div class="section">
+  <h2>{% trans "Tell us about yourself" %}</h2>
+  <table class="key-value">
+    <tr>
+      <td>{% trans "Name" %}</td>
+      <td>{{ space_request.name }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Email" %}</td>
+      <td>{{ space_request.email }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Squirrel Contact" %}</td>
+      <td>{{ space_request.squirrel_member }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Organization" %}</td>
+      <td>{{ space_request.organization }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Website" %}</td>
+      <td>{{ space_request.website }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Mission" %}</td>
+      <td>{{ space_request.mission }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Phone Number" %}</td>
+      <td>{{ space_request.phone_number }}</td>
+    </tr>
+  </table>
+</div>
+
+{% if space_request.additional_comments %}
+<div class="section">
+  <h2>{% trans "Additional Comments" %}</h2>
+  {{ space_request.additional_comments }}
+</div>
+{% endif %}
+
+<form method="POST" action="">
+  {% csrf_token %}
+  {% if not space_request.is_approved %}
+  <button class="submit" name="approve" value="1">{% trans "Approve" %}</button>
+  {% endif %}
+  {% if not space_request.is_denied %}
+  <button class="delete" name="deny" value="1">{% trans "Deny" %}</button>
+  {% endif %}
+</form>
+
+{% endblock %}

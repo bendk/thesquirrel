@@ -132,13 +132,24 @@ class SpaceUseRequestBase(models.Model):
     )
 
     title = models.CharField(max_length=255)
+    description = models.TextField()
     state = models.CharField(max_length=1, choices=STATE_CHOICES,
                              default=PENDING)
     created = models.DateTimeField(default=timezone.now)
     changed = models.DateTimeField(null=True, auto_now=True)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(max_length=255)
+    squirrel_member = models.CharField(max_length=255, blank=True)
+    organization = models.CharField(max_length=255, blank=True)
+    website = models.CharField(max_length=255, blank=True)
+    mission = models.TextField(blank=True)
+    phone_number = models.CharField(max_length=255)
+    additional_comments = models.TextField(blank=True)
 
     class Meta:
         abstract = True
+
+    objects = SpaceUseRequestManager()
 
     def is_pending(self):
         return self.state == self.PENDING
@@ -155,9 +166,14 @@ class SpaceUseRequestBase(models.Model):
         Puts pending events on top, then sorts by last changed time
         """
         if self.is_pending():
-            return (0, (-t for t in self.changed.timetuple()))
+            return (0, tuple(-t for t in self.created.timetuple()))
         else:
-            return (1, (-t for t in self.changed.timetuple()))
+            return (1, tuple(-t for t in self.created.timetuple()))
+
+    def get_created_display(self):
+        created = timezone.localtime(self.created)
+        return '{d:%a} {d.month}/{d.day}, {t}'.format(
+            d=created, t=format_time(created.time()))
 
     def approve(self):
         self.state = self.APPROVED
@@ -169,26 +185,12 @@ class SpaceUseRequestBase(models.Model):
 
 class SpaceUseRequest(SpaceUseRequestBase):
     event_type = models.CharField(max_length=255)
-    description = models.TextField()
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
     setup_cleanup_time = models.CharField(max_length=255, blank=True)
-
     event_charge = models.CharField(max_length=255)
     squirrel_donation = models.TextField(blank=True)
-
-    name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
-    squirrel_member = models.CharField(max_length=255, blank=True)
-    organization = models.CharField(max_length=255, blank=True)
-    website = models.CharField(max_length=255, blank=True)
-    mission = models.TextField(blank=True)
-    phone_number = models.CharField(max_length=255)
-
-    additional_comments = models.TextField(blank=True)
-
-    objects = SpaceUseRequestManager()
 
     class Meta:
         index_together = [
@@ -201,12 +203,23 @@ class SpaceUseRequest(SpaceUseRequestBase):
     def get_absolute_url(self):
         return reverse('events:space-request', args=(self.id,))
 
-    def get_created_display(self):
-        return '{d:%a} {d.month}/{d.day}, {t}'.format(
-            d=self.created, t=format_time(self.created.time()))
-
     def get_date_display(self):
         return '{d:%a} {d.month}/{d.day}, {st}-{et}'.format(
             d=self.date, st=format_time(self.start_time),
             et=format_time(self.end_time))
 
+
+class OngoingSpaceUseRequest(SpaceUseRequestBase):
+    dates = models.CharField(max_length=255)
+    frequency = models.CharField(max_length=255)
+    squirrel_goals = models.TextField()
+    space_needs = models.CharField(max_length=255)
+
+    def get_type_display(self):
+        return _('Ongoing use')
+
+    def get_absolute_url(self):
+        return reverse('events:ongoing-space-request', args=(self.id,))
+
+    def get_date_display(self):
+        return self.dates

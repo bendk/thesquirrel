@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans "Single Event Space Request" %}</h1>
+<form class="space-use-request" method="POST" action="">
+  {% csrf_token %}
+
+  <fieldset>
+    <legend>{% trans "How do you want to use the space?" %}</legend>
+    {% include "field.html" with field=form.title %}
+    {% include "field.html" with field=form.event_type %}
+    {% include "field.html" with field=form.description %}
+    {% include "field.html" with field=form.dates %}
+    {% include "field.html" with field=form.frequency %}
+    {% include "field.html" with field=form.squirrel_goals %}
+    {% include "field.html" with field=form.space_needs %}
+  </fieldset>
+
+  <fieldset>
+    <legend>{% trans "Tell us about yourself" %}</legend>
+    {% include "field.html" with field=form.name %}
+    {% include "field.html" with field=form.email %}
+    {% include "field.html" with field=form.squirrel_member %}
+    {% include "field.html" with field=form.organization %}
+    {% include "field.html" with field=form.website %}
+    {% include "field.html" with field=form.mission %}
+    {% include "field.html" with field=form.phone_number %}
+  </fieldset>
+
+  <fieldset>
+    <legend>{% trans "Additional Comments" %}</legend>
+    {% include "field.html" with field=form.additional_comments %}
+  </fieldset>
+
+  <div class="actions">
+    <button class="submit">{% trans "Submit" %}</button>
+  </div>
+
+</form>
+{% endblock %}

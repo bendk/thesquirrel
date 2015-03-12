@@ -21,7 +21,8 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
-from .models import Event, EventRepeat, weekday_fields, SpaceUseRequest
+from .models import (Event, EventRepeat, weekday_fields,
+                     SpaceUseRequest, OngoingSpaceUseRequest)
 from .utils import format_time
 
 class DateField(forms.DateField):
@@ -53,6 +54,7 @@ class EventForm(forms.ModelForm):
             'title', 'description', 'date', 'start_time', 'end_time',
         )
         labels = {
+            'description': '',
             'description': '',
         }
 
@@ -149,7 +151,7 @@ class EventWithRepeatForm(object):
             event.repeat.delete()
         return event
 
-class SpaceUserRequestForm(forms.ModelForm):
+class SpaceRequestForm(forms.ModelForm):
     date = DateField()
     start_time = TimeField(with_blank=True, initial='')
     end_time = TimeField(with_blank=True, initial='')
@@ -164,6 +166,7 @@ class SpaceUserRequestForm(forms.ModelForm):
             'additional_comments',
         )
         labels = {
+            'title': _('Event title'),
             'setup_cleanup_time': _('Do you need extra setup/cleanup time? '
                                     'If so, how much?'),
             'event_charge': _('Will you charge or ask for donations?'),
@@ -171,6 +174,36 @@ class SpaceUserRequestForm(forms.ModelForm):
                                    'event, does our standard donation '
                                    'agreement work for you? If not, what '
                                    'would you like to propose?'),
+            'squirrel_member': _('Are you a member of the FSCS or have a '
+                                 'contact in the collective? If so, who?'),
+            'organization': _('Organization Name'),
+            'website': _('Website URL'),
+            'mission': _('Mission Statement'),
+            'additional_comments': '',
+        }
+        help_texts = {
+            'event_charge': _('If you do, we ask that no one be turned away '
+                              'for lack of funds.'),
+        }
+
+class OngoingSpaceRequestForm(forms.ModelForm):
+    class Meta:
+        model = OngoingSpaceUseRequest
+        fields = (
+            'title', 'description', 'dates', 'frequency',
+            'squirrel_goals', 'space_needs', 'name', 'email',
+            'squirrel_member', 'organization', 'website', 'mission',
+            'phone_number', 'additional_comments',
+        )
+
+        labels = {
+            'title': _('Event title'),
+            'dates': _('Date and times'),
+            'frequency': _('Frequency of use (weekly, monthly, etc)'),
+            'squirrel_goals': _('How will your use of the space advance '
+                                'the goals of the center'),
+            'space_needs': _('Material needs of the space (chairs, stage, '
+                             'sound system, desks, table, kitchen use, etc)'),
             'squirrel_member': _('Are you a member of the FSCS or have a '
                                  'contact in the collective? If so, who?'),
             'organization': _('Organization Name'),
