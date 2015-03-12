@@ -15,9 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
@@ -109,3 +113,79 @@ class EventRepeat(models.Model):
 class EventDate(models.Model):
     event = models.ForeignKey(Event, related_name='date_set')
     date = models.DateField(db_index=True)
+
+class SpaceUseRequestManager(models.Manager):
+    def current(self):
+        changed_since = timezone.now() - timedelta(days=14)
+        return self.filter(Q(state=SpaceUseRequest.PENDING) |
+                           Q(changed__gte=changed_since))
+
+class SpaceUseRequestBase(models.Model):
+    PENDING = 'P'
+    APPROVED = 'A'
+    DENIED = 'D'
+    STATE_CHOICES = (
+        (PENDING, _('Pending')),
+        (APPROVED, _('Approved')),
+        (DENIED, _('Denied')),
+    )
+
+    title = models.CharField(max_length=255)
+    state = models.CharField(max_length=1, choices=STATE_CHOICES,
+                             default=PENDING)
+    created = models.DateTimeField(default=timezone.now)
+    changed = models.DateTimeField(null=True, auto_now=True)
+
+    class Meta:
+        abstract = True
+
+    def sort_key(self):
+        """Key to use to sort events.
+
+        Puts pending events on top, then sorts by last changed time
+        """
+        if self.state == self.PENDING:
+            return (0, (-t for t in self.changed.timetuple()))
+        else:
+            return (1, (-t for t in self.changed.timetuple()))
+
+class SpaceUseRequest(SpaceUseRequestBase):
+    event_type = models.CharField(max_length=255)
+    description = models.TextField()
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    setup_cleanup_time = models.CharField(max_length=255, blank=True)
+
+    event_charge = models.CharField(max_length=255)
+    squirrel_donation = models.TextField(blank=True)
+
+    name = models.CharField(max_length=255)
+    email = models.CharField(max_length=255)
+    squirrel_member = models.CharField(max_length=255, blank=True)
+    organization = models.CharField(max_length=255, blank=True)
+    website = models.CharField(max_length=255, blank=True)
+    mission = models.TextField(blank=True)
+    phone_number = models.CharField(max_length=255)
+
+    additional_comments = models.TextField(blank=True)
+
+    objects = SpaceUseRequestManager()
+
+    class Meta:
+        index_together = [
+            ('state', 'changed'),
+        ]
+
+    def get_type_display(self):
+        return _('Single use')
+
+    def get_created_display(self):
+        return '{d:%a} {d.month}/{d.day}, {t}'.format(
+            d=self.created, t=format_time(self.created.time()))
+
+    def get_date_display(self):
+        return '{d:%a} {d.month}/{d.day}, {st}-{et}'.format(
+            d=self.date, st=format_time(self.start_time),
+            et=format_time(self.end_time))
+

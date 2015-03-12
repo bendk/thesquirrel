@@ -18,8 +18,12 @@
 from __future__ import absolute_import
 
 from django.contrib import admin
-from .models import Event
+from .models import Event, SpaceUseRequest
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     pass
+
+@admin.register(SpaceUseRequest)
+class SpaceUseRequestAdmin(admin.ModelAdmin):
+    list_display = ('title', 'name', 'state', 'created')

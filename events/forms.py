@@ -21,7 +21,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
-from .models import Event, EventRepeat, weekday_fields
+from .models import Event, EventRepeat, weekday_fields, SpaceUseRequest
 from .utils import format_time
 
 class DateField(forms.DateField):
@@ -33,18 +33,19 @@ class DateField(forms.DateField):
 class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
         choices = []
+        if kwargs.pop('with_blank', False):
+            choices.append(('', ''))
         for h in range(7, 23):
             for m in (0, 30):
                 t = time(h, m)
                 choices.append((t.strftime('%H:%M:00'), format_time(t)))
         kwargs['widget'] = forms.Select(choices=choices)
-        kwargs['initial'] = '18:00:00'
         super(TimeField, self).__init__(*args, **kwargs)
 
 class EventForm(forms.ModelForm):
     date = DateField()
-    start_time = TimeField()
-    end_time = TimeField()
+    start_time = TimeField(initial='18:00:00')
+    end_time = TimeField(initial='19:00:00')
 
     class Meta:
         model = Event
@@ -147,3 +148,38 @@ class EventWithRepeatForm(object):
         elif event.has_repeat():
             event.repeat.delete()
         return event
+
+class SpaceUserRequestForm(forms.ModelForm):
+    date = DateField()
+    start_time = TimeField(with_blank=True, initial='')
+    end_time = TimeField(with_blank=True, initial='')
+
+    class Meta:
+        model = SpaceUseRequest
+        fields = (
+            'title', 'event_type', 'description', 'date', 'start_time',
+            'end_time', 'setup_cleanup_time', 'event_charge',
+            'squirrel_donation', 'name', 'email', 'squirrel_member',
+            'organization', 'website', 'mission', 'phone_number',
+            'additional_comments',
+        )
+        labels = {
+            'setup_cleanup_time': _('Do you need extra setup/cleanup time? '
+                                    'If so, how much?'),
+            'event_charge': _('Will you charge or ask for donations?'),
+            'squirrel_donation': _('If you are collecting money for your '
+                                   'event, does our standard donation '
+                                   'agreement work for you? If not, what '
+                                   'would you like to propose?'),
+            'squirrel_member': _('Are you a member of the FSCS or have a '
+                                 'contact in the collective? If so, who?'),
+            'organization': _('Organization Name'),
+            'website': _('Website URL'),
+            'mission': _('Mission Statement'),
+            'additional_comments': '',
+        }
+        help_texts = {
+            'event_charge': _('If you do, we ask that no one be turned away '
+                              'for lack of funds.'),
+        }
+

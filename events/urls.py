@@ -23,4 +23,7 @@ urlpatterns = patterns('events.views',
     url(r'^create/$', 'create', name='create'),
     url(r'^(?P<id>\d+)/$', 'view', name='view'),
     url(r'^(?P<id>\d+)/edit/$', 'edit', name='edit'),
+    url(r'^space-request-form/$', 'space_request_form',
+        name='space-request-form'),
+    url(r'^space-requests/$', 'space_requests', name='space-requests'),
 )

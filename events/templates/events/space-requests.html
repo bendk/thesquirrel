@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block html-attrs %} class="wide-content"{% endblock %}
+{% block content %}
+<h1>{% trans "Space Requests" %}</h1>
+{% if requests %}
+<table class="space-requests">
+  <thead>
+    <tr>
+      <th>{% trans "Event" %}</th>
+      <th>{% trans "Type" %}</th>
+      <th class="small-exclude">{% trans "Name" %}</th>
+      <th class="small-exclude">{% trans "Submission Date" %}</th>
+      <th class="small-exclude">{% trans "Date" %}</th>
+      <th>{% trans "Status" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for request in requests %}
+    <tr>
+      <td>{{ request.title }}</td>
+      <td>{{ request.get_type_display }}</td>
+      <td class="small-exclude">{{ request.name }}</td>
+      <td class="small-exclude">{{ request.get_created_display }}</td>
+      <td class="small-exclude">{{ request.get_date_display }}</td>
+      <td><span class="{{ request.get_state_display|lower }}">{{ request.get_state_display }}</span></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<h2>{% trans "No requests" %}</h2>
+{% endif %}
+{% endblock %}

@@ -111,6 +111,38 @@ table.calendar {
     }
 }
 
+table.space-requests {
+    span.approved, span.denied, span.pending {
+        display: inline-block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px 8px;
+        text-align: center;
+        font-weight: bold;
+        color: $white;
+        border-radius: 5px;
+    }
+    span.approved {
+        background: $green;
+    }
+    span.denied {
+        background: $red;
+    }
+    span.pending {
+        background: $darkish-gray;
+    }
+
+    @include small-screen {
+        td.small-exclude, th.small-exclude {
+            display: none;
+        }
+
+        span.approved, span.denied, span.pending {
+            padding: 6px 2px;
+        }
+    }
+}
+
 form.events {
     .weekdays {
         width: 80%;
@@ -149,6 +181,15 @@ form.events {
 
     .details {
         display: none;
+    }
+}
+
+form.space-use-request {
+    p.donation {
+        padding: 20px;
+        border: 1px solid $gray;
+        border-radius: 5px;
+        background: $white;
     }
 }
 

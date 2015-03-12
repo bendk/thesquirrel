@@ -22,14 +22,15 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 from django import forms
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from .forms import EventWithRepeatForm
-from .models import Event, EventDate
+from .forms import EventWithRepeatForm, SpaceUserRequestForm
+from .models import Event, EventDate, SpaceUseRequest
 
 def view(request, id):
     event = get_object_or_404(Event, id=id)
@@ -117,4 +118,28 @@ def edit_form(request, instance, return_url):
         'title': title,
         'submit_text': submit_text,
         'enable_delete': enable_delete,
+    })
+
+def space_request_form(request):
+    if request.method == 'POST':
+        form = SpaceUserRequestForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(
+                request, messages.INFO,
+                _("Thanks for considering the squirrel for your event!  "
+                  "We'll get back to you soon."))
+            return redirect('home')
+    else:
+        form = SpaceUserRequestForm()
+    return render(request, "events/space-request-form.html", {
+        'form': form,
+    })
+
+@login_required
+def space_requests(request):
+    requests = list(SpaceUseRequest.objects.current())
+    requests.sort(key=lambda r: r.sort_key())
+    return render(request, "events/space-requests.html", {
+        'requests': requests,
     })

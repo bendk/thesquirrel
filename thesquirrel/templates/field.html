@@ -1,2 +1,6 @@
 {{ field.errors }}
-<label>{{field.label }} {{ field }}</label>
+<label>
+  {{ field.label }}{% if field.field.required %} <span class="required">*</span>{% endif %}
+  {{ field }}
+  {% if field.help_text %}<p class="help">{{ field.help_text }}</p>{% endif %}
+</label>
