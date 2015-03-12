@@ -60,12 +60,11 @@ table.key-value {
 
         &:first-of-type {
             text-align: right;
-            width: 180px;
+            width: 25%;
             font-style: italic;
             &:after {
                 content: ":";
             }
         }
     }
-
 }
