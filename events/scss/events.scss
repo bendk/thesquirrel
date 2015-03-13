@@ -5,6 +5,16 @@ html#event {
     }
 }
 
+html.space-request-form {
+    ul {
+        list-style-type: none;
+    }
+
+    li {
+        margin: 0 0 1rem 40px;
+    }
+}
+
 html#calendar {
     .content {
         max-width: 1200px;
@@ -38,8 +48,6 @@ html#calendar {
             display: none;
         }
     }
-
-
 }
 
 table.calendar, div.date-details {

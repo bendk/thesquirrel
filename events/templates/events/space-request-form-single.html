@@ -1,7 +1,27 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% block html-attrs %} class="space-request-form"{% endblock %}
 {% block content %}
 <h1>{% trans "Single Event Space Request" %}</h1>
+
+<p>{% trans "Thank you for your interest in the Flying Squirrel Community Space!" %}</p>
+
+<p>{% trans "Please read through these guidelines for using our space before you complete this form:" %}</p>
+
+{% url "docs:view" "principles-of-unity" as pou_url %}
+<ul>
+  <li><strong>{% trans "Principles of Unity:" %}</strong> {% blocktrans %}We feel very strongly about our principles of unity.  They help us keep the squirrel space a safe and welcoming zone: <a href="{{ pou_url }}">Read our prinicples of unity</a>.{% endblocktrans %}</li>
+  <li><strong>{% trans "Occupancy:" %}</strong> {% trans "91 for the upstairs room and 43 for the downstairs room" %}</li>
+  <li><strong>{% trans "Amplified Music days and times:" %}</strong> {% trans "Amplified music is normally only allowed on weekends.  Amplified music must end at 10pm Fridays/Saturdays, and 9pm on Sundays." %}</li>
+  <li><strong>{% trans "Flat fee for Music Events and Private Parties:" %}</strong> {% trans "$85 with a deposit of $35 (to be paid upon approval either online or by check) to reserve the date. The remaining fee ($50) is due at the time of the event. Waivers are available if this fee presents a hardship." %}</li>
+  <li><strong>{% trans "Smoke/Drug/Alcohol Policy:" %}</strong> {% trans "All public events at the Squirrel are alcohol and drug free (inside the space as well as the parking lot). Smoking is prohibited inside the building." %}</li>
+  <li><strong>{% trans "Event Promotion:" %}</strong> {% trans "Please know you are responsible for promoting your own event. Our only notice is the posting on the Squirrel Calendar." %}</li>
+  <li><strong>{% trans "Cancellation:" %}</strong> {% trans "If you cancel your event more than 2 weeks out, then we can return your deposit." %}</li>
+  <li><strong>{% trans "Special Needs:" %}</strong> {% trans "Contact us about special needs (kitchen, etc.)" %}</li>
+  <li><strong>{% trans "Clean Up:" %}</strong> {% trans "Groups are responsible for set up and clean up for their events.  Clean up includes taking out the trash." %}</li>
+</ul>
+{% url "events:ongoing-space-request-form" as ongoing_form_url %}
+<p><strong>{% trans "This form is for a single event at the space." %}</strong> {% blocktrans %}If you are looking to use the space on an ongoing basis, please use the <a href="{{ ongoing_form_url }}">Ongoing Space Request Form</a>.{% endblocktrans %}</p>
 <form class="space-use-request" method="POST" action="">
   {% csrf_token %}
 

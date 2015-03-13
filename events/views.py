@@ -82,6 +82,9 @@ def calendar(request, year=None, month=None):
         'month_name': start_date.strftime("%B %Y"),
     })
 
+def book_the_space(request):
+    return render(request, 'events/book-the-space.html')
+
 @login_required
 def create(request):
     return edit_form(request, None, reverse('events:calendar'))

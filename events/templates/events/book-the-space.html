@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block html-attrs %} class="space-request-form"{% endblock %}
+{% block content %}
+<h1>{% trans "Booking the Flying Squirrel" %}</h1>
+
+<p><strong>{% trans "The Flying Squirrel Community Center is for the community to use."%}</strong> {% trans "If you want to use the space for you or your organization's event, meeting, show, screening.. whatever, we'd love to work with you." %}</p>
+
+<p><strong>{% trans "Requesting space is easy." %}</strong> {% trans "Just read the notes below then fill out one of the space request forms at the bottom of the page." %}
+
+<h2>{% trans "Space usage notes:" %}</h2>
+<ul>
+  <li><strong>{% trans "The Flying Squirrel Community Space (FSCS) Mission:" %}</strong> {% trans "Together, we want to provide a welcoming space that cultivates and sustains long lasting relationships between artists, activists, and community members in Rochester so that we may work together to create positive social change." %}</li>
+  <li><strong>{% trans "All space requests must be approved by the FSCS collective."%}</strong>{% trans "This could take as long as 2 weeks; please plan accordingly.  All decisions are made by consensus during meetings." %}</li>
+  <li><strong>{% trans "We are working to provide a welcoming space for people of all races, ethnic groups, abilities, ages, sexual orientations, and gender identities." %}</strong> {% trans "This is not a space for hate groups or groups that discriminate in any way. We want all groups using our space to agree with this mission, and to support this mission in all activities and communication." %}</li>
+  <li><strong>{% trans "Events must be respectful of our community." %}</strong> {% trans "  Please help us maintain a positive relationship with our neighbors." %}</li>
+  <li><strong>{% trans "Groups using the space are responsible for cleaning up after themselves." %}</strong></li>
+<li><strong>{% trans "Events should be free or donation-based, with no one turned away for lack of funds." %}</strong> {% trans "We generally ask 50% of the any proceeds to help us stay open.  However, this is flexible.  If you need a different arrangement feel free to ask." %}</li>
+<li><strong>{% trans "Music Events and Private Parties have special guidelines and a flat fee of $85 ($35 deposit)." %}</strong> {% trans "Read about these at the top of the single event request form linked below." %}</li>
+<li><strong>{% trans "Public events at the Flying Squirrel are drug and alcohol free." %}</strong> {% trans "The indoors of the space is non-smoking.  Cigarettes can be smoked on our upstairs balcony." %}</li>
+{% url "docs:view" "principles-of-unity" as pou_url %}
+<li><strong>{% blocktrans %}Our space is grounded in our <a href="{{ pou_url }}">Principles of Unity.</a>{% endblocktrans %}</strong> {% trans "Please take a moment to read them." %}</li>
+</ul>
+<h2>{% trans "Space Use Request Forms" %}</h2>
+<a class="button" href="{% url "events:space-request-form" %}">{% trans "Single Event" %}</a>
+<a class="button" href="{% url "events:ongoing-space-request-form" %}">{% trans "Ongoing Usage" %}</a>
+{% endblock %}

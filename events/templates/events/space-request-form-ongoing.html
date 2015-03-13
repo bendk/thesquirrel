@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% block html-attrs %} class="space-request-form"{% endblock %}
 {% block content %}
-<h1>{% trans "Single Event Space Request" %}</h1>
+<h1>{% trans "Ongoing Event Space Request" %}</h1>
+<p>{% trans "Thank you for your interest in the Flying Squirrel Community Space! Please take your time to fill out this form with care and sincerity. The information that you provide below will be taken seriously and will directly affect how we respond to your request." %}</p>
+
+{% url "events:space-request-form" as single_form_url %}
+<p><strong>{% trans "This form is for ongoing usage of the space." %}</strong> {% blocktrans %}If you are looking to use the space for a single event, then you can use the simpler and shorter <a href="{{ single_form_url }}">single event form</a>. {% endblocktrans %}</p>
 <form class="space-use-request" method="POST" action="">
   {% csrf_token %}
 
