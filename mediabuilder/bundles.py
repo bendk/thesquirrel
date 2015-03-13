@@ -106,6 +106,7 @@ class SassBundle(Bundle):
 
     def include_paths(self):
         include_paths = self.bundle_info.get('include_paths', [])
+        include_paths = [ self.source_path(p) for p in include_paths ]
         # automatically include the directories from ant source paths
         include_paths.extend(
             set(os.path.dirname(p) for p in self.source_paths()))
