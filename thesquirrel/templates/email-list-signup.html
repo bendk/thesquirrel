@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans "Sign up for Flying Squirrel Announcements" %}</h1>
+<p>{% trans "The list is low volume and we will not share your email with anyone" %}</p>
+
+<form method="post" action="http://lists.rocus.org/subscribe/flying-squirrel-announce">
+  <label>
+    {% trans "Email" %} <span class="required">*</span>
+    <input name="email">
+  </label>
+  <input type="hidden" name="email-button" value="Subscribe">
+  <div class="actions">
+    <button class="submit">{% trans "Subscribe" %}</button>
+  </div>
+</form>
+{% endblock %}

@@ -52,3 +52,6 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect("home")
+
+def email_list_signup(request):
+    return render(request, 'email-list-signup.html')
