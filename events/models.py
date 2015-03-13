@@ -115,13 +115,35 @@ class EventDate(models.Model):
     event = models.ForeignKey(Event, related_name='date_set')
     date = models.DateField(db_index=True)
 
+class SpaceUseRequestQueryset(models.QuerySet):
+    def iterator(self):
+        # This code does a couple things:
+        #   - Generate subclass instances instead of the base class
+        #   - Only uses 1 query to fetch all the data we need
+        real_query = self.select_related('singlespaceuserequest',
+                                         'ongoingspaceuserequest')
+        for base_obj in super(SpaceUseRequestQueryset, real_query).iterator():
+            if base_obj._singlespaceuserequest_cache:
+                yield base_obj.singlespaceuserequest
+            elif base_obj._ongoingspaceuserequest_cache:
+                yield base_obj.ongoingspaceuserequest
+            else:
+                raise TypeError("No subclass found: {}".format(base_obj))
+
+
 class SpaceUseRequestManager(models.Manager):
+    def get_queryset(self):
+        return SpaceUseRequestQueryset(self.model)
+
     def current(self):
         changed_since = timezone.now() - timedelta(days=14)
-        return self.filter(Q(state=SpaceUseRequest.PENDING) |
-                           Q(changed__gte=changed_since))
+        return (self.filter(Q(state=SpaceUseRequest.PENDING) |
+                            Q(changed__gte=changed_since))
+                .extra(select={
+                    'state_order':'(CASE WHEN state="P" THEN 0 ELSE 1 END)',
+                }).order_by('state_order', 'created'))
 
-class SpaceUseRequestBase(models.Model):
+class SpaceUseRequest(models.Model):
     PENDING = 'P'
     APPROVED = 'A'
     DENIED = 'D'
@@ -146,10 +168,12 @@ class SpaceUseRequestBase(models.Model):
     phone_number = models.CharField(max_length=255)
     additional_comments = models.TextField(blank=True)
 
-    class Meta:
-        abstract = True
-
     objects = SpaceUseRequestManager()
+
+    class Meta:
+        index_together = [
+            ('state', 'changed'),
+        ]
 
     def is_pending(self):
         return self.state == self.PENDING
@@ -159,16 +183,6 @@ class SpaceUseRequestBase(models.Model):
 
     def is_denied(self):
         return self.state == self.DENIED
-
-    def sort_key(self):
-        """Key to use to sort events.
-
-        Puts pending events on top, then sorts by last changed time
-        """
-        if self.is_pending():
-            return (0, tuple(-t for t in self.created.timetuple()))
-        else:
-            return (1, tuple(-t for t in self.created.timetuple()))
 
     def get_created_display(self):
         created = timezone.localtime(self.created)
@@ -183,7 +197,7 @@ class SpaceUseRequestBase(models.Model):
         self.state = self.DENIED
         self.save()
 
-class SpaceUseRequest(SpaceUseRequestBase):
+class SingleSpaceUseRequest(SpaceUseRequest):
     event_type = models.CharField(max_length=255)
     date = models.DateField()
     start_time = models.TimeField()
@@ -191,11 +205,6 @@ class SpaceUseRequest(SpaceUseRequestBase):
     setup_cleanup_time = models.CharField(max_length=255, blank=True)
     event_charge = models.CharField(max_length=255)
     squirrel_donation = models.TextField(blank=True)
-
-    class Meta:
-        index_together = [
-            ('state', 'changed'),
-        ]
 
     def get_type_display(self):
         return _('Single use')
@@ -208,8 +217,7 @@ class SpaceUseRequest(SpaceUseRequestBase):
             d=self.date, st=format_time(self.start_time),
             et=format_time(self.end_time))
 
-
-class OngoingSpaceUseRequest(SpaceUseRequestBase):
+class OngoingSpaceUseRequest(SpaceUseRequest):
     dates = models.CharField(max_length=255)
     frequency = models.CharField(max_length=255)
     squirrel_goals = models.TextField()

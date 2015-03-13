@@ -86,6 +86,24 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
 )
 
+LOGGING = {
+    'disable_existing_loggers': False,
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+}
+
 ROOT_URLCONF = 'thesquirrel.urls'
 WSGI_APPLICATION = 'wsgi.application'
 LANGUAGE_CODE = 'en-us'
@@ -95,7 +113,10 @@ USE_L10N = True
 USE_TZ = True
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 NOSE_PLUGINS = ['thesquirrel.nose.TestPlugin']
-NOSE_ARGS = ['--logging-filter=-django.db.backends,-factory']
+NOSE_ARGS = [
+    '--logging-filter=-django.db.backends,-factory',
+    '--logging-clear-handlers',
+]
 
 MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,

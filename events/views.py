@@ -30,9 +30,9 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from .forms import (EventWithRepeatForm, SpaceRequestForm,
+from .forms import (EventWithRepeatForm, SingleSpaceRequestForm,
                     OngoingSpaceRequestForm)
-from .models import Event, EventDate, SpaceUseRequest, OngoingSpaceUseRequest
+from .models import Event, EventDate, SpaceUseRequest
 
 def view(request, id):
     event = get_object_or_404(Event, id=id)
@@ -123,7 +123,7 @@ def edit_form(request, instance, return_url):
     })
 
 def space_request_form(request):
-    return _space_request_form(request, SpaceRequestForm,
+    return _space_request_form(request, SingleSpaceRequestForm,
                                'events/space-request-form.html')
 
 def ongoing_space_request_form(request):
@@ -138,7 +138,8 @@ def _space_request_form(request, form_class, template_name):
             messages.add_message(
                 request, messages.INFO,
                 _("Thanks for considering the squirrel for your event!  "
-                  "We'll get back to you soon."))
+                  "We'll get back to you soon.  If you have any questions "
+                  "email us: flying-squirrel-events@lists.rocus.org."))
             return redirect('home')
     else:
         form = form_class()
@@ -148,9 +149,7 @@ def _space_request_form(request, form_class, template_name):
 
 @login_required
 def space_requests(request):
-    requests = list(SpaceUseRequest.objects.current())
-    requests.extend(OngoingSpaceUseRequest.objects.current())
-    requests.sort(key=lambda r: r.sort_key())
+    requests = SpaceUseRequest.objects.current()
     return render(request, "events/space-requests.html", {
         'requests': requests,
     })

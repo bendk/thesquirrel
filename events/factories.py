@@ -20,9 +20,12 @@ from datetime import date, time, timedelta
 import factory
 
 from thesquirrel.factories import *
-from .models import Event, EventRepeat
+from .models import (Event, EventRepeat, SingleSpaceUseRequest,
+                     OngoingSpaceUseRequest)
 
 class EventFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = Event
+
     title = 'test-event'
     description = 'test-event-description'
     date = date(2015, 1, 1)
@@ -36,8 +39,34 @@ class EventFactory(factory.DjangoModelFactory):
             EventRepeat.objects.create(event=obj, type='2W', th=True,
                                        until=obj.date + timedelta(days=30))
 
-    class Meta:
-        model = Event
+class SpaceUseRequestFactory(factory.DjangoModelFactory):
+    title = factory.Sequence(lambda n: 'event-request-{}'.format(n))
+    description = 'my event'
+    name = 'Susan B. Event Requestor'
+    email = 'susan@example.com'
+    squirrel_member = 'No'
+    organization = 'First Wave'
+    website = 'example.com'
+    mission = 'To get the vote'
+    phone_number = '555-555-5555'
+    additional_comments = 'Extra comments'
+
+class SingleSpaceUseRequestFactory(SpaceUseRequestFactory):
+    FACTORY_FOR = SingleSpaceUseRequest
+    event_type = 'Speaker'
+    date = date(2015, 1, 1)
+    start_time = time(12, 0)
+    end_time = time(13, 30)
+    setup_cleanup_time = '1 hour before'
+    event_charge = '$50'
+    squirrel_donation = 'Yes the donation works for us'
+
+class OngoingSpaceUseRequestFactory(SpaceUseRequestFactory):
+    FACTORY_FOR = OngoingSpaceUseRequest
+    dates = 'first monday and wednesday'
+    frequency = 'monthly'
+    squirrel_goals = 'We will be promoting feminism'
+    space_needs = 'Chairs'
 
 __all__ = [
     name for name, value in globals().items()

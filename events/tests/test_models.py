@@ -24,9 +24,9 @@ from nose.tools import *
 import pytz
 
 from ..factories import *
-from ..models import Event, EventRepeat, EventDate
+from ..models import Event, EventRepeat, EventDate, SpaceUseRequest
 
-class TestModels(TestCase):
+class TestEventModels(TestCase):
     def check_dates(self, event, correct_dates):
         event.update_dates()
         assert_items_equal([d.date for d in event.date_set.all()],
@@ -51,3 +51,13 @@ class TestModels(TestCase):
         # make an extra event date -- it should be deleted in update_dates()
         EventDate.objects.create(event=event, date=date(2015, 1, 2))
         self.check_dates(event, [date(2015, 1, 1)])
+
+class TestSpaceUseRequestModels(TestCase):
+    def test_query(self):
+        SingleSpaceUseRequestFactory()
+        OngoingSpaceUseRequestFactory()
+        with self.assertNumQueries(1):
+            types = [sr.get_type_display()
+                     for sr in SpaceUseRequest.objects.all()]
+        assert_items_equal(types, ['Single use', 'Ongoing use'])
+

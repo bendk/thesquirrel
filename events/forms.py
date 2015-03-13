@@ -22,7 +22,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
 from .models import (Event, EventRepeat, weekday_fields,
-                     SpaceUseRequest, OngoingSpaceUseRequest)
+                     SingleSpaceUseRequest, OngoingSpaceUseRequest)
 from .utils import format_time
 
 class DateField(forms.DateField):
@@ -151,13 +151,13 @@ class EventWithRepeatForm(object):
             event.repeat.delete()
         return event
 
-class SpaceRequestForm(forms.ModelForm):
+class SingleSpaceRequestForm(forms.ModelForm):
     date = DateField()
     start_time = TimeField(with_blank=True, initial='')
     end_time = TimeField(with_blank=True, initial='')
 
     class Meta:
-        model = SpaceUseRequest
+        model = SingleSpaceUseRequest
         fields = (
             'title', 'event_type', 'description', 'date', 'start_time',
             'end_time', 'setup_cleanup_time', 'event_charge',
