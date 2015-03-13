@@ -1,4 +1,4 @@
-Django==1.7.3
+Django==1.7.6
 Pillow==2.7.0
 argparse==1.2.1
 django-nose==1.3

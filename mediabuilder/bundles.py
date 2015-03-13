@@ -80,7 +80,7 @@ class Bundle(object):
     def build(self):
         content = self.build_content()
         with open(self.dest_path(), 'w') as f:
-            f.write(content)
+            f.write(content.encode('utf-8'))
 
 class JSBundle(Bundle):
     settings_key = 'JS_BUNDLES'
