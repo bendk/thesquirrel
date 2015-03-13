@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n events %}
 
 {% block nav %}
 {% if user.is_authenticated %}
@@ -36,28 +36,7 @@
 
   <div class="callout">
       <h2>What's Happening?</h2>
-
-      <ul class="upcoming">
-        <li>
-        <a href="#" class="title">Coalition of Concerned Residents of Monroe County</a>
-        <div class="date">Mon, Jan. 19 - 6:00pm - 8:00pm</div>
-        </li>
-
-        <li>
-        <a href="#" class="title">Flying Squirrel Working time</a>
-        <div class="date">Mon, Jan. 19 - 7:00pm - 9:00pm</div>
-        </li>
-
-        <li>
-        <a href="#" class="title">Enough is Enough! Organizing meeting</a>
-        <div class="date">Tue, Jan. 20 - 7:00pm - 9:00pm</div>
-        </li>
-
-        <li>
-        <a href="#" class="title">Whirly Wednesday --upstairs</a>
-        <div class="date">Wed, Jan. 21 - 7:00pm - 10:00pm</div>
-        </li>
-      </ul>
+      {% upcoming-events %}
       <div class="next-step"><a href="{% url "events:calendar" %}">Full Calendar</a></div>
   </div>
 

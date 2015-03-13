@@ -118,6 +118,13 @@ class EventDate(models.Model):
     event = models.ForeignKey(Event, related_name='date_set')
     date = models.DateField(db_index=True)
 
+    @classmethod
+    def upcoming(cls):
+        today = timezone.now().date()
+        return (cls.objects.filter(date__gte=today)
+                .select_related('event')
+                .order_by('date', 'event__start_time'))
+
 class SpaceUseRequestQueryset(models.QuerySet):
     def iterator(self):
         # This code does a couple things:
