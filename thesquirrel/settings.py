@@ -127,7 +127,7 @@ MEDIA_BUILDER = {
                           'jquery-cookie/archive/v1.4.1.tar.gz'),
         'Pikaday': 'https://github.com/dbushell/Pikaday/archive/1.3.2.zip',
         'video.js': 'http://vjs.zencdn.net/4.12/video.js',
-        'video-js.scss': 'http://vjs.zencdn.net/4.12/video-js.css',
+        'video-js.css': 'http://vjs.zencdn.net/4.12/video-js.css',
         'fontawesome': ('http://fortawesome.github.io/'
                         'Font-Awesome/assets/font-awesome-4.3.0.zip'),
     },
