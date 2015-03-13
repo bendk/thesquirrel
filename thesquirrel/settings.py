@@ -134,11 +134,11 @@ MEDIA_BUILDER = {
     'SASS_BUNDLES': {
         'app.css': {
             'sources': [
+                'thesquirrel/scss/app.scss',
+                'events/scss/events.scss',
                 'mediabuilder/downloads/Pikaday/css/pikaday.css',
                 'mediabuilder/downloads/fontawesome/scss/font-awesome.scss',
                 'mediabuilder/downloads/video-js.css',
-                'thesquirrel/scss/app.scss',
-                'events/scss/events.scss',
             ],
             'include_paths': [
                 'editor/scss',
