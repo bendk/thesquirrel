@@ -1,0 +1,8 @@
+A new space use request was submitted to the site:
+
+Type: {{ space_use_request.get_type_display }}
+Title: {{ space_use_request.title }}
+Name: {{ space_use_request.name }}
+Date: {{ space_use_request.get_date_display }}
+
+You can view the request at: {{ uri }}

@@ -40,7 +40,7 @@ DEBUG = DEV
 TEMPLATE_DEBUG = DEBUG
 ALLOWED_HOSTS = []
 if DEV:
-    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 LOGIN_URL = 'login'

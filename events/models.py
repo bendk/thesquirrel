@@ -19,10 +19,13 @@ from __future__ import absolute_import
 from datetime import timedelta
 
 from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
@@ -196,6 +199,17 @@ class SpaceUseRequest(models.Model):
     def deny(self):
         self.state = self.DENIED
         self.save()
+
+    def send_email(self, request):
+        events_email = getattr(settings, 'EVENTS_EMAIL', None)
+        if not events_email:
+            return
+        message = render_to_string('events/new-space-use-request-email.txt', {
+            'space_use_request': self,
+            'uri': request.build_absolute_uri(self.get_absolute_url()),
+        })
+        send_mail('New space use request', message, self.email,
+                  [events_email], fail_silently=False)
 
 class SingleSpaceUseRequest(SpaceUseRequest):
     event_type = models.CharField(max_length=255)

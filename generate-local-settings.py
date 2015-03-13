@@ -26,6 +26,13 @@ MYSQL_PASS = 'ENTER_DATABASE_PASSWORD'
 MYSQL_HOST = 'localhost'
 MYSQL_PORT = '3306'
 
+# Email Info
+EVENTS_EMAIL = None
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_HOST_USER = None
+EMAIL_HOST_PASSWORD = None
+
 # Set to False for production servers
 DEV = True
 

@@ -134,7 +134,8 @@ def _space_request_form(request, form_class, template_name):
     if request.method == 'POST':
         form = form_class(data=request.POST)
         if form.is_valid():
-            form.save()
+            space_use_request = form.save()
+            space_use_request.send_email(request)
             messages.add_message(
                 request, messages.INFO,
                 _("Thanks for considering the squirrel for your event!  "
