@@ -1,0 +1,40 @@
+{% load i18n %}
+<div class="section">
+  <h2>{% trans "How do you want to use the space?" %}</h2>
+  <table class="key-value">
+    <tr>
+      <td>{% trans "Title" %}</td>
+      <td>{{ space_request.title }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Event Type" %}</td>
+      <td>{{ space_request.event_type }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Description" %}</td>
+      <td>{{ space_request.description }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Dates" %}</td>
+      <td>{{ space_request.dates }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Frequency" %}</td>
+      <td>{{ space_request.frequency }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Squirrel goals" %}</td>
+      <td>{{ space_request.squirrel_goals }}</td>
+    </tr>
+
+    <tr>
+      <td>{% trans "Space needs" %}</td>
+      <td>{{ space_request.space_needs }}</td>
+    </tr>
+  </table>
+</div>

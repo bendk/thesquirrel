@@ -178,6 +178,9 @@ class SpaceUseRequest(models.Model):
             ('state', 'changed'),
         ]
 
+    def get_absolute_url(self):
+        return reverse('events:space-request', args=(self.id,))
+
     def is_pending(self):
         return self.state == self.PENDING
 
@@ -220,11 +223,9 @@ class SingleSpaceUseRequest(SpaceUseRequest):
     event_charge = models.CharField(max_length=255)
     squirrel_donation = models.TextField(blank=True)
 
+    type = 'single'
     def get_type_display(self):
         return _('Single use')
-
-    def get_absolute_url(self):
-        return reverse('events:space-request', args=(self.id,))
 
     def get_date_display(self):
         return '{d:%a} {d.month}/{d.day}, {st}-{et}'.format(
@@ -237,11 +238,17 @@ class OngoingSpaceUseRequest(SpaceUseRequest):
     squirrel_goals = models.TextField()
     space_needs = models.CharField(max_length=255)
 
+    type = 'ongoing'
     def get_type_display(self):
         return _('Ongoing use')
 
-    def get_absolute_url(self):
-        return reverse('events:ongoing-space-request', args=(self.id,))
-
     def get_date_display(self):
         return self.dates
+
+
+class SpaceUseNote(models.Model):
+    space_use_request = models.ForeignKey(SpaceUseRequest,
+                                          related_name='notes')
+    user = models.ForeignKey(User)
+    datetime = models.DateTimeField(default=timezone.now)
+    body = models.TextField()

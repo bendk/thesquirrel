@@ -32,7 +32,8 @@ from django.utils.translation import ugettext as _
 
 from .forms import (EventWithRepeatForm, SingleSpaceRequestForm,
                     OngoingSpaceRequestForm)
-from .models import Event, EventDate, SpaceUseRequest
+from .models import (Event, EventDate, SpaceUseRequest, SingleSpaceUseRequest,
+                     OngoingSpaceUseRequest)
 
 def view(request, id):
     event = get_object_or_404(Event, id=id)
@@ -124,11 +125,11 @@ def edit_form(request, instance, return_url):
 
 def space_request_form(request):
     return _space_request_form(request, SingleSpaceRequestForm,
-                               'events/space-request-form.html')
+                               'events/space-request-form-single.html')
 
 def ongoing_space_request_form(request):
     return _space_request_form(request, OngoingSpaceRequestForm,
-                               'events/ongoing-space-request-form.html')
+                               'events/space-request-form-ongoing.html')
 
 def _space_request_form(request, form_class, template_name):
     if request.method == 'POST':
@@ -155,24 +156,22 @@ def space_requests(request):
         'requests': requests,
     })
 
-def space_request(request, id):
-    return _space_request(request, SpaceUseRequest, id,
-                          'events/space-request.html')
-
-def ongoing_space_request(request, id):
-    return _space_request(request, OngoingSpaceUseRequest, id,
-                          'events/ongoing-space-request.html')
-
 @login_required
-def _space_request(request, model, id, template_name):
-    space_request = get_object_or_404(model, id=id)
+def space_request(request, id):
+    space_request = get_object_or_404(SpaceUseRequest, id=id)
+
     if request.method == 'POST':
         if 'approve' in request.POST:
             space_request.approve()
         elif 'deny' in request.POST:
             space_request.deny()
+        elif 'note' in request.POST:
+            space_request.notes.create(user=request.user,
+                                          body=request.POST['note'])
+            return HttpResponseRedirect(space_request.get_absolute_url())
         return redirect('events:space-requests')
 
-    return render(request, template_name, {
+    return render(request, 'events/space-request.html', {
         'space_request': space_request,
+        'notes': space_request.notes.all().select_related('user'),
     })

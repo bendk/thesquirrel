@@ -172,6 +172,33 @@ html#space-request {
         border: none;
         padding: 0;
     }
+
+    div.notes {
+        padding-top: 4rem;
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            padding: 1rem 0 0 40px;
+            border-bottom: 1px solid $light-gray;
+
+            &:last-of-type {
+                border: none;
+            }
+        }
+
+        .date-time, .user {
+            @extend %medium-text;
+            color: $darkish-gray;
+        }
+
+
+        .date-time {
+            float: right;
+        }
+
+    }
 }
 
 form.events {
