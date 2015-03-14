@@ -35,6 +35,8 @@ EMAIL_HOST_PASSWORD = None
 
 # Set to False for production servers
 DEV = True
+# list of hosts that we will serve, required if DEV==False
+ALLOWED_HOSTS = ['www.example.com']
 
 # Server-specific secret key.  No need to change this, but make sure you keep
 # it secret

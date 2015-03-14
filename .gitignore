@@ -2,4 +2,5 @@
 /env
 /local_settings.py
 /settings_override.py
+/static
 /user-media

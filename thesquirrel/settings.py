@@ -38,7 +38,6 @@ DATABASES = {
 
 DEBUG = DEV
 TEMPLATE_DEBUG = DEBUG
-ALLOWED_HOSTS = []
 if DEV:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
