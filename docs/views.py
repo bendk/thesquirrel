@@ -17,6 +17,7 @@
 from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import redirect_to_login
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
@@ -32,9 +33,10 @@ def index(request):
     })
 
 
-@login_required
 def view(request, slug):
     document = get_object_or_404(Document, slug=slug)
+    if not document.public and not request.user.is_authenticated():
+        return redirect_to_login(next=reverse('docs:view', args=(slug,)))
     return render(request, 'docs/view.html', {
         'document': document,
     })
