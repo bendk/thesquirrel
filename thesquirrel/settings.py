@@ -125,8 +125,7 @@ MEDIA_BUILDER = {
         'jquery.cookie': ('https://github.com/carhartl/'
                           'jquery-cookie/archive/v1.4.1.tar.gz'),
         'Pikaday': 'https://github.com/dbushell/Pikaday/archive/1.3.2.zip',
-        'video.js': 'http://vjs.zencdn.net/4.12/video.js',
-        'video-js.css': 'http://vjs.zencdn.net/4.12/video-js.css',
+        'video.js': 'http://www.videojs.com/downloads/video-js-4.12.3.zip',
         'fontawesome': ('http://fortawesome.github.io/'
                         'Font-Awesome/assets/font-awesome-4.3.0.zip'),
     },
@@ -137,7 +136,7 @@ MEDIA_BUILDER = {
                 'events/scss/events.scss',
                 'mediabuilder/downloads/Pikaday/css/pikaday.css',
                 'mediabuilder/downloads/fontawesome/scss/font-awesome.scss',
-                'mediabuilder/downloads/video-js.css',
+                'mediabuilder/downloads/video.js/video-js.css',
             ],
             'include_paths': [
                 'editor/scss',
@@ -151,7 +150,7 @@ MEDIA_BUILDER = {
                 'mediabuilder/downloads/jquery.form.js',
                 'mediabuilder/downloads/jquery.cookie/jquery.cookie.js',
                 'mediabuilder/downloads/Pikaday/pikaday.js',
-                'mediabuilder/downloads/video.js',
+                'mediabuilder/downloads/video.js/video.dev.js',
                 'thesquirrel/js/*.js',
                 'editor/js/editor.js',
                 'events/js/events.js',
