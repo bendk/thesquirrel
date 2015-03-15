@@ -187,6 +187,7 @@
             a {
                 @include button(primary, large);
                 display: block;
+                margin-bottom: 0;
             }
         }
 
