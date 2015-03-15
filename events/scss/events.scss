@@ -5,13 +5,19 @@ html#event {
     }
 }
 
-html.space-request-form {
+html.space-request-form .content {
     ul {
         list-style-type: none;
     }
 
     li {
         margin: 0 0 1rem 40px;
+    }
+
+    @include small-screen {
+        li {
+            margin: 0 10px 1rem 10px;
+        }
     }
 }
 
