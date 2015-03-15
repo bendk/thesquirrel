@@ -1,8 +1,7 @@
 form {
     @extend %group;
     margin: 0;
-    padding: 0 0 1em 0;
-    padding: 2rem 1rem;
+    padding: 2rem 1rem 1rem 1em;
     border: 1px solid $light-gray;
 
     fieldset {
@@ -105,6 +104,11 @@ form {
         }
         &.delete {
             @include button(delete);
+        }
+        @include small-screen {
+            &.cancel {
+                display: none;
+            }
         }
     }
 }
