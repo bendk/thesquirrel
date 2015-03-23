@@ -17,7 +17,9 @@
 from __future__ import absolute_import
 from datetime import time
 
+from dateutil.relativedelta import relativedelta
 from django import forms
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
@@ -75,13 +77,16 @@ class EventForm(forms.ModelForm):
         event.update_dates()
         return event
 
+def two_years_from_now():
+    return (timezone.now() + relativedelta(years=2)).date()
+
 class EventRepeatForm(forms.ModelForm):
     TYPE_CHOICES = [
         ('', _("Don't Repeat")),
     ] + repeat.CHOICES
 
     type = forms.ChoiceField(choices=TYPE_CHOICES, label='')
-    until = DateField()
+    until = DateField(initial=two_years_from_now)
 
     class Meta:
         model = EventRepeat
