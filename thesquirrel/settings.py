@@ -132,11 +132,14 @@ MEDIA_BUILDER = {
     'SASS_BUNDLES': {
         'app.css': {
             'sources': [
+                # External CSS first because we may want to override them
+                'mediabuilder/downloads/Pikaday/css/pikaday.css',
+                'mediabuilder/downloads/video.js/video-js.css',
+                # Now our SCSS because it may override external SCSS variables
                 'thesquirrel/scss/app.scss',
                 'events/scss/events.scss',
-                'mediabuilder/downloads/Pikaday/css/pikaday.css',
+                # Finally external SCSS
                 'mediabuilder/downloads/fontawesome/scss/font-awesome.scss',
-                'mediabuilder/downloads/video.js/video-js.css',
             ],
             'include_paths': [
                 'editor/scss',
