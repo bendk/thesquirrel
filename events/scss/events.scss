@@ -272,8 +272,14 @@ form.space-use-request {
     text-align: center;
 }
 
-.pika-table th {
-    padding-bottom: 0.5rem;
+.pika-table { 
+    th, td {
+        border: none;
+    }
+
+    th {
+        padding-bottom: 0.5rem;
+    }
 }
 
 .pika-button, .pika-label {
@@ -286,7 +292,7 @@ form.space-use-request {
 
 .pika-button {
     padding: 0;
-    line-height: 3.2rem;
+    line-height: 4.0rem;
     &:hover {
         background: $light-yellow !important;
     }
