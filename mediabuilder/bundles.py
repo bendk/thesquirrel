@@ -20,10 +20,15 @@ import os
 
 from django.conf import settings
 from django.templatetags.static import static
+from django.utils import importlib
 import sass
 import slimit
 
 import mediabuilder
+
+def settings_path():
+    mod = importlib.import_module(settings.SETTINGS_MODULE)
+    return os.path.abspath(mod.__file__)
 
 class Bundle(object):
     """Base class for CSS/JS bundles."""
@@ -74,8 +79,9 @@ class Bundle(object):
         if not os.path.exists(self.dest_path()):
             return True
         dest_mtime = os.stat(self.dest_path()).st_mtime
+        paths_to_check = self.source_paths() + [settings_path()]
         return any(os.stat(path).st_mtime > dest_mtime
-                   for path in self.source_paths())
+                   for path in paths_to_check)
 
     def build(self):
         content = self.build_content()
