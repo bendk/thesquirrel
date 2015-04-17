@@ -37,6 +37,7 @@ EMAIL_HOST_PASSWORD = None
 DEV = True
 # list of hosts that we will serve, required if DEV==False
 ALLOWED_HOSTS = ['www.example.com']
+SERVER_EMAIL = DEFAULT_FROM_EMAIL = 'admin@example.com'
 
 # Server-specific secret key.  No need to change this, but make sure you keep
 # it secret

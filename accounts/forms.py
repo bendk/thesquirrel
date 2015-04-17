@@ -27,7 +27,7 @@ class InviteMemberForm(forms.Form):
     email = forms.EmailField()
 
     def create_invite(self, user):
-        nonce = NewAccountNonce.objects.create(
+        return NewAccountNonce.objects.create(
             email=self.cleaned_data['email'],
             invited_by=user)
 

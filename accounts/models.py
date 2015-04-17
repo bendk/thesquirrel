@@ -20,8 +20,12 @@ from datetime import timedelta
 from random import SystemRandom
 import string
 
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.template.loader import render_to_string
 from django.utils import timezone
 
 random = SystemRandom()
@@ -47,3 +51,15 @@ class NewAccountNonce(models.Model):
     created = models.DateTimeField(default=timezone.now)
 
     objects = NewAccountNonceManager()
+
+    def create_url(self):
+        return reverse("accounts:create", args=(self.code,))
+
+    def send_email(self, request):
+        message = render_to_string('registration/invite-email.txt', {
+            'create_url': request.build_absolute_uri(self.create_url()),
+        })
+        send_mail('TheSquirrel.org account invitation', message,
+                  settings.DEFAULT_FROM_EMAIL,
+                  [self.email], fail_silently=False)
+

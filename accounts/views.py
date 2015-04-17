@@ -67,7 +67,8 @@ def invite(request):
     if request.method == 'POST':
         form = forms.InviteMemberForm(data=request.POST)
         if form.is_valid():
-            form.create_invite(request.user)
+            nonce = form.create_invite(request.user)
+            nonce.send_email(request)
             messages.add_message(
                 request, messages.INFO,
                 _("An invite has been sent to {email}").format(

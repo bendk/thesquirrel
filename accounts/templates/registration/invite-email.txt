@@ -1,0 +1,4 @@
+A member of TheSquirrel.org has invited you to create a user account.
+
+Follow this link to get started:
+{{ create_url }}
