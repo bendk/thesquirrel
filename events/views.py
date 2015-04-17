@@ -180,3 +180,12 @@ def space_request(request, id):
         'state_form': state_form,
         'notes': space_request.notes.all().select_related('user'),
     })
+
+@login_required
+def lookup_others(request, id):
+    space_request = get_object_or_404(SpaceUseRequest, id=id)
+    other_requests = SpaceUseRequest.objects.lookup_others(space_request)
+    return render(request, "events/lookup-others.html", {
+        'space_request': space_request,
+        'other_requests': other_requests
+    })

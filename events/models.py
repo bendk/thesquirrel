@@ -160,6 +160,12 @@ class SpaceUseRequestManager(models.Manager):
                     'state_order':'(CASE WHEN state="P" THEN 0 ELSE 1 END)',
                 }).order_by('state_order', 'created'))
 
+    def lookup_others(self, other_request):
+        return (self
+                .filter(Q(name=other_request.name)|
+                        Q(email=other_request.email))
+                .exclude(id=other_request.id))
+
 class SpaceUseRequest(models.Model):
     PENDING = 'P'
     APPROVED = 'A'
@@ -178,8 +184,8 @@ class SpaceUseRequest(models.Model):
                              default=PENDING)
     created = models.DateTimeField(default=timezone.now)
     changed = models.DateTimeField(null=True, auto_now=True)
-    name = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255)
+    name = models.CharField(max_length=255, db_index=True)
+    email = models.EmailField(max_length=255, db_index=True)
     squirrel_member = models.CharField(max_length=255, blank=True)
     organization = models.CharField(max_length=255, blank=True)
     website = models.CharField(max_length=255, blank=True)

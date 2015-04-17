@@ -31,4 +31,6 @@ urlpatterns = patterns('events.views',
     url(r'^space-requests/$', 'space_requests', name='space-requests'),
     url(r'^space-requests/(?P<id>\d+)/$', 'space_request',
         name='space-request'),
+    url(r'^space-requests/(?P<id>\d+)/lookup-others/$', 'lookup_others',
+        name='lookup-others'),
 )

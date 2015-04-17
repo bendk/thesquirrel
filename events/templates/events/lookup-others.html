@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block html-attrs %} class="wide-content"{% endblock %}
+{% block content %}
+<h1>{% trans "Lookup Space Requests" %}</h1>
+{% include "events/requests-table.html" with requests=other_requests %}
+<a class="button" href="{% url "events:space-request" space_request.id %}"><span class="fa fa-angle-double-left"></span> {% trans "Back to request details" %}</a>
+{% endblock %}
+

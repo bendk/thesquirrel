@@ -51,6 +51,9 @@
       <td>{{ space_request.phone_number }}</td>
     </tr>
   </table>
+  <p class="find-more">
+    <a href="{% url "events:lookup-others" space_request.id %}">{% trans "Find other events from this person" %}</a>
+  </p>
 </div>
 
 {% if space_request.additional_comments %}

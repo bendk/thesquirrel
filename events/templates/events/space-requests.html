@@ -3,33 +3,8 @@
 {% block html-attrs %} class="wide-content"{% endblock %}
 {% block content %}
 <h1>{% trans "Space Requests" %}</h1>
+{% include "events/requests-table.html" %}
 {% if requests %}
-<table class="space-requests">
-  <thead>
-    <tr>
-      <th>{% trans "Event" %}</th>
-      <th>{% trans "Type" %}</th>
-      <th class="small-exclude">{% trans "Name" %}</th>
-      <th class="small-exclude">{% trans "Submission Date" %}</th>
-      <th class="small-exclude">{% trans "Date" %}</th>
-      <th>{% trans "Status" %}</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for request in requests %}
-    <tr>
-      <td><a href="{{ request.get_absolute_url }}">{{ request.title }}</a></td>
-      <td>{{ request.get_type_display }}</td>
-      <td class="small-exclude">{{ request.name }}</td>
-      <td class="small-exclude">{{ request.get_created_display }}</td>
-      <td class="small-exclude">{{ request.get_date_display }}</td>
-      <td><span class="state {{ request.get_state_display|slugify }}">{{ request.get_state_display }}</span></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 <p><em>{% trans "Note: requests will be displayed for 14 days after they are approved/declined" %}</em></p>
-{% else %}
-<h2>{% trans "No requests" %}</h2>
 {% endif %}
 {% endblock %}
