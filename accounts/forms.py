@@ -21,6 +21,16 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from .models import NewAccountNonce
+
+class InviteMemberForm(forms.Form):
+    email = forms.EmailField()
+
+    def create_invite(self, user):
+        nonce = NewAccountNonce.objects.create(
+            email=self.cleaned_data['email'],
+            invited_by=user)
+
 class AccountForm(forms.ModelForm):
     password1 = forms.CharField(widget=forms.PasswordInput(),
                                 required=False, label=_('Password'))
@@ -40,10 +50,10 @@ class AccountForm(forms.ModelForm):
             user.set_password(self.cleaned_data['password1'])
         user.save()
         if self.cleaned_data.get('password1'):
-            self.relogin_user(request, user.username)
+            self.login_user(request, user.username)
         return user
 
-    def relogin_user(self, request, username):
+    def login_user(self, request, username):
         # need to re-log the user in
         user = auth.authenticate(username=username,
                                  password=self.cleaned_data['password1'])
@@ -53,4 +63,17 @@ class AccountForm(forms.ModelForm):
         model = User
         fields = (
             'email', 'password1', 'password2',
+        )
+
+class CreateAccountForm(AccountForm):
+    def __init__(self, *args, **kwargs):
+        super(CreateAccountForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = True
+        self.fields['password1'].required = True
+        self.fields['password2'].required = True
+
+    class Meta:
+        model = User
+        fields = (
+            'username', 'email', 'password1', 'password2',
         )

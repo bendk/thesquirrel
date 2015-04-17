@@ -8,7 +8,7 @@
     <li><a href="{% url "docs:create" %}?return_url={{ request.path }}"><i class="fa fa-fw fa-file-text"></i> add document</a></li>
     <li><a href="{% url "articles:create" %}"><i class="fa fa-fw fa-newspaper-o"></i> add blog post</a></li>
     <li><a href="{% url "docs:index" %}"><i class="fa fa-fw fa-folder"></i> member docs</a></li>
-    <li><a href="#"><i class="fa fa-fw fa-user-plus"></i> invite member</a></li>
+    <li><a href="{% url "accounts:invite" %}"><i class="fa fa-fw fa-user-plus"></i> invite member</a></li>
     <li><a href="{% url "accounts:my" %}"><i class="fa fa-fw fa-user"></i> my account</a></li>
     <li><a href="{% url "accounts:logout" %}"><i class="fa fa-fw fa-sign-out"></i> logout</a></li>
   </ul>

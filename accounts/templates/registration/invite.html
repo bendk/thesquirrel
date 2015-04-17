@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h2>{% trans "Invite Member" %}</h2>
+<p>{% trans "Enter the email of the member to invite" %}</p>
+<form method="POST">
+  {% csrf_token %}
+  {% include "field.html" with field=form.email %}
+  <div class="actions">
+    <button class="submit">{% trans "Invite" %}</button>
+  </div>
+</form>
+{% endblock %}
+

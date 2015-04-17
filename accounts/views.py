@@ -18,13 +18,16 @@
 from __future__ import absolute_import
 
 from django.contrib import auth
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.http import is_safe_url
+from django.utils.translation import ugettext as _
 
 from . import forms
+from .models import NewAccountNonce
 
 def login(request):
     if request.method == 'POST':
@@ -56,5 +59,42 @@ def my(request):
     else:
         form = forms.AccountForm(instance=request.user)
     return render(request, 'registration/my-account.html', {
+        'form': form,
+    })
+
+@login_required
+def invite(request):
+    if request.method == 'POST':
+        form = forms.InviteMemberForm(data=request.POST)
+        if form.is_valid():
+            form.create_invite(request.user)
+            messages.add_message(
+                request, messages.INFO,
+                _("An invite has been sent to {email}").format(
+                    email=form.cleaned_data['email'])
+            )
+            return redirect("home")
+    else:
+        form = forms.InviteMemberForm()
+    return render(request, 'registration/invite.html', {
+        'form': form,
+    })
+
+def create(request, code):
+    nonce = get_object_or_404(NewAccountNonce.objects.active(), code=code)
+    initial = dict(email=nonce.email)
+    if request.method == 'POST':
+        form = forms.CreateAccountForm(initial=initial, data=request.POST)
+        if form.is_valid():
+            user = form.save(request)
+            messages.add_message(
+                request, messages.INFO,
+                _("Welcome to the squirrel.org {username}!").format(
+                    username=user.username)
+            )
+            return redirect("home")
+    else:
+        form = forms.CreateAccountForm(initial=initial)
+    return render(request, 'registration/create.html', {
         'form': form,
     })
