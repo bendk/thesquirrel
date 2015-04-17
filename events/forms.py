@@ -174,7 +174,7 @@ class SingleSpaceRequestForm(forms.ModelForm):
             'title': _('Event title'),
             'setup_cleanup_time': _('Do you need extra setup/cleanup time? '
                                     'If so, how much?'),
-            'event_charge': _('Will you charge or ask for donations?'),
+            'event_charge': _('Will you ask for donations?'),
             'squirrel_donation': _('If you are collecting money for your '
                                    'event, does our standard donation '
                                    'agreement work for you? If not, what '
@@ -187,8 +187,9 @@ class SingleSpaceRequestForm(forms.ModelForm):
             'additional_comments': '',
         }
         help_texts = {
-            'event_charge': _('If you do, we ask that no one be turned away '
-                              'for lack of funds.'),
+            'event_charge': _(
+                'We ask that events request donations instead of charging '
+                'fees and that no one be turned away for lack of funds.'),
         }
 
 class OngoingSpaceRequestForm(forms.ModelForm):
