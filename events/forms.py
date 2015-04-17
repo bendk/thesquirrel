@@ -24,7 +24,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
 from .models import (Event, EventRepeat, weekday_fields,
-                     SingleSpaceUseRequest, OngoingSpaceUseRequest)
+                     SpaceUseRequest, SingleSpaceUseRequest,
+                     OngoingSpaceUseRequest)
 from .utils import format_time
 
 class DateField(forms.DateField):
@@ -222,3 +223,15 @@ class OngoingSpaceRequestForm(forms.ModelForm):
                               'for lack of funds.'),
         }
 
+class SpaceRequestStateForm(forms.Form):
+    state = forms.ChoiceField(choices=SpaceUseRequest.STATE_CHOICES)
+
+    def __init__(self, space_request, data=None):
+        self.space_request = space_request
+        super(SpaceRequestStateForm, self).__init__(
+            initial=dict(state=space_request.state),
+            data=data,
+        )
+
+    def save(self):
+        self.space_request.update_state(self.cleaned_data['state'])

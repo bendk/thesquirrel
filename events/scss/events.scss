@@ -126,7 +126,7 @@ table.calendar {
 }
 
 table.space-requests {
-    span.approved, span.denied, span.pending {
+    span.state {
         display: inline-block;
         width: 100%;
         box-sizing: border-box;
@@ -139,7 +139,10 @@ table.space-requests {
     span.approved {
         background: $green;
     }
-    span.denied {
+    span.approved-pending-deposit {
+        background: $green;
+    }
+    span.declined {
         background: $red;
     }
     span.pending {
@@ -151,7 +154,7 @@ table.space-requests {
             display: none;
         }
 
-        span.approved, span.denied, span.pending {
+        span.approved, span.declined, span.pending {
             padding: 6px 2px;
         }
     }
@@ -168,7 +171,7 @@ html#space-request {
     div.approved {
         background: $green;
     }
-    div.denied {
+    div.declined {
         background: $red;
     }
     .section {
@@ -186,6 +189,23 @@ html#space-request {
         border: none;
         padding: 0;
     }
+
+    .state-form {
+        margin-top: 2em;
+        label {
+            display: inline;
+        }
+        select {
+            width: auto;
+            margin-left: 1em;
+            line-height: 4rem;
+        }
+        button.submit {
+            line-height: normal;
+            line-height: 4rem;
+        }
+    }
+
 
     div.notes {
         padding-top: 4rem;

@@ -23,12 +23,12 @@
       <td class="small-exclude">{{ request.name }}</td>
       <td class="small-exclude">{{ request.get_created_display }}</td>
       <td class="small-exclude">{{ request.get_date_display }}</td>
-      <td><span class="{{ request.get_state_display|lower }}">{{ request.get_state_display }}</span></td>
+      <td><span class="state {{ request.get_state_display|slugify }}">{{ request.get_state_display }}</span></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-<p><em>{% trans "Note: requests will be displayed for 14 days after they are approved/denied" %}</em></p>
+<p><em>{% trans "Note: requests will be displayed for 14 days after they are approved/declined" %}</em></p>
 {% else %}
 <h2>{% trans "No requests" %}</h2>
 {% endif %}

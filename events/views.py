@@ -21,7 +21,6 @@ from collections import defaultdict
 from datetime import date
 
 from dateutil.relativedelta import relativedelta
-from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
@@ -31,7 +30,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from .forms import (EventWithRepeatForm, SingleSpaceRequestForm,
-                    OngoingSpaceRequestForm)
+                    OngoingSpaceRequestForm, SpaceRequestStateForm)
 from .models import (Event, EventDate, SpaceUseRequest, SingleSpaceUseRequest,
                      OngoingSpaceUseRequest)
 
@@ -163,18 +162,21 @@ def space_requests(request):
 def space_request(request, id):
     space_request = get_object_or_404(SpaceUseRequest, id=id)
 
-    if request.method == 'POST':
-        if 'approve' in request.POST:
-            space_request.approve()
-        elif 'deny' in request.POST:
-            space_request.deny()
-        elif 'note' in request.POST:
-            space_request.notes.create(user=request.user,
-                                          body=request.POST['note'])
-            return HttpResponseRedirect(space_request.get_absolute_url())
-        return redirect('events:space-requests')
+    if 'note' in request.POST:
+        space_request.notes.create(user=request.user,
+                                   body=request.POST['note'])
+        return HttpResponseRedirect(space_request.get_absolute_url())
+
+    if 'state-form' in request.POST:
+        state_form = SpaceRequestStateForm(space_request, request.POST)
+        if state_form.is_valid():
+            state_form.save()
+            return redirect('events:space-requests')
+    else:
+        state_form = SpaceRequestStateForm(space_request)
 
     return render(request, 'events/space-request.html', {
         'space_request': space_request,
+        'state_form': state_form,
         'notes': space_request.notes.all().select_related('user'),
     })

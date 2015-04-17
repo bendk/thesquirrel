@@ -147,7 +147,14 @@ class SpaceUseRequestManager(models.Manager):
 
     def current(self):
         changed_since = timezone.now() - timedelta(days=14)
-        return (self.filter(Q(state=SpaceUseRequest.PENDING) |
+        case_sql = ('(CASE WHEN state="P" THEN 0 '
+                    'WHEN state="B" THEN 1 '
+                    'ELSE 2 END)')
+        active_states = (
+            SpaceUseRequest.PENDING,
+            SpaceUseRequest.APPROVED_PENDING_DEPOSIT,
+        )
+        return (self.filter(Q(state__in=active_states) |
                             Q(changed__gte=changed_since))
                 .extra(select={
                     'state_order':'(CASE WHEN state="P" THEN 0 ELSE 1 END)',
@@ -156,11 +163,13 @@ class SpaceUseRequestManager(models.Manager):
 class SpaceUseRequest(models.Model):
     PENDING = 'P'
     APPROVED = 'A'
-    DENIED = 'D'
+    APPROVED_PENDING_DEPOSIT = 'B'
+    DECLINED = 'D'
     STATE_CHOICES = (
         (PENDING, _('Pending')),
         (APPROVED, _('Approved')),
-        (DENIED, _('Denied')),
+        (APPROVED_PENDING_DEPOSIT, _('Approved (Pending deposit)')),
+        (DECLINED, _('Declined')),
     )
 
     title = models.CharField(max_length=255)
@@ -194,20 +203,19 @@ class SpaceUseRequest(models.Model):
     def is_approved(self):
         return self.state == self.APPROVED
 
-    def is_denied(self):
-        return self.state == self.DENIED
+    def is_approved_pending_deposit(self):
+        return self.state == self.APPROVED_PENDING_DEPOSIT
+
+    def is_declined(self):
+        return self.state == self.DECLINED
 
     def get_created_display(self):
         created = timezone.localtime(self.created)
         return '{d:%a} {d.month}/{d.day}, {t}'.format(
             d=created, t=format_time(created.time()))
 
-    def approve(self):
-        self.state = self.APPROVED
-        self.save()
-
-    def deny(self):
-        self.state = self.DENIED
+    def update_state(self, new_state):
+        self.state = new_state
         self.save()
 
     def send_email(self, request):

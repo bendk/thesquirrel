@@ -60,14 +60,14 @@
 </div>
 {% endif %}
 
-<form method="POST" action="">
+<form method="POST" action="" class="state-form">
   {% csrf_token %}
-  {% if not space_request.is_approved %}
-  <button class="submit" name="approve" value="1">{% trans "Approve" %}</button>
-  {% endif %}
-  {% if not space_request.is_denied %}
-  <button class="delete" name="deny" value="1">{% trans "Deny" %}</button>
-  {% endif %}
+  <input type="hidden" name="state-form" value="1">
+  <label for="id_state">
+    {% trans "State:" %}
+  </label>
+    {{ state_form.state }}
+    <button class="submit">{% trans "Update" %}</button>
 </form>
 
 <div class="notes">
