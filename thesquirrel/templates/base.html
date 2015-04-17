@@ -66,9 +66,9 @@
     </li>
     <li class="last">
       {% if user.is_anonymous %}
-      <a href="{% url "login" %}"><span class="fa fa-sign-in"></span> Member Login</a>
+      <a href="{% url "accounts:login" %}"><span class="fa fa-sign-in"></span> Member Login</a>
       {% else %}
-      <a href="{% url "logout" %}"><span class="fa fa-sign-out"></span> Logout</a>
+      <a href="{% url "accounts:logout" %}"><span class="fa fa-sign-out"></span> Logout</a>
       {% endif %}
     </li>
   </ul>

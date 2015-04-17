@@ -42,11 +42,12 @@ if DEV:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-LOGIN_URL = 'login'
+LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'home'
 
 INSTALLED_APPS = (
     # our apps
+    'accounts',
     'articles',
     'docs',
     'editor',

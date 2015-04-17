@@ -6,7 +6,6 @@
 # under the terms of the GNU Affero General Public License as published by the
 # Free Software Foundation, either version 3 of the License, or (at your
 # option) any later version.
-#
 # thesquirrel.org is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
@@ -15,19 +14,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.shortcuts import render
+from django.conf.urls import patterns, include, url
 
-from articles.models import Article
-from docs.models import Document
-
-def home(request):
-    try:
-        topstory = Article.objects.all()[0]
-    except IndexError:
-        topstory = None
-    return render(request, 'home.html', {
-        'topstory': topstory
-    })
-
-def email_list_signup(request):
-    return render(request, 'email-list-signup.html')
+urlpatterns = patterns('accounts.views',
+    url(r'^login/$', 'login', name='login'),
+    url(r'^logout/$', 'logout', name='logout'),
+    url(r'^my/$', 'my', name='my'),
+)
