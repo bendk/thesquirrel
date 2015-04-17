@@ -16,6 +16,7 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -23,6 +24,7 @@ from django.utils.http import is_safe_url
 
 from articles.models import Article
 from docs.models import Document
+from thesquirrel import forms
 
 def home(request):
     try:
@@ -55,3 +57,16 @@ def logout(request):
 
 def email_list_signup(request):
     return render(request, 'email-list-signup.html')
+
+@login_required
+def my_account(request):
+    if request.method == 'POST':
+        form = forms.AccountForm(instance=request.user, data=request.POST)
+        if form.is_valid():
+            form.save(request)
+            return redirect("my-account")
+    else:
+        form = forms.AccountForm(instance=request.user)
+    return render(request, 'registration/my-account.html', {
+        'form': form,
+    })

@@ -9,7 +9,7 @@
     <li><a href="{% url "articles:create" %}"><i class="fa fa-fw fa-newspaper-o"></i> add blog post</a></li>
     <li><a href="{% url "docs:index" %}"><i class="fa fa-fw fa-folder"></i> member docs</a></li>
     <li><a href="#"><i class="fa fa-fw fa-user-plus"></i> invite member</a></li>
-    <li><a href="#"><i class="fa fa-fw fa-user"></i> my account</a></li>
+    <li><a href="{% url "my-account" %}"><i class="fa fa-fw fa-user"></i> my account</a></li>
     <li><a href="{% url "logout" %}"><i class="fa fa-fw fa-sign-out"></i> logout</a></li>
   </ul>
 </li>

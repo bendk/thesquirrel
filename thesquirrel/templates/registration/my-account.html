@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h2>{% trans "Your Account" %}</h2>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  {% include "field.html" with field=form.email %}
+  {% include "field.html" with field=form.password1 %}
+  {% include "field.html" with field=form.password2 %}
+  <div class="actions">
+    <button class="submit">{% trans "Update" %}</button>
+  </div>
+</form>
+{% endblock %}
