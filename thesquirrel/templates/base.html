@@ -8,52 +8,50 @@
     {% sass_bundle "app.css" %}
 </head>
 <body>
-<div class="page">
-  {% block nav %}
-  <nav id="main">
-    <div id="expand-menu">
-      <button>{% trans "MENU" %}</button>
-    </div>
-    <ul>
-      <li><a href="{% url "home" %}">Home</a></li>
-      <li><a href="{% url "docs:view" "about-us" %}">About Us</a></li>
-      <li><a href="{% url "events:calendar" %}">Calendar</a></li>
-      <li><a href="{% url "events:book-the-space" %}">Book the Space</a></li>
-      {% if user.is_authenticated %}
-      {% include "squirrel-menu.html" %}
-      {% endif %}
-    </ul>
-  </nav>
-  {% endblock %}
-  <div class="heading{% if request.user.is_authenticated %} member{% endif %}">
-    <div class="top">
-      <h1 class="title"><span>Flying Squirrel</span> <span>Community Space</span></h1>
-      <ul class="vcard">
-        <li class="adr">
-          <span class="street-address">285 Clarissa St.</span>
-          <span class="locality">Rochester</span>
-          <span class="state">NY</state>,
-          <span class="postal-code">14608</span>
-        </li>
-        <li class="tel">585-678-6870</li>
-      </ul>
-    </div>
-    <div class="extra">{% block header-extra %}{% endblock %}</div>
+{% block nav %}
+<nav id="main">
+  <div id="expand-menu">
+    <button>{% trans "MENU" %}</button>
   </div>
-  <div class="content">
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-            {{ message }}
-        </li>
-        {% endfor %}
-    </ul>
+  <ul>
+    <li><a href="{% url "home" %}">Home</a></li>
+    <li><a href="{% url "docs:view" "about-us" %}">About Us</a></li>
+    <li><a href="{% url "events:calendar" %}">Calendar</a></li>
+    <li><a href="{% url "events:book-the-space" %}">Book the Space</a></li>
+    {% if user.is_authenticated %}
+    {% include "squirrel-menu.html" %}
     {% endif %}
-    {% block content %}{% endblock %}
+  </ul>
+</nav>
+{% endblock %}
+<div class="heading{% if request.user.is_authenticated %} member{% endif %}">
+  <div class="top">
+    <h1 class="title"><span>Flying Squirrel</span> <span>Community Space</span></h1>
+    <ul class="vcard">
+      <li class="adr">
+        <span class="street-address">285 Clarissa St.</span>
+        <span class="locality">Rochester</span>
+        <span class="state">NY</state>,
+        <span class="postal-code">14608</span>
+      </li>
+      <li class="tel">585-678-6870</li>
+    </ul>
   </div>
+  <div class="extra">{% block header-extra %}{% endblock %}</div>
 </div>
-<div class="footer">
+<div class="content">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+          {{ message }}
+      </li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  {% block content %}{% endblock %}
+</div>
+<footer>
   <ul>
     <li>
     <a href="{% url "email-list-signup" %}"><span class="fa fa-envelope"></span> Email List</a>
@@ -72,7 +70,7 @@
       {% endif %}
     </li>
   </ul>
-</div>
+</footer>
 {% block bodyextra %}{% endblock %}
 </body>
 </html>

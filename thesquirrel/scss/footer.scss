@@ -1,7 +1,4 @@
-$footer-height: 8.4rem;
-$footer-padding: 10rem;
-
-.footer {
+footer {
     padding: 3rem 0 3rem 0;
     background: #eee;
 
@@ -43,17 +40,21 @@ $footer-padding: 10rem;
     }
 }
 
-.page {
-    // Implement a "sticky footer".  This ensures that if the content doesn't
-    // fill a full screen, we still position the footer at the bottom.
-    min-height: 100%;
-    box-sizing: border-box;
-    margin-bottom: -$footer-height;
-    padding-bottom: $footer-height + $footer-padding;
+body {
+    // Implement a sticky footer using flexbox.  This isn't supported on
+    // some older browsers, but it's not a big deal if this doesn't work.
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+
+    .content {
+        flex: 1;
+        width: 100%;
+    }
 }
 
 @include small-screen {
-    .footer {
+    footer {
         padding: 0;
 
         li {
@@ -67,10 +68,5 @@ $footer-padding: 10rem;
                 text-align: left;
             }
         }
-    }
-
-    .page {
-        margin-bottom: 0;
-        padding-bottom: $footer-padding;
     }
 }
