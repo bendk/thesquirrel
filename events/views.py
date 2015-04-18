@@ -149,6 +149,7 @@ def _space_request_form(request, form_class, template_name):
         form = form_class()
     return render(request, template_name, {
         'form': form,
+        'mode': 'create',
     })
 
 @login_required
@@ -188,4 +189,27 @@ def lookup_others(request, id):
     return render(request, "events/lookup-others.html", {
         'space_request': space_request,
         'other_requests': other_requests
+    })
+
+@login_required
+def edit_space_request(request, id):
+    space_request = get_object_or_404(SpaceUseRequest, id=id)
+    if isinstance(space_request, SingleSpaceUseRequest):
+        form_class = SingleSpaceRequestForm
+        template_name = 'events/space-request-form-single.html'
+    else:
+        form_class = OngoingSpaceRequestForm
+        template_name = 'events/space-request-form-ongoing.html'
+
+    if request.method == 'POST':
+        form = form_class(instance=space_request, data=request.POST)
+        if form.is_valid():
+            space_use_request = form.save()
+            return redirect('events:space-request', space_request.id)
+    else:
+        form = form_class(instance=space_request)
+    return render(request, template_name, {
+        'space_request': space_request,
+        'form': form,
+        'mode': 'edit',
     })

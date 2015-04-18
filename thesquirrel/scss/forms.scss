@@ -95,7 +95,7 @@ form {
         margin-top: 3rem;
     }
 
-    button {
+    button, a.button {
         @include button(secondary);
         &.submit {
             float: right;

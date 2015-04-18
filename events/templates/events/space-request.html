@@ -62,16 +62,17 @@
   {{ space_request.additional_comments }}
 </div>
 {% endif %}
+<a class="button" href="{% url "events:edit-space-request" space_request.id %}">{% trans "Edit Request Info" %}</a>
 
-<form method="POST" action="" class="state-form">
-  {% csrf_token %}
-  <input type="hidden" name="state-form" value="1">
-  <label for="id_state">
-    {% trans "State:" %}
-  </label>
+<div class="state-form">
+  <h3>{% trans "State" %}</h3>
+  <form method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" name="state-form" value="1">
     {{ state_form.state }}
     <button class="submit">{% trans "Update" %}</button>
-</form>
+  </form>
+</div>
 
 <div class="notes">
   {% if notes %}

@@ -195,13 +195,12 @@ html#space-request {
     }
 
     .state-form {
-        margin-top: 2em;
+        padding-top: 4em;
         label {
             display: inline;
         }
         select {
             width: auto;
-            margin-left: 1em;
             line-height: 4rem;
         }
         button.submit {
@@ -212,7 +211,6 @@ html#space-request {
 
 
     div.notes {
-        padding-top: 4rem;
         ul {
             list-style-type: none;
         }

@@ -3,7 +3,7 @@
 {% block html-attrs %} class="space-request-form"{% endblock %}
 {% block content %}
 <h1>{% trans "Single Event Space Request" %}</h1>
-
+{% if mode == 'create' %}
 <p>{% trans "Thank you for your interest in the Flying Squirrel Community Space!" %}</p>
 
 <p>{% trans "Please read through these guidelines for using our space before you complete this form:" %}</p>
@@ -22,6 +22,8 @@
 </ul>
 {% url "events:ongoing-space-request-form" as ongoing_form_url %}
 <p><strong>{% trans "This form is for a single event at the space." %}</strong> {% blocktrans %}If you are looking to use the space on an ongoing basis, please use the <a href="{{ ongoing_form_url }}">Ongoing Space Request Form</a>.{% endblocktrans %}</p>
+{% endif %}
+
 <form class="space-use-request" method="POST" action="">
   {% csrf_token %}
 
@@ -59,7 +61,12 @@
   </fieldset>
 
   <div class="actions">
+    {% if mode == 'create' %}
     <button class="submit">{% trans "Submit" %}</button>
+    {% elif mode == 'edit' %}
+    <a class="button" href="{% url "events:space-request" space_request.id %}">{% trans "Cancel" %}</a>
+    <button class="submit">{% trans "Update" %}</button>
+    {% endif %}
   </div>
 
 </form>
