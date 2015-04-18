@@ -31,3 +31,6 @@ def home(request):
 
 def email_list_signup(request):
     return render(request, 'email-list-signup.html')
+
+def contact_us(request):
+    return render(request, 'contact-us.html')

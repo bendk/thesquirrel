@@ -21,6 +21,7 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
     url(r'^$', 'thesquirrel.views.home', name='home'),
+    url(r'^contact-us/$', 'thesquirrel.views.contact_us', name='contact-us'),
     url(r'^email-list-signup/$', 'thesquirrel.views.email_list_signup',
         name='email-list-signup'),
     url(r'^accounts/', include('accounts.urls', 'accounts')),
