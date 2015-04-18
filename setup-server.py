@@ -38,6 +38,8 @@ def main():
     manage('buildmedia')
     if production():
         manage('collectstatic')
+        # touch wsgi.py to make apache restart the wsgi daemon
+        os.utime(os.path.join(BASE_DIR, 'wsgi.py'), None)
 
 if __name__ == '__main__':
     main()
