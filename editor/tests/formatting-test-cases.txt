@@ -266,15 +266,18 @@ ends the list
 
 * two
 
-
 * three
+
+
+* four
 .
 <ul>
 <li>one</li>
 <li>two</li>
+<li>three</li>
 </ul>
 <ul>
-<li>three</li>
+<li>four</li>
 </ul>
 .
 
