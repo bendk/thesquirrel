@@ -253,25 +253,30 @@ class Renderer(object):
 
     def render_list_items(self, lexer, output):
         start_token = lexer.next_token
-        while isinstance(lexer.next_token, ListItem):
-            # check if the next item is the same as the first.  Note that we
-            # need to compare __class__ directly to avoid mixing ordered and
-            # unordered list items
-            if lexer.next_token.continues_list(start_token):
-                output.append('<li>')
-                text_parts = [lexer.pop_next().text]
-                while isinstance(lexer.next_token, Text):
-                    text_parts.append(lexer.pop_next().text)
-                output.extend(inline.chunked_render(text_parts))
-                output.append('</li>\n')
-            elif lexer.next_token.leading > start_token.leading:
-                # more leading space, start a nested list
-                nester = lexer.next_token
-                output.extend(('<li>', nester.open_tag, '\n'))
-                self.render_list_items(lexer, output)
-                output.extend((nester.close_tag, '</li>\n'))
-            else:
-                break
+        self.render_list_item(lexer, output)
+        # note that we leave the list item open, because if we start a nested
+        # list then we want to include it inside the last list item
+        while (isinstance(lexer.next_token, ListItem) and
+               lexer.next_token.continues_list(start_token)):
+            self.render_list_item(lexer, output)
+
+    def render_list_item(self, lexer, output):
+        output.append('<li>')
+        list_item_token = lexer.next_token
+        text_parts = [lexer.pop_next().text]
+        while isinstance(lexer.next_token, Text):
+            text_parts.append(lexer.pop_next().text)
+        output.extend(inline.chunked_render(text_parts))
+
+        # check if we need to render nested lists(s)
+        while (isinstance(lexer.next_token, ListItem) and
+               lexer.next_token.leading > list_item_token.leading):
+            nester = lexer.next_token
+            output.extend(('\n', nester.open_tag, '\n'))
+            self.render_list_items(lexer, output)
+            output.extend((nester.close_tag, '\n'))
+
+        output.append('</li>\n')
 
     def render_image(self, lexer, output):
         image_token = lexer.pop_next()

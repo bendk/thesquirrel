@@ -310,12 +310,13 @@ lists can be nested
 .
 <ul>
 <li>one</li>
-<li>two</li>
-<li><ul>
+<li>two
+<ul>
 <li>two a</li>
 <li>two b</li>
 <li>two c</li>
-</ul></li>
+</ul>
+</li>
 <li>three</li>
 </ul>
 .
@@ -354,10 +355,11 @@ three
 three
 .
 <ul>
-<li>one</li>
-<li><ul>
+<li>one
+<ul>
 <li>two</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <p>three</p>
 .
@@ -415,11 +417,12 @@ nested lists can use a different type
 .
 <ul>
 <li>one</li>
-<li>two</li>
-<li><ol>
+<li>two
+<ol>
 <li>two a</li>
 <li>two b</li>
-</ol></li>
+</ol>
+</li>
 <li>three</li>
 </ul>
 .
