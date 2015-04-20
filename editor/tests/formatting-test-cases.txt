@@ -445,6 +445,20 @@ inline renderer works across lines
 </ul>
 .
 
+Italics are not mistaken for a list
+.
+*hello*
+.
+<p><em>hello</em></p>
+.
+
+Bold is not mistaken for a list
+.
+**hello**
+.
+<p><strong>hello</strong></p>
+.
+
 # Images
 
 basic image

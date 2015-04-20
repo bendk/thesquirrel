@@ -53,7 +53,7 @@ class Quote(Token):
         return not self.text
 
 class ListItem(Token):
-    rule = re.compile(r'( *)([*-])(.*)$')
+    rule = re.compile(r'( *)([*-])\s(.*)$')
     open_tag = '<ul>'
     close_tag = '</ul>'
     def __init__(self, match):
