@@ -254,6 +254,10 @@ class Renderer(object):
     def render_list_items(self, lexer, output):
         start_token = lexer.next_token
         self.render_list_item(lexer, output)
+        # allow for a single empty line between list items
+        if isinstance(lexer.next_token, EmptyLine):
+            lexer.pop_next()
+
         # note that we leave the list item open, because if we start a nested
         # list then we want to include it inside the last list item
         while (isinstance(lexer.next_token, ListItem) and

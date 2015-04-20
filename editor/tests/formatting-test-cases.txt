@@ -259,6 +259,25 @@ dashes work
 </ul>
 .
 
+lists items can have a single empty line between them, but two empty lines
+ends the list
+.
+* one
+
+* two
+
+
+* three
+.
+<ul>
+<li>one</li>
+<li>two</li>
+</ul>
+<ul>
+<li>three</li>
+</ul>
+.
+
 numbers followed by a dot or ")" create an ordered list
 .
 1. one
@@ -334,7 +353,7 @@ three
 </ul>
 .
 
-An empty line ends all lists
+An empty line followed by a paragraph ends the list
 .
 * one
 * two
