@@ -484,6 +484,90 @@ Bold is not mistaken for a list
 <p><strong>hello</strong></p>
 .
 
+# Tables
+
+Pipes create tables
+.
+First Header  | Second Header
+------------- | -------------
+data1         | data2
+data3         | data4
+.
+<table>
+<thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data1</td>
+<td>data2</td>
+</tr>
+<tr>
+<td>data3</td>
+<td>data4</td>
+</tr>
+</tbody>
+</table>
+.
+
+Pipes don't need to line up
+.
+First Header  | Second Header
+------------- | -------------
+data1 | data2
+data3  | data4
+.
+<table>
+<thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data1</td>
+<td>data2</td>
+</tr>
+<tr>
+<td>data3</td>
+<td>data4</td>
+</tr>
+</tbody>
+</table>
+.
+
+Extra Pipes are allowed on the outside
+.
+|First Header  | Second Header|
+|------------- | -------------|
+|data1         | data2        |
+|data3         | data4        |
+.
+<table>
+<thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>data1</td>
+<td>data2</td>
+</tr>
+<tr>
+<td>data3</td>
+<td>data4</td>
+</tr>
+</tbody>
+</table>
+.
+
+
 # Images
 
 basic image

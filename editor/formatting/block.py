@@ -33,6 +33,9 @@ class Token(object):
     def __init__(self, match):
         pass
 
+    def continues_table(self):
+        return False
+
 class Heading(Token):
     rule = re.compile(r'#(?!#)(.*)$')
     def __init__(self, match):
@@ -97,8 +100,37 @@ class Text(Token):
     def __init__(self, match):
         self.text = match.group(1).strip()
 
+    # couple of table-related functions
+    #
+    # Table formatting is special cased because whether a line starts a table
+    # or not depends on the following line
+    def table_columns(self):
+        parts = [t.strip() for t in self.text.split('|')]
+        # if the first/last part are empty, then skip them
+        if parts[0] == '' and parts[-1] == '':
+            return parts[1:-1]
+        else:
+            return parts
+
+    dashes_re = re.compile('-+$')
+    def can_be_table_header(self):
+        return (
+            '|' in self.text and
+            all(Text.dashes_re.match(col) for col in self.table_columns()))
+
+    def starts_table(self, next_token):
+        return (isinstance(next_token, Text) and
+                next_token.can_be_table_header() and 
+                self.text.count('|') == next_token.text.count('|'))
+
+    def continues_table(self):
+        return '|' in self.text
+
 class EOS(object):
     """Signals the end of the token stream."""
+
+    def continues_table(self):
+        return False
 
 class Lexer(object):
     """Transforms an input string into a stream of tokens
@@ -234,12 +266,36 @@ class Renderer(object):
             output.append('</blockquote>\n')
 
     def render_text(self, lexer, output):
+        start_token = lexer.pop_next()
+        if start_token.starts_table(lexer.next_token):
+            return self.render_table(start_token, lexer, output)
         output.append('<p>')
-        text_parts = [lexer.pop_next().text]
+        text_parts = [start_token.text]
         while isinstance(lexer.next_token, Text):
             text_parts.append(lexer.pop_next().text)
         output.extend(inline.chunked_render(text_parts))
         output.append('</p>\n')
+
+    def render_table(self, start_token, lexer, output):
+        output.append('<table>\n<thead>\n<tr>\n')
+        for col in start_token.table_columns():
+            output.extend(
+                ('<th>', inline.render(col), '</th>\n')
+            )
+        output.append('</tr>\n</thead>\n')
+        # pop the separator row
+        lexer.pop_next()
+        if lexer.next_token.continues_table():
+            output.append('<tbody>\n')
+            while lexer.next_token.continues_table():
+                output.append('<tr>\n')
+                for col in lexer.pop_next().table_columns():
+                    output.extend(
+                        ('<td>', inline.render(col), '</td>\n')
+                    )
+                output.append('</tr>\n')
+            output.append('</tbody>\n')
+        output.append('</table>\n')
 
     def render_listitem(self, lexer, output):
         output.append('<ul>\n')
