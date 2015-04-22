@@ -24,7 +24,7 @@ from nose.tools import *
 from thesquirrel.factories import *
 from ..factories import *
 from ..forms import EventForm, EventRepeatForm, EventWithRepeatForm
-from ..models import EventRepeat
+from ..models import EventRepeat, EventRepeatExclude
 
 class EventFormTest(TestCase):
     def test_start_date_must_be_after_end_date(self):
@@ -71,6 +71,26 @@ class EventRepeatFormTest(TestCase):
         repeat = form.save(event)
         assert_equal(repeat.event, event)
 
+    def test_save_with_exclude(self):
+        event = EventFactory()
+        form = EventRepeatForm(data={
+            'type': '1M',
+            'until': '2/1/2015',
+            'we': 'True',
+            'exclude': ['2/4/2015'],
+        })
+        assert_true(form.is_valid(), form.errors.as_text())
+        repeat = form.save(event)
+        assert_equal(repeat.event, event)
+        assert_equal([e.date for e in repeat.event.excludes.all()],
+                     [date(2015, 2, 4)])
+
+    def test_exclude_initial_value(self):
+        event = EventFactory(with_repeat=True)
+        event.excludes.add(EventRepeatExclude(date=date(2015, 3, 4)))
+        form = EventRepeatForm(instance=event.repeat)
+        assert_equal(form['exclude'].value(), ['03/04/2015'])
+
 class EventWithRepeatFormTest(TestCase):
     def form_data(self):
         return {
@@ -98,6 +118,13 @@ class EventWithRepeatFormTest(TestCase):
             'repeat-type': '1M',
             'repeat-until': '2/1/2015',
             'repeat-we': True
+        })
+        return data
+
+    def form_data_with_exclude(self):
+        data = self.form_data_with_repeat()
+        data.update({
+            'repeat-exclude': ['2/4/2015'],
         })
         return data
 
@@ -157,7 +184,34 @@ class EventWithRepeatFormTest(TestCase):
         assert_equal(event.author, user)
         assert_true(event.has_repeat())
 
-    def test_save_without_repeat_deletes_existing(self):
+    def test_save_with_repeat_exclusion(self):
+        user = UserFactory()
+        form = EventWithRepeatForm(data=self.form_data_with_exclude())
+        assert_true(form.is_valid())
+        event = form.save(user)
+        assert_equal([e.date for e in event.excludes.all()],
+                     [date(2015, 2, 4)])
+
+    def test_save_with_deletes_repeat_exclusions(self):
+        user = UserFactory()
+        event = EventFactory(with_repeat=True)
+        # this exclude should be removed when we submit the form data
+        event.excludes.add(EventRepeatExclude(date=date(2015, 3, 4)))
+        form = EventWithRepeatForm(data=self.form_data_with_exclude(),
+                                   instance=event)
+        assert_true(form.is_valid())
+        event = form.save(user)
+        assert_equal([e.date for e in event.excludes.all()],
+                     [date(2015, 2, 4)])
+
+    def test_invalid_exclude(self):
+        user = UserFactory()
+        data = self.form_data_with_repeat()
+        data['repeat-exclude'] = ['invalid-date']
+        form = EventWithRepeatForm(data=data)
+        assert_false(form.is_valid())
+
+    def test_save_without_repeat_deletes_existing_repeat(self):
         event = EventFactory(with_repeat=True)
         user = UserFactory()
         form = EventWithRepeatForm(data=self.form_data(), instance=event)
@@ -165,3 +219,14 @@ class EventWithRepeatFormTest(TestCase):
         event = form.save(user)
         # since the form didn't have repeat data, we should delete the repeat
         assert_false(EventRepeat.objects.filter(event=event).exists())
+
+    def test_save_without_repeat_deletes_existing_exclude(self):
+        event = EventFactory(with_repeat=True)
+        event.excludes.add(EventRepeatExclude(date=date(2015, 3, 4)))
+        user = UserFactory()
+        form = EventWithRepeatForm(data=self.form_data(), instance=event)
+        assert_true(form.is_valid())
+        event = form.save(user)
+        # since the form didn't have repeat data, we should delete the exclude
+        # date
+        assert_false(event.excludes.all().exists())

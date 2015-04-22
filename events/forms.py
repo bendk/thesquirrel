@@ -15,7 +15,7 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-from datetime import time
+from datetime import datetime, time
 
 from dateutil.relativedelta import relativedelta
 from django import forms
@@ -23,8 +23,8 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
-from .models import (Event, EventRepeat, weekday_fields,
-                     SpaceUseRequest, SingleSpaceUseRequest,
+from .models import (Event, EventRepeat, EventRepeatExclude,
+                     weekday_fields, SpaceUseRequest, SingleSpaceUseRequest,
                      OngoingSpaceUseRequest)
 from .utils import format_time
 
@@ -45,6 +45,29 @@ class TimeField(forms.TimeField):
                 choices.append((t.strftime('%H:%M:00'), format_time(t)))
         kwargs['widget'] = forms.Select(choices=choices)
         super(TimeField, self).__init__(*args, **kwargs)
+
+class MultipleDateField(forms.Field):
+    hidden_widget = forms.MultipleHiddenInput
+    widget = forms.MultipleHiddenInput
+    default_error_messages = forms.DateField.default_error_messages.copy()
+
+    def to_python(self, value):
+        "Returns a Unicode object."
+        if value in self.empty_values:
+            return []
+        try:
+            return [
+                datetime.strptime(item, '%m/%d/%Y').date()
+                for item in value
+            ]
+        except ValueError:
+            raise forms.ValidationError(self.error_messages['invalid'],
+                                        code='invalid')
+
+    def prepare_value(self, value):
+        if value in self.empty_values:
+            return []
+        return [ date.strftime('%m/%d/%Y') for date in value ]
 
 class EventForm(forms.ModelForm):
     date = DateField()
@@ -90,12 +113,25 @@ class EventRepeatForm(forms.ModelForm):
 
     type = forms.ChoiceField(choices=TYPE_CHOICES, label='')
     until = DateField(initial=two_years_from_now)
+    exclude = MultipleDateField(required=False)
+
+    def __init__(self, instance=None, *args, **kwargs):
+        if instance:
+            initial = {
+                'exclude': [e.date for e in instance.event.excludes.all()]
+            }
+        else:
+            initial = None
+        super(EventRepeatForm, self).__init__(instance=instance,
+                                              initial=initial, *args,
+                                              **kwargs)
 
     class Meta:
         model = EventRepeat
         fields = (
             'type', 'until',
             'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su',
+            'exclude',
         )
         labels = {
             'mo': _('Mon'),
@@ -121,6 +157,11 @@ class EventRepeatForm(forms.ModelForm):
         repeat = super(EventRepeatForm, self).save(commit=False)
         repeat.event = event
         repeat.save()
+        event.excludes.all().delete()
+        event.excludes.bulk_create(
+            EventRepeatExclude(event=event, date=date)
+            for date in self.cleaned_data['exclude']
+        )
         return repeat
 
 class EventWithRepeatForm(object):
@@ -140,6 +181,7 @@ class EventWithRepeatForm(object):
         self.event_form = EventForm(instance=instance, data=data)
         self.repeat_form = EventRepeatForm(prefix='repeat', instance=repeat,
                                            data=repeat_data)
+        self.data = data
 
     def is_valid(self):
         if not self.repeat_form.is_bound:
@@ -156,6 +198,7 @@ class EventWithRepeatForm(object):
         if self.repeat_form.is_bound:
             self.repeat_form.save(event)
         elif event.has_repeat():
+            event.excludes.all().delete()
             event.repeat.delete()
         event.update_dates()
         return event

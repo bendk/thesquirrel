@@ -27,6 +27,22 @@
         <label>{% trans "Sun" %}<br>{{ repeat_form.su }}</label>
       </div>
       {% include "field.html" with field=repeat_form.until %}
+      <label>
+        {% trans "Exclude Dates" %}
+        <div class="exclude-list group">
+          {% for date in repeat_form.exclude.value %}
+            <div class="date">
+              <input type="hidden" name="repeat-exclude" value="{{ date }}">
+              {{ date }}
+              <a><span class="fa fa-close"></span></a>
+            </div>
+          {% endfor %}
+          <a class='button add'>{% trans "Add" %}</a>
+          <div class="calendar">
+            <a class='button close'>{% trans "Close" %}</a>
+          </div>
+        </div>
+      </label>
     </div>
   </fieldset>
   {% include "editor/fieldset.html" with field=event_form.description %}

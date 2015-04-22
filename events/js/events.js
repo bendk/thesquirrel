@@ -2,6 +2,7 @@
     $(document).ready(function() {
         $('input.pikaday').each(handlePikaday);
         $('form.events #id_repeat-type').each(handleRepeatSelect);
+        $('form.events .exclude-list').each(handleExcludeList);
         $('table.calendar').each(handleCalendar);
     });
 
@@ -15,6 +16,49 @@
             }
         }).change();
     }
+
+    function handleExcludeList() {
+        var excludeList = $(this);
+        var calendar = $('.calendar', excludeList);
+        var closeButton = $('a.close', excludeList);
+        var addButton = $('a.add', excludeList);
+
+        var picker = new Pikaday({
+            onSelect: function(date) {
+                var parts = [
+                    zeroPad(date.getMonth() + 1, 2),
+                    zeroPad(date.getDate(), 2),
+                    date.getFullYear()
+                ];
+                appendDate(parts.join('/'));
+                calendar.hide();
+            },
+        });
+        calendar.prepend(picker.el);
+
+        addButton.click(function(evt) {
+            calendar.show();
+        });
+        closeButton.click(function(evt) {
+            calendar.hide();
+        });
+
+        function onRemoveClicked(evt) {
+            $(this).closest('div').remove();
+        };
+        $('.date a', excludeList).click(onRemoveClicked);
+
+        function appendDate(dateStr) {
+            var dateElt = $('<div class="date">' + dateStr + ' </div>');
+            var input = $('<input type="hidden" name="repeat-exclude">')
+                .val(dateStr);
+            var removeButton = $('<a class="button">').click(onRemoveClicked)
+                .append($('<span class="fa fa-close">'));
+            dateElt.append(input, removeButton);
+            addButton.before(dateElt);
+        }
+    }
+
 
     function zeroPad(number, digits) {
         var str = number.toString();

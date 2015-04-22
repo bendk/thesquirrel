@@ -54,6 +54,8 @@ class Event(models.Model):
         dates = set([self.date])
         if self.has_repeat():
             dates.update(dt.date() for dt in self.repeat.calc_repeat_rrule())
+        for exclude in self.excludes.all():
+            dates.discard(exclude.date)
         EventDate.objects.bulk_create([
             EventDate(event=self, date=date)
             for date in dates
@@ -115,6 +117,10 @@ class EventRepeat(models.Model):
     def calc_repeat_rrule(self):
         return repeat.get_rrule(self.type, self.event.date,
                                 self.until, self._rrule_weekdays())
+
+class EventRepeatExclude(models.Model):
+    event = models.ForeignKey(Event, related_name='excludes')
+    date = models.DateField()
 
 class EventDate(models.Model):
     event = models.ForeignKey(Event, related_name='date_set')
