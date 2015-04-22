@@ -39,7 +39,7 @@ class TimeField(forms.TimeField):
         choices = []
         if kwargs.pop('with_blank', False):
             choices.append(('', ''))
-        for h in range(7, 23):
+        for h in range(7, 24):
             for m in (0, 30):
                 t = time(h, m)
                 choices.append((t.strftime('%H:%M:00'), format_time(t)))
