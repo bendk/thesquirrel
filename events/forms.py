@@ -71,11 +71,12 @@ class EventForm(forms.ModelForm):
 
         return cleaned_data
 
-    def save(self, user):
+    def save(self, user, update_dates=True):
         event = super(EventForm, self).save(commit=False)
         event.author = user
         event.save()
-        event.update_dates()
+        if update_dates:
+            event.update_dates()
         return event
 
 def two_years_from_now():
@@ -150,11 +151,12 @@ class EventWithRepeatForm(object):
             return self.event_form.is_valid() and self.repeat_form.is_valid()
 
     def save(self, user):
-        event = self.event_form.save(user)
+        event = self.event_form.save(user, update_dates=False)
         if self.repeat_form.is_bound:
             self.repeat_form.save(event)
         elif event.has_repeat():
             event.repeat.delete()
+        event.update_dates()
         return event
 
 class SingleSpaceRequestForm(forms.ModelForm):
