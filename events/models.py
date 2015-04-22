@@ -38,6 +38,8 @@ from .utils import format_time
 class Event(models.Model):
     title = models.CharField(max_length=255)
     description = EditorTextField()
+    location = models.CharField(max_length=255)
+    bottomliner = models.CharField(max_length=255)
     created = models.DateTimeField(default=timezone.now)
     date = models.DateField()
     start_time = models.TimeField()

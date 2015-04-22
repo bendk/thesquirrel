@@ -41,15 +41,15 @@ class NthWeeksOfTheMonthRule(object):
 
 # list of (code, label, rule) objects
 repeat_rule_types = [
-    ('W', 'Every Week', WeeklyRule(1)),
-    ('2W', 'Every Other Week', WeeklyRule(2)),
-    ('1M', 'First Week of the month', NthWeeksOfTheMonthRule(1)),
-    ('2M', 'Second Week of the month', NthWeeksOfTheMonthRule(2)),
-    ('3M', 'Third Week of the month', NthWeeksOfTheMonthRule(3)),
-    ('4M', 'Fourth Week of the month', NthWeeksOfTheMonthRule(4)),
-    ('LM', 'Last Week of the month', NthWeeksOfTheMonthRule(-1)),
-    ('13M', '1st/3rd Week of the month', NthWeeksOfTheMonthRule(1, 3)),
-    ('24M', '2nd/4th Week of the month', NthWeeksOfTheMonthRule(2, 4)),
+    ('W', 'Every week', WeeklyRule(1)),
+    ('2W', 'Every other week', WeeklyRule(2)),
+    ('1M', 'First week of the month', NthWeeksOfTheMonthRule(1)),
+    ('2M', 'Second week of the month', NthWeeksOfTheMonthRule(2)),
+    ('3M', 'Third week of the month', NthWeeksOfTheMonthRule(3)),
+    ('4M', 'Fourth week of the month', NthWeeksOfTheMonthRule(4)),
+    ('LM', 'Last week of the month', NthWeeksOfTheMonthRule(-1)),
+    ('13M', '1st/3rd week of the month', NthWeeksOfTheMonthRule(1, 3)),
+    ('24M', '2nd/4th week of the month', NthWeeksOfTheMonthRule(2, 4)),
 ]
 
 CHOICES = [

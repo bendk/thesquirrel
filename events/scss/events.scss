@@ -1,5 +1,8 @@
 html#event {
-    ul.schedule {
+    h1 {
+        margin-bottom: 10px;
+    }
+    dl.details {
         @extend %medium-text;
         padding-bottom: 5rem;
     }

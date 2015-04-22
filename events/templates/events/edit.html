@@ -8,6 +8,8 @@
     <legend>{% trans "Event Info" %}</legend>
     {% include "field.html" with field=event_form.title %}
     {% include "field.html" with field=event_form.date %}
+    {% include "field.html" with field=event_form.location %}
+    {% include "field.html" with field=event_form.bottomliner %}
     {% include "field.html" with field=event_form.start_time %}
     {% include "field.html" with field=event_form.end_time %}
   </fieldset>

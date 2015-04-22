@@ -52,7 +52,7 @@ form {
     @include not-small-screen {
         .compact {
             input, select, textarea {
-                width: 80%;
+                width: 70%;
                 margin: 0 0 0 2.0rem;
             }
 

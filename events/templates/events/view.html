@@ -4,14 +4,24 @@
 {% block content %}
 <article>
   <h1>{% blocktrans with title=event.title %}Event: {{ title }}{% endblocktrans %}</h1>
-  <ul class="schedule">
+  <dl class="details">
+    <dt>{% trans "Location" %}</dt>
+    <dd>{{ event.location }}</dd>
+
+    <dt>{% trans "Bottomliner" %}</dt>
+    <dd>{{ event.bottomliner }}</dd>
+
     {% if event.has_repeat %}
-    <li>{% blocktrans with repeat_type=event.repeat.get_type_display days=event.repeat.get_weekdays_display %}{{ repeat_type }}: {{ days }}{% endblocktrans %}</li>
+    <dt>{% trans "Repeats" %}</dt>
+    <dd>{% blocktrans with repeat_type=event.repeat.get_type_display days=event.repeat.get_weekdays_display %}{{ repeat_type }} on {{ days }}{% endblocktrans %}
+    </dd>
     {% else %}
-    <li>{{ event.date }}</li>
+    <dt>{% trans "Date" %}</dt>
+    <dd>{{ event.date }}</dd>
     {% endif %}
-    <li>{{ event.get_start_time_display }} - {{ event.get_end_time_display }}</li>
-  </ul>
+    <dt>{% trans "Time" %}</dt>
+    <dd>{{ event.get_start_time_display }} - {{ event.get_end_time_display }}</dd>
+  </dl>
   {{ event.render_description }}
 </article>
   <div class="tools">

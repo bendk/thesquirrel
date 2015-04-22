@@ -41,6 +41,8 @@ class EventFormTest(TestCase):
         form = EventForm(data={
             'title': 'test-title',
             'description': 'test-description',
+            'location': 'Library',
+            'bottomliner': 'Santa',
             'date': '1/1/2015',
             'start_time': '18:30',
             'end_time': '19:30',
@@ -74,6 +76,8 @@ class EventWithRepeatFormTest(TestCase):
         return {
             'title': 'test-title',
             'description': 'test-description',
+            'location': 'library',
+            'bottomliner': 'Santa',
             'date': '1/1/2015',
             'start_time': '18:30',
             'end_time': '19:30',
