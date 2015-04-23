@@ -120,7 +120,7 @@ class EventRepeat(models.Model):
 
 class EventRepeatExclude(models.Model):
     event = models.ForeignKey(Event, related_name='excludes')
-    date = models.DateField()
+    date = models.DateField(unique=True)
 
 class EventDate(models.Model):
     event = models.ForeignKey(Event, related_name='date_set')

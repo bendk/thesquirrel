@@ -160,7 +160,7 @@ class EventRepeatForm(forms.ModelForm):
         event.excludes.all().delete()
         event.excludes.bulk_create(
             EventRepeatExclude(event=event, date=date)
-            for date in self.cleaned_data['exclude']
+            for date in set(self.cleaned_data['exclude'])
         )
         return repeat
 
