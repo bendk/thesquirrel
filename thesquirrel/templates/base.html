@@ -66,11 +66,6 @@
       <a href="https://fundly.com/keep-the-squirrel-alive"><span class="fa fa-money"></span> Donate</a>
     </li>
   </ul>
-  {% if user.is_anonymous %}
-  <div class="login">
-    <a href="{% url "accounts:login" %}">Member login</a>
-  </div>
-  {% endif %}
 </footer>
 {% block bodyextra %}{% endblock %}
 </body>
