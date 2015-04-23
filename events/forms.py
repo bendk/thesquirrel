@@ -31,7 +31,7 @@ from .utils import format_time
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
         kwargs['widget'] = forms.DateInput(attrs={'class': 'pikaday'},
-                                           format='%m/%d/%y')
+                                           format='%m/%d/%Y')
         super(forms.DateField, self).__init__(*args, **kwargs)
 
 class TimeField(forms.TimeField):
