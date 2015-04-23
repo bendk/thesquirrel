@@ -3,12 +3,16 @@
 {% block content %}
 <div class="documents-list">
   <h2>
+    {% if user.is_authenticated %}
     <a href="{% url "docs:create" %}" class="create">{% trans "Create" %}</a>
-    {% trans "Member Documents" %}</h2>
+    {% endif %}
+    {% trans "Flying Squirrel Documents" %}</h2>
   <ul>
     {% for doc in documents %}
     <li>
+    {% if user.is_authenticated %}
     <a href="{% url "docs:edit" doc.slug %}" class="action">{% trans "edit" %}</a>
+    {% endif %}
     <h3><a href="{% url "docs:view" doc.slug %}">{{ doc.title }}</a></h3>
     </li>
     {% empty %}

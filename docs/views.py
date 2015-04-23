@@ -26,10 +26,13 @@ from django.utils.translation import ugettext as _
 from .forms import DocumentForm
 from .models import Document
 
-@login_required
 def index(request):
+    if request.user.is_authenticated():
+        documents = Document.objects.all()
+    else:
+        documents = Document.objects.filter(public=True)
     return render(request, 'docs/index.html', {
-        'documents': Document.objects.all(),
+        'documents': documents,
     })
 
 

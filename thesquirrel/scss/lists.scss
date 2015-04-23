@@ -3,11 +3,16 @@
     border: 1px solid $gray;
     border-radius: 5px;
 
-    h2 {
+    h2 { // Header at the top of the list
         padding: 0 1rem;
-        vertical-align: middl;
+        vertical-align: middle;
     }
 
+    h3 { // Header for each item
+        margin: 0;
+        padding: 10px 0;
+        vertical-align: middle;
+    }
 
     ul {
         list-style-type: none;
@@ -30,6 +35,7 @@
     }
     a.action {
         @include button(secondary, small);
+        margin: 10px 0 0 0;
         float: right;
     }
     a.create {
