@@ -31,18 +31,19 @@ html#calendar {
 
     .month {
         margin-top: 4rem;
-        a {
-            @include button(primary, small);
-        }
-        a.next {
-            float: right;
-        }
-        a.prev {
-            float: left;
-        }
         h2 {
             text-align: center;
         }
+    }
+
+    a.next, a.prev {
+        @include medium-text;
+    }
+    a.next {
+        float: right;
+    }
+    a.prev {
+        float: left;
     }
 
     .date-details {
