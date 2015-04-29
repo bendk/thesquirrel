@@ -79,9 +79,11 @@ class Bundle(object):
         if not os.path.exists(self.dest_path()):
             return True
         dest_mtime = os.stat(self.dest_path()).st_mtime
-        paths_to_check = self.source_paths() + [settings_path()]
         return any(os.stat(path).st_mtime > dest_mtime
-                   for path in paths_to_check)
+                   for path in self.needs_build_paths_to_check())
+
+    def needs_build_paths_to_check(self):
+        return self.source_paths() + [settings_path()]
 
     def build(self):
         content = self.build_content()
@@ -117,6 +119,14 @@ class SassBundle(Bundle):
         include_paths.extend(
             set(os.path.dirname(p) for p in self.source_paths()))
         return include_paths
+
+    def needs_build_paths_to_check(self):
+        yield settings_path()
+        for include_path in self.include_paths():
+            for (dirpath, dirnames, filenames) in os.walk(include_path):
+                for filename in filenames:
+                    if filename.endswith('.scss'):
+                        yield os.path.join(dirpath, filename)
 
     def build_content(self, output_style='compressed'):
         return sass.compile(
