@@ -50,8 +50,8 @@ def make_calendar(start_date):
         events_by_date[event_date.date].append(event_date.event)
 
     calendar = []
-    for week in Calendar().monthdatescalendar(start_date.year,
-                                              start_date.month):
+    for week in Calendar(6).monthdatescalendar(start_date.year,
+                                               start_date.month):
         week_with_events = []
         for day_date in week:
             events = events_by_date[day_date]
