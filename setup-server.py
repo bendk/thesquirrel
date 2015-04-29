@@ -37,7 +37,7 @@ def main():
     manage('migrate')
     manage('buildmedia')
     if production():
-        manage('collectstatic')
+        manage('collectstatic', '--noinput')
         # touch wsgi.py to make apache restart the wsgi daemon
         os.utime(os.path.join(BASE_DIR, 'wsgi.py'), None)
 
