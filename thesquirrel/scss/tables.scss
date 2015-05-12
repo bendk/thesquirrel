@@ -1,7 +1,7 @@
 table {
     width: 100%;
     border-spacing: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 20px;
 }
 
 th {
@@ -26,7 +26,7 @@ td, th {
 
 dl {
     @extend %group;
-    margin: 0 0 1rem 0;
+    margin: 0 0 10px 0;
     padding: 0;
 }
 
@@ -55,7 +55,7 @@ table.key-value {
 
     th, td {
         border: none;
-        padding: 1rem 0;
+        padding: 10px 0;
 
         &:first-of-type {
             text-align: right;

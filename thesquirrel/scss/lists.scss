@@ -1,10 +1,10 @@
 .documents-list {
-    margin-top: 2rem;
+    margin-top: 20px;
     border: 1px solid $gray;
     border-radius: 5px;
 
     h2 { // Header at the top of the list
-        padding: 0 1rem;
+        padding: 0 10px;
         vertical-align: middle;
     }
 
@@ -22,7 +22,7 @@
 
     li {
         @extend %group;
-        padding: 0 1rem;
+        padding: 0 10px;
 
         &:nth-of-type(even) {
             background: $lighter-gray;
@@ -30,7 +30,7 @@
 
         &.empty {
             font-style: italic;
-            padding: 1rem 1rem;
+            padding: 10px;
         }
     }
     a.action {
@@ -49,16 +49,6 @@
         color: $white;
         padding: 0.25em 0.5em;
         border-radius: 5px;
-        margin-left: 1rem;
-    }
-}
-
-ul.jump {
-    list-style-type: none;
-    display: inline;
-    li {
-        @extend %small-text;
-        display: inline;
-        margin-right: 0.6rem;
+        margin-left: 10px;
     }
 }

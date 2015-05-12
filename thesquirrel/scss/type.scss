@@ -63,7 +63,7 @@ a {
 
 h1, h2, h3, h4, h5, h6 {
     @extend %header-font;
-    margin: 2rem 0;
+    margin: 20px 0;
 
     a {
         color: inherit;
@@ -112,20 +112,20 @@ h6 {
 
 p {
     margin: 0;
-    padding: 0 0 1em 0;
+    padding: 0 0 10px 0;
 }
 
 ul, ol {
     margin: 0;
-    padding: 0 0 1em 0;
+    padding: 0 0 10px 0;
     list-style-position: inside;
 
     ul, ol {
-        padding: 0.25em 0 0 20px;
+        padding: 4px 0 0 20px;
     }
 }
 li {
-    padding-bottom: 0.25em;
+    padding-bottom: 4px;
 }
 ul {
     list-style-type: disc;
@@ -134,6 +134,6 @@ ul {
 
 blockquote {
     border-left: 0.4rem solid $light-gray;
-    margin-left: 2rem;
-    padding-left: 2rem;
+    margin-left: 20px;
+    padding-left: 20px;
 }

@@ -1,13 +1,13 @@
 form {
     @extend %group;
     margin: 0;
-    padding: 2rem 1rem 1rem 1em;
+    padding: 20px 10px 10px 10px;
     border: 1px solid $light-gray;
 
     fieldset {
         border: 1px solid $light-gray;
-        padding: 1rem;
-        margin-bottom: 3rem;
+        padding: 10px;
+        margin-bottom: 30px;
         background: $off-white;
     }
 
@@ -18,7 +18,7 @@ form {
     label {
         display: block;
         margin: 0;
-        padding: 0.8rem 0;
+        padding: 8px 0;
     }
 
     span.required {
@@ -41,7 +41,7 @@ form {
         background: $white;
         padding: 0.5em;
         border-radius: 5px;
-        margin: 0.2rem 0 0 0;
+        margin: 2px 0 0 0;
 
         &:focus {
             border-color: $dark-gray;
@@ -53,7 +53,7 @@ form {
         .compact {
             input, select, textarea {
                 width: 70%;
-                margin: 0 0 0 2.0rem;
+                margin: 0 0 0 20px;
             }
 
             label {
@@ -67,7 +67,7 @@ form {
         resize: vertical;
 
         &[name=body] {
-            height: 30rem;
+            height: 300px;
         }
 
     }
@@ -82,8 +82,12 @@ form {
         padding: 0;
         font-style: italic;
         list-style-type: none;
-        margin-top: 0.8rem;
+        margin-top: 8px;
         color: $red;
+
+        li {
+            padding: 0;
+        }
     }
 
     .compact ul.errorlist {
@@ -92,7 +96,7 @@ form {
     }
 
     .actions {
-        margin-top: 3rem;
+        margin-top: 30px;
     }
 
     button, a.button {

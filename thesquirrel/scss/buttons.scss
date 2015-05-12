@@ -14,11 +14,11 @@
     // Returns button size info in the form of
     // (font-size, line-height, x-padding, margin-right)
     @if $size == large {
-        @return (1.8rem, 3.6rem, 4.0rem, 2rem);
+        @return (1.8rem, 3.6rem, 40px, 20px);
     } @else if $size == normal {
-        @return (1.6rem, 2.8rem, 2.0rem, 2rem);
+        @return (1.6rem, 2.8rem, 20px, 20px);
     } @else if $size == small {
-        @return (1.4rem, 2.4rem, 1.0rem, 1rem);
+        @return (1.4rem, 2.4rem, 10px, 10px);
     }
 }
 
@@ -33,7 +33,7 @@
     border-radius: 5px;
     border: 1px solid black;
     cursor: pointer;
-    margin-bottom: 1rem;
+    margin-bottom: 10px;
 
     &:hover {
         text-decoration: none;
