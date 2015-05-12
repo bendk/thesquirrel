@@ -75,18 +75,18 @@ class OrderedListItem(ListItem):
     open_tag = '<ol>'
     close_tag = '</ol>'
 
-class Image(ListItem):
+class Image(Token):
     rule = re.compile(r'#image-(\d+)-(\w+)\s*$')
     def __init__(self, match):
         self.image_id = match.group(1)
         self.style_class = match.group(2)
 
-class Caption(ListItem):
+class Caption(Token):
     rule = re.compile(r'#caption *(.*)$')
     def __init__(self, match):
         self.text = match.group(1)
 
-class Video(ListItem):
+class Video(Token):
     rule = re.compile(r'\[ *([^\s]+) *]$')
     def __init__(self, match):
         self.url = match.group(1)
