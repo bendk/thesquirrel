@@ -171,7 +171,8 @@ class SpaceUseRequestManager(models.Manager):
     def lookup_others(self, other_request):
         return (self
                 .filter(Q(name=other_request.name)|
-                        Q(email=other_request.email))
+                        Q(email=other_request.email)|
+                        Q(phone_number=other_request.phone_number))
                 .exclude(id=other_request.id))
 
 class SpaceUseRequest(models.Model):
@@ -198,7 +199,7 @@ class SpaceUseRequest(models.Model):
     organization = models.CharField(max_length=255, blank=True)
     website = models.CharField(max_length=255, blank=True)
     mission = models.TextField(blank=True)
-    phone_number = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=255, db_index=True)
     additional_comments = models.TextField(blank=True)
 
     objects = SpaceUseRequestManager()
