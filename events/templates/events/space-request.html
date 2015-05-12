@@ -64,16 +64,6 @@
 {% endif %}
 <a class="button" href="{% url "events:edit-space-request" space_request.id %}">{% trans "Edit Request Info" %}</a>
 
-<div class="state-form">
-  <h3>{% trans "State" %}</h3>
-  <form method="POST" action="">
-    {% csrf_token %}
-    <input type="hidden" name="state-form" value="1">
-    {{ state_form.state }}
-    <button class="submit">{% trans "Update" %}</button>
-  </form>
-</div>
-
 <div class="notes">
   {% if notes %}
   <h3>Notes</h3>
@@ -87,12 +77,16 @@
     {% endfor %}
   </ul>
   {% endif %}
-
-  <form class="note" method="POST" action="">
-    {% csrf_token %}
-    <textarea name="note" class="submits-form" placeholder="{% trans "add note" %}"></textarea>
-  </form>
 </div>
+
+<form method="POST" action="">
+  {% csrf_token %}
+  <div class="state">
+    {% include "field.html" with field=form.state %}
+  </div>
+  {% include "field.html" with field=form.note %}
+  <button class="submit">{% trans "Update" %}</button>
+</form>
 
 {% endblock %}
 

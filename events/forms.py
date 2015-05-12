@@ -269,15 +269,23 @@ class OngoingSpaceRequestForm(forms.ModelForm):
                               'for lack of funds.'),
         }
 
-class SpaceRequestStateForm(forms.Form):
-    state = forms.ChoiceField(choices=SpaceUseRequest.STATE_CHOICES)
+class SpaceRequestUpdateForm(forms.Form):
+    note = forms.CharField(
+        label=_('Add note'), required=False, 
+        widget=forms.Textarea(attrs={'rows': 3}))
+    state = forms.ChoiceField(choices=SpaceUseRequest.STATE_CHOICES,
+                              required=False)
 
-    def __init__(self, space_request, data=None):
+    def __init__(self, space_request, user, data=None):
         self.space_request = space_request
-        super(SpaceRequestStateForm, self).__init__(
+        self.user = user
+        super(SpaceRequestUpdateForm, self).__init__(
             initial=dict(state=space_request.state),
             data=data,
         )
 
     def save(self):
         self.space_request.update_state(self.cleaned_data['state'])
+        if self.cleaned_data['note']:
+            self.space_request.notes.create(user=self.user,
+                                            body=self.cleaned_data['note'])

@@ -30,7 +30,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from .forms import (EventWithRepeatForm, SingleSpaceRequestForm,
-                    OngoingSpaceRequestForm, SpaceRequestStateForm)
+                    OngoingSpaceRequestForm, SpaceRequestUpdateForm)
 from .models import (Event, EventDate, SpaceUseRequest, SingleSpaceUseRequest,
                      OngoingSpaceUseRequest)
 
@@ -163,22 +163,18 @@ def space_requests(request):
 def space_request(request, id):
     space_request = get_object_or_404(SpaceUseRequest, id=id)
 
-    if 'note' in request.POST:
-        space_request.notes.create(user=request.user,
-                                   body=request.POST['note'])
-        return HttpResponseRedirect(space_request.get_absolute_url())
-
-    if 'state-form' in request.POST:
-        state_form = SpaceRequestStateForm(space_request, request.POST)
-        if state_form.is_valid():
-            state_form.save()
-            return redirect('events:space-requests')
+    if request.method == 'POST':
+        form = SpaceRequestUpdateForm(space_request, request.user,
+                                      request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('events:space-request', space_request.id)
     else:
-        state_form = SpaceRequestStateForm(space_request)
+        form = SpaceRequestUpdateForm(space_request, request.user)
 
     return render(request, 'events/space-request.html', {
         'space_request': space_request,
-        'state_form': state_form,
+        'form': form,
         'notes': space_request.notes.all().select_related('user'),
     })
 
