@@ -11,24 +11,33 @@
     <dt>{% trans "Bottomliner" %}</dt>
     <dd>{{ event.bottomliner }}</dd>
 
-    {% if event.has_repeat %}
-    <dt>{% trans "Repeats" %}</dt>
-    <dd>{% blocktrans with repeat_type=event.repeat.get_type_display days=event.repeat.get_weekdays_display %}{{ repeat_type }} on {{ days }}{% endblocktrans %}
-    </dd>
-    {% else %}
     <dt>{% trans "Date" %}</dt>
-    <dd>{{ event.date }}</dd>
-    {% endif %}
+    <dd>{{ event.get_date_display }}</dd>
+
     <dt>{% trans "Time" %}</dt>
-    <dd>{{ event.get_start_time_display }} - {{ event.get_end_time_display }}</dd>
+    <dd>{{ event.get_time_display }}</dd>
+    {% if user.is_authenticated and event.space_request %}
+    <dt>{% trans "Space Request" %}</dt>
+    <dd><a href="{% url "events:space-request" event.space_request.id %}">{{ event.space_request.title }}</a></dd>
+    {% endif %}
   </dl>
   {{ event.render_description }}
-</article>
+
+  {% if user.is_authenticated %}
   <div class="tools">
-    <a href="{% url "events:calendar" %}">Full Calendar</a>
-    {% if user.is_authenticated %}
     <a href="{% url "events:edit" event.id %}">Edit Event</a>
-  {% endif %}
+    {% if event.space_request %}
+    <form method="POST" action="{% url "events:unlink-event" event.id %}">
+      {% csrf_token %}
+      <button>{% trans "Unlink space request" %}</button>
+    </form>
+    {% else %}
+    <a href="{% url "events:link-event" event.id %}">{% trans "Link to space request" %}</a>
+    {% endif %}
   </div>
+  {% endif %}
+
+</article>
+<a class="button" href="{% url "events:calendar" %}"><span class="fa fa-calendar"></span> Full Calendar</a>
 {% endblock %}
 

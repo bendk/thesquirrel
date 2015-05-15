@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block html-attrs %} id="link-event"{% endblock %}
+{% block content %}
+<h1>{% trans "Link Event to Space Request" %}</h1>
+{% if space_requests %}
+{% if query %}
+<h2>{% trans "Space Requests" %}</h2>
+{% else %}
+<h2>{% trans "Suggested Space Requests" %}</h2>
+{% endif %}
+<table>
+  <tr>
+    <th>{% trans "Title" %}</th>
+    <th>{% trans "Date" %}</th>
+    <th>{% trans "Time" %}</th>
+    <th></th>
+  </tr>
+  {% for space_request in space_requests %}
+  <tr>
+    <td>
+      <a href="{% url "events:space-request" space_request.id %}">{{ space_request.title }}</a>
+    </td>
+    <td>{{ event.date }}</td>
+    <td>{{ event.get_time_display }}</td>
+    <td>
+      <form class="action" action="" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="space-request" value="{{ space_request.id }}">
+        <button>{% trans "Link" %}</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+<form method="GET" action="" class="text-with-button">
+  <input name="q" type="text">
+  <button><span class="fa fa-search"></span> {% trans "Search" %}</button>
+</form>
+{% endblock %}
+

@@ -8,6 +8,12 @@ html#event {
     }
 }
 
+html#link-event {
+    table {
+        margin-bottom: 40px;
+    }
+}
+
 html.space-request-form ul.pou {
     list-style-type: none;
 
@@ -182,27 +188,35 @@ html#space-request {
     div.declined {
         background: $red;
     }
-    .section {
-        border: 1px solid $gray;
-        border-radius: 5px;
-        margin-bottom: 2rem;
-        padding: 0 10px;
-
-        h2 {
-            margin: 0.5rem 0 1rem 20px;
-        }
+    h2 {
+        margin: 0.5rem 0 1rem 20px;
     }
 
     p.find-more {
+        margin: -20px 20px 20px 20px;
+    }
+    p.comments {
         margin-left: 20px;
     }
 
+    .tools {
+        margin-top: 20px;
+    }
+
     form {
-        border: none;
-        padding: 0;
+        border: 1px solid $gray;
+        background: $lighter-gray;
+        padding: 10px 20px;
+        margin-top: 40px;
+
+        input, select, textarea {
+            border-color: $gray;
+        }
     }
 
     div.notes {
+        margin-top: 20px;
+
         ul {
             list-style-type: none;
         }

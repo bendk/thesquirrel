@@ -1,40 +1,37 @@
 {% load i18n %}
-<div class="section">
-  <h2>{% trans "How do you want to use the space?" %}</h2>
-  <table class="key-value">
-    <tr>
-      <td>{% trans "Title" %}</td>
-      <td>{{ space_request.title }}</td>
-    </tr>
 
-    <tr>
-      <td>{% trans "Event Type" %}</td>
-      <td>{{ space_request.event_type }}</td>
-    </tr>
+<h2>{% trans "How do you want to use the space?" %}</h2>
+<table class="key-value">
+  <tr>
+    <td>{% trans "Title" %}</td>
+    <td>{{ space_request.title }}</td>
+  </tr>
 
-    <tr>
-      <td>{% trans "Description" %}</td>
-      <td>{{ space_request.description }}</td>
-    </tr>
+  <tr>
+    <td>{% trans "Event Type" %}</td>
+    <td>{{ space_request.event_type }}</td>
+  </tr>
 
-    <tr>
-      <td>{% trans "Date" %}</td>
-      <td>{{ space_request.get_date_display }}</td>
-    </tr>
-  </table>
-</div>
+  <tr>
+    <td>{% trans "Description" %}</td>
+    <td>{{ space_request.description }}</td>
+  </tr>
 
-<div class="section">
-  <h2>{% trans "Charges/Donations" %}</h2>
-  <table class="key-value">
-    <tr>
-      <td>{% trans "Fees/Donations" %}</td>
-      <td>{{ space_request.event_charge }}</td>
-    </tr>
+  <tr>
+    <td>{% trans "Date" %}</td>
+    <td>{{ space_request.get_date_display }}</td>
+  </tr>
+</table>
 
-    <tr>
-      <td>{% trans "Squirrel Donation" %}</td>
-      <td>{{ space_request.squirrel_donation }}</td>
-    </tr>
-  </table>
-</div>
+<h2>{% trans "Charges/Donations" %}</h2>
+<table class="key-value">
+  <tr>
+    <td>{% trans "Fees/Donations" %}</td>
+    <td>{{ space_request.event_charge }}</td>
+  </tr>
+
+  <tr>
+    <td>{% trans "Squirrel Donation" %}</td>
+    <td>{{ space_request.squirrel_donation }}</td>
+  </tr>
+</table>

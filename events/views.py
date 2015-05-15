@@ -86,12 +86,53 @@ def book_the_space(request):
 
 @login_required
 def create(request):
-    return edit_form(request, None, reverse('events:calendar'))
+    if 'space-request' in request.GET:
+        space_request = get_object_or_404(SpaceUseRequest,
+                                          id=request.GET['space-request'])
+        instance = Event(
+            title=space_request.title,
+            space_request=space_request,
+        )
+        if isinstance(space_request, SingleSpaceUseRequest):
+            instance.date = space_request.date
+            instance.start_time = space_request.start_time
+            instance.end_time = space_request.end_time
+    else:
+        instance = None
+    return edit_form(request, instance, reverse('events:calendar'))
 
 @login_required
 def edit(request, id):
     instance = get_object_or_404(Event, id=id)
     return edit_form(request, instance, reverse('events:calendar'))
+
+@login_required
+def link_event(request, id):
+    event = get_object_or_404(Event, id=id)
+    if request.method == 'POST':
+        event.space_request = get_object_or_404(
+            SpaceUseRequest, id=request.POST.get('space-request')
+        )
+        event.save()
+        return redirect('events:view', event.id)
+    query = request.GET.get('q')
+    if query:
+        space_requests = SpaceUseRequest.objects.filter(title__contains=query)
+    else:
+        space_requests = SpaceUseRequest.objects.filter(title=event.title)
+    return render(request, "events/link-event.html", {
+        'event': event,
+        'query': query,
+        'space_requests': space_requests,
+    })
+
+@login_required
+def unlink_event(request, id):
+    event = get_object_or_404(Event, id=id)
+    if request.method == 'POST':
+        event.space_request = None
+        event.save()
+    return redirect('events:view', event.id)
 
 def edit_form(request, instance, return_url):
     return_url = request.GET.get('return_url', return_url)
@@ -104,11 +145,15 @@ def edit_form(request, instance, return_url):
         form = EventWithRepeatForm(data=request.POST, instance=instance)
         if form.is_valid():
             event = form.save(request.user)
-            return redirect('events:view', event.id)
+            if 'space-request' in request.GET:
+                return redirect('events:space-request',
+                                request.GET['space-request'])
+            else:
+                return redirect('events:view', event.id)
     else:
         form = EventWithRepeatForm(instance=instance)
 
-    if not instance:
+    if not instance or not instance.pk:
         title = _('Create New Event')
         submit_text = _('Create')
         enable_delete = False

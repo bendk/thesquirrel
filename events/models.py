@@ -45,6 +45,7 @@ class Event(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     author = models.ForeignKey(User)
+    space_request = models.ForeignKey('SpaceUseRequest', null=True)
 
     def __unicode__(self):
         return u'Event: {}'.format(self.title)
@@ -66,6 +67,19 @@ class Event(models.Model):
 
     def get_end_time_display(self):
         return format_time(self.end_time)
+
+    def get_time_display(self):
+        return '{} - {}'.format(self.get_start_time_display(),
+                                self.get_end_time_display())
+    
+    def get_date_display(self):
+        if self.has_repeat():
+            return _('{repeat_type} on {days}').format(
+                repeat_type=self.repeat.get_type_display(),
+                days=self.repeat.get_weekdays_display()
+            )
+        else:
+            return self.date
 
     def has_repeat(self):
         try:
@@ -223,6 +237,9 @@ class SpaceUseRequest(models.Model):
 
     def is_declined(self):
         return self.state == self.DECLINED
+
+    def has_event(self):
+        return bool(self.event_set.all())
 
     def get_created_display(self):
         created = timezone.localtime(self.created)
