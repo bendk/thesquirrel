@@ -29,7 +29,15 @@
         {% if events %}
         <ul>
           {% for event in events %}
+          {% if event.space_request.is_pending %}
+          <li class="pending">
+          {% elif event.space_request.is_declined %}
+          <li class="declined">
+          {% elif event.space_request.is_approved_pending_deposit %}
+          <li class="approved-pending-deposit">
+          {% else %}
           <li>
+          {% endif %}
             <a href="{% url "events:view" event.id %}">
               <div class="time">{% blocktrans with start_time=event.get_start_time_display end_time=event.get_end_time_display %}{{ start_time }} - {{ end_time}} {% endblocktrans %}</div>
               <div class="title" href="{% url "events:view" event.id %}">{{ event.title }}</div>

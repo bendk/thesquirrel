@@ -18,7 +18,7 @@
     <dd>{{ event.get_time_display }}</dd>
     {% if user.is_authenticated and event.space_request %}
     <dt>{% trans "Space Request" %}</dt>
-    <dd><a href="{% url "events:space-request" event.space_request.id %}">{{ event.space_request.title }}</a></dd>
+    <dd><a href="{% url "events:space-request" event.space_request.id %}">{{ event.space_request.title }} ({{ event.space_request.get_state_display }})</a></dd>
     {% endif %}
   </dl>
   {{ event.render_description }}

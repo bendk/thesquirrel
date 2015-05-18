@@ -197,7 +197,7 @@ class SpaceUseRequest(models.Model):
     STATE_CHOICES = (
         (PENDING, _('Pending')),
         (APPROVED, _('Approved')),
-        (APPROVED_PENDING_DEPOSIT, _('Approved (Pending deposit)')),
+        (APPROVED_PENDING_DEPOSIT, _('Approved Pending Deposit')),
         (DECLINED, _('Declined')),
     )
 

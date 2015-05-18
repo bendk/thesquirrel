@@ -24,6 +24,7 @@ from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
@@ -40,11 +41,16 @@ def view(request, id):
         'event': event,
     })
 
-def make_calendar(start_date):
+def make_calendar(start_date, show_pending):
     qs = EventDate.objects.filter(
         date__gte=start_date,
         date__lt=start_date + relativedelta(months=1),
-    ).select_related('event')
+    ).select_related('event', 'event__space_request')
+    if not show_pending:
+        qs = qs.filter(
+            Q(event__space_request__isnull=True) |
+            Q(event__space_request__state=SpaceUseRequest.APPROVED)
+        )
     events_by_date = defaultdict(list)
     for event_date in qs:
         events_by_date[event_date.date].append(event_date.event)
@@ -74,7 +80,8 @@ def calendar(request, year=None, month=None):
     start_date = date(year, month, 1)
 
     return render(request, 'events/calendar.html', {
-        'calendar': make_calendar(start_date),
+        'calendar': make_calendar(start_date,
+                                  request.user.is_authenticated()),
         'start_date': start_date,
         'next_month': start_date + relativedelta(months=1),
         'prev_month': start_date - relativedelta(months=1),

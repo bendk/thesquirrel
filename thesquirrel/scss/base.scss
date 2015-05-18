@@ -28,7 +28,7 @@ $medium-screen-width: 768px;
 }
 
 
-%group {
+.group {
     // clearfix for container elements with floating children
     &:after {
         content: "";

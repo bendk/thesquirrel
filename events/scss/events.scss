@@ -62,6 +62,19 @@ html#calendar {
             display: none;
         }
     }
+
+    .pending {
+        color: $semi-dark-gray;
+        font-style: italic;
+    }
+    .declined {
+        color: $red;
+        font-style: italic;
+    }
+    .approved-pending-deposit {
+        color: $green;
+        font-style: italic;
+    }
 }
 
 table.calendar, div.date-details {
