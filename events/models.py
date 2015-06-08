@@ -194,11 +194,13 @@ class SpaceUseRequest(models.Model):
     APPROVED = 'A'
     APPROVED_PENDING_DEPOSIT = 'B'
     DECLINED = 'D'
+    CANCLED = 'D'
     STATE_CHOICES = (
         (PENDING, _('Pending')),
         (APPROVED, _('Approved')),
         (APPROVED_PENDING_DEPOSIT, _('Approved Pending Deposit')),
         (DECLINED, _('Declined')),
+        (CANCLED, _('Canceled')),
     )
 
     title = models.CharField(max_length=255)
@@ -237,6 +239,9 @@ class SpaceUseRequest(models.Model):
 
     def is_declined(self):
         return self.state == self.DECLINED
+
+    def is_canceled(self):
+        return self.state == self.CANCLED
 
     def has_event(self):
         return bool(self.event_set.all())

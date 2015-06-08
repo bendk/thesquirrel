@@ -69,7 +69,7 @@ html#calendar {
         color: $semi-dark-gray;
         font-style: italic;
     }
-    .declined {
+    .declined, .canceled {
         color: $red;
         font-style: italic;
     }
@@ -170,7 +170,7 @@ table.space-requests {
     span.approved-pending-deposit {
         background: $green;
     }
-    span.declined {
+    span.declined, span.canceled {
         background: $red;
     }
     span.pending {
@@ -182,7 +182,7 @@ table.space-requests {
             display: none;
         }
 
-        span.approved, span.declined, span.pending {
+        span.approved, span.declined, span.pending, span.canceled {
             padding: 6px 2px;
         }
     }
@@ -200,7 +200,7 @@ html#space-request {
     div.approved {
         background: $green;
     }
-    div.declined {
+    div.declined, div.canceled {
         background: $red;
     }
     h2 {

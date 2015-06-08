@@ -31,7 +31,7 @@
           {% for event in events %}
           {% if event.space_request.is_pending %}
           <li class="pending">
-          {% elif event.space_request.is_declined %}
+          {% elif event.space_request.is_declined or event.space_request.is_canceled %}
           <li class="declined">
           {% elif event.space_request.is_approved_pending_deposit %}
           <li class="approved-pending-deposit">
