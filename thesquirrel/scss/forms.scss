@@ -47,6 +47,10 @@ form {
             border-color: $dark-gray;
         }
 
+        &[type=checkbox] {
+            width: auto;
+        }
+
     }
 
     @include not-small-screen {
@@ -96,6 +100,7 @@ form {
     }
 
     .actions {
+        @extend .group;
         margin-top: 30px;
     }
 
