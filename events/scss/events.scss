@@ -34,7 +34,9 @@ html#calendar {
     }
 
     .month {
-        margin-top: 4rem;
+        @include not-small-screen {
+            margin-top: 4rem;
+        }
         h2 {
             text-align: center;
         }

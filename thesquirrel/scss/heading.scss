@@ -11,6 +11,11 @@
     @include small-screen {
         background-image: url($static-url + 'images/heading-small.png');
         background-position: left top;
+        display: none;
+
+        #home & {
+            display: block;
+        }
     }
 
     .top, .extra {
