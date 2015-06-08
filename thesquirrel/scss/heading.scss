@@ -119,7 +119,6 @@
             display: none;
 
             @include small-screen {
-                margin-top: -1em;
                 display: block;
             }
         }
