@@ -18,6 +18,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('events.views',
     url(r'^$', 'calendar', name='calendar'),
+    url(r'^bottomliner$', 'bottomliner', name='bottomliner'),
     url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/$', 'calendar',
         name='month-calendar'),
     url(r'^create/$', 'create', name='create'),

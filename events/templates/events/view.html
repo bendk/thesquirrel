@@ -3,25 +3,7 @@
 {% load i18n %}
 {% block content %}
 <article>
-  <h1>{% blocktrans with title=event.title %}Event: {{ title }}{% endblocktrans %}</h1>
-  <dl class="details">
-    <dt>{% trans "Location" %}</dt>
-    <dd>{{ event.location }}</dd>
-
-    <dt>{% trans "Bottomliner" %}</dt>
-    <dd>{{ event.bottomliner }}</dd>
-
-    <dt>{% trans "Date" %}</dt>
-    <dd>{{ event.get_date_display }}</dd>
-
-    <dt>{% trans "Time" %}</dt>
-    <dd>{{ event.get_time_display }}</dd>
-    {% if user.is_authenticated and event.space_request %}
-    <dt>{% trans "Space Request" %}</dt>
-    <dd><a href="{% url "events:space-request" event.space_request.id %}">{{ event.space_request.title }} ({{ event.space_request.get_state_display }})</a></dd>
-    {% endif %}
-  </dl>
-  {{ event.render_description }}
+  {% include "events/_event_data.html" %}
 
   {% if user.is_authenticated %}
   <div class="tools">

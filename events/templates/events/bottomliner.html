@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<h1>{% trans "Flying Squirrel Bottomliner Page" %}</h1>
+{% for event in events %}
+<article>
+  {% include "events/_event_data.html" %}
+</article>
+{% endfor %}
+
+<a href="{% url "accounts:logout" %}" class="button secondary medium">{% trans "Logout" %}</a>
+
+
+{% endblock %}
+

@@ -261,3 +261,13 @@ def edit_space_request(request, id):
         'form': form,
         'mode': 'edit',
     })
+
+@login_required
+def bottomliner(request):
+    events = (Event.objects
+              .filter(date_set__date=date.today())
+              .select_related('space_request'))
+
+    return render(request, 'events/bottomliner.html', {
+        'events': events,
+    })
