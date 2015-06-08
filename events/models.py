@@ -194,7 +194,7 @@ class SpaceUseRequest(models.Model):
     APPROVED = 'A'
     APPROVED_PENDING_DEPOSIT = 'B'
     DECLINED = 'D'
-    CANCLED = 'D'
+    CANCLED = 'C'
     STATE_CHOICES = (
         (PENDING, _('Pending')),
         (APPROVED, _('Approved')),
