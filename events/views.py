@@ -106,6 +106,7 @@ def create(request):
                                           id=request.GET['space-request'])
         instance = Event(
             title=space_request.title,
+            description=space_request.description,
             space_request=space_request,
         )
         if isinstance(space_request, SingleSpaceUseRequest):
