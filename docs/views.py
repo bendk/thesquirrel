@@ -32,6 +32,7 @@ def index(request):
         documents = Document.objects.all()
     else:
         documents = Document.objects.filter(public=True)
+    documents = documents.order_by('title')
     return render(request, 'docs/index.html', {
         'documents': documents,
         'breadcrumbs': [
