@@ -124,7 +124,7 @@ def link_event(request, id):
         return redirect('events:view', event.id)
     query = request.GET.get('q')
     if query:
-        space_requests = SpaceUseRequest.objects.filter(title__contains=query)
+        space_requests = SpaceUseRequest.objects.filter(title__icontains=query)
     else:
         space_requests = SpaceUseRequest.objects.filter(title=event.title)
     return render(request, "events/link-event.html", {
