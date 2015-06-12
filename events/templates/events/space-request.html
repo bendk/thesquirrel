@@ -51,7 +51,7 @@
   </tr>
 </table>
 
-<p class="find-more">
+<p class="extra">
   <a href="{% url "events:lookup-others" space_request.id %}">{% trans "Find other events from this person" %}</a>
 </p>
 
@@ -63,8 +63,7 @@
 {% endif %}
 
 {% for event in space_request.event_set.all %}
-<h2><a href="{% url "events:view" event.id %}">{% trans "Linked Event" %}</a>
-</h2
+<h2>{% trans "Linked Event" %}</h2
 >
 <table class="key-value">
   <tr>
@@ -79,7 +78,14 @@
     <td>{% trans "Time" %}</td>
     <td>{{ event.get_time_display }}</td>
   </tr>
+  <tr>
+    <td>{% trans "Bottomliner" %}</td>
+    <td>{{ event.bottomliner }}</td>
+  </tr>
 </table>
+<p class="extra">
+    <a href="{% url "events:view" event.id %}">{% trans "View event" %}</a>
+</p>
 {% endfor %}
 
 <div class="notes">
