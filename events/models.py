@@ -304,3 +304,6 @@ class SpaceUseNote(models.Model):
     user = models.ForeignKey(User)
     datetime = models.DateTimeField(default=timezone.now)
     body = models.TextField()
+
+    class Meta:
+        ordering = ['datetime']
