@@ -25,6 +25,7 @@ from django.utils.translation import ugettext as _
 
 from .forms import DocumentForm
 from .models import Document
+from utils.breadcrumbs import BreadCrumb
 
 def index(request):
     if request.user.is_authenticated():
@@ -33,8 +34,10 @@ def index(request):
         documents = Document.objects.filter(public=True)
     return render(request, 'docs/index.html', {
         'documents': documents,
+        'breadcrumbs': [
+            BreadCrumb(_('Documents')),
+        ],
     })
-
 
 def view(request, slug):
     document = get_object_or_404(Document, slug=slug)
@@ -42,6 +45,10 @@ def view(request, slug):
         return redirect_to_login(next=reverse('docs:view', args=(slug,)))
     return render(request, 'docs/view.html', {
         'document': document,
+        'breadcrumbs': [
+            BreadCrumb(_('Documents'), 'docs:index'),
+            BreadCrumb(document.title)
+        ],
     })
 
 @login_required

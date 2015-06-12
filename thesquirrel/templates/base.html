@@ -40,6 +40,18 @@
   </div>
   <div class="extra">{% block header-extra %}{% endblock %}</div>
 </div>
+{% if breadcrumbs %}
+<ul class="breadcrumbs">
+  <li><a href="{% url "home" %}">{% trans "Home" %}</a></li>
+  {% for breadcrumb in breadcrumbs %}
+  {% if breadcrumb.url %}
+  <li><a href="{{ breadcrumb.url }}">{{ breadcrumb.label }}</a></li>
+  {% else %}
+  <li>{{ breadcrumb.label }}</li>
+  {% endif %}
+  {% endfor %}
+</ul>
+{% endif %}
 <div class="content">
   {% if messages %}
   <ul class="messages">

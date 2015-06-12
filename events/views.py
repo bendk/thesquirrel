@@ -34,11 +34,16 @@ from .forms import (EventWithRepeatForm, SingleSpaceRequestForm,
                     OngoingSpaceRequestForm, SpaceRequestUpdateForm)
 from .models import (Event, EventDate, SpaceUseRequest, SingleSpaceUseRequest,
                      OngoingSpaceUseRequest)
+from utils.breadcrumbs import BreadCrumb
 
 def view(request, id):
     event = get_object_or_404(Event, id=id)
     return render(request, 'events/view.html', {
         'event': event,
+        'breadcrumbs': [
+            BreadCrumb(_('Calendar'), 'events:calendar'),
+            BreadCrumb(event.title),
+        ],
     })
 
 def make_calendar(start_date, show_pending):
@@ -86,6 +91,9 @@ def calendar(request, year=None, month=None):
         'next_month': start_date + relativedelta(months=1),
         'prev_month': start_date - relativedelta(months=1),
         'month_name': start_date.strftime("%B %Y"),
+        'breadcrumbs': [
+            BreadCrumb(_('Calendar')),
+        ],
     })
 
 def book_the_space(request):
@@ -209,6 +217,9 @@ def space_requests(request):
     requests = SpaceUseRequest.objects.current()
     return render(request, "events/space-requests.html", {
         'requests': requests,
+        'breadcrumbs': [
+            BreadCrumb(_('Space Requests')),
+        ],
     })
 
 @login_required
@@ -228,6 +239,10 @@ def space_request(request, id):
         'space_request': space_request,
         'form': form,
         'notes': space_request.notes.all().select_related('user'),
+        'breadcrumbs': [
+            BreadCrumb(_('Space Requests'), 'events:space-requests'),
+            BreadCrumb(space_request.title),
+        ],
     })
 
 @login_required
@@ -236,7 +251,7 @@ def lookup_others(request, id):
     other_requests = SpaceUseRequest.objects.lookup_others(space_request)
     return render(request, "events/lookup-others.html", {
         'space_request': space_request,
-        'other_requests': other_requests
+        'other_requests': other_requests,
     })
 
 @login_required
