@@ -270,10 +270,10 @@ class Renderer(object):
         if start_token.starts_table(lexer.next_token):
             return self.render_table(start_token, lexer, output)
         output.append('<p>')
-        text_parts = [start_token.text]
+        output.append(inline.render(start_token.text))
         while isinstance(lexer.next_token, Text):
-            text_parts.append(lexer.pop_next().text)
-        output.extend(inline.chunked_render(text_parts))
+            output.append('<br>')
+            output.append(inline.render(lexer.pop_next().text))
         output.append('</p>\n')
 
     def render_table(self, start_token, lexer, output):

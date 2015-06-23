@@ -15,7 +15,7 @@ continuations
 first
 second
 .
-<p>first second</p>
+<p>first<br>second</p>
 .
 
 ignore extra empty lines
@@ -33,18 +33,9 @@ second
 
 inline rendering
 .
-one *one*
-two **two**
+one *one* two **two**
 .
 <p>one <em>one</em> two <strong>two</strong></p>
-.
-
-inline rendering works across lines
-.
-I *really
-like* pizza
-.
-<p>I <em>really like</em> pizza</p>
 .
 
 # Headings
