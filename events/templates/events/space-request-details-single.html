@@ -21,6 +21,16 @@
     <td>{% trans "Date" %}</td>
     <td>{{ space_request.get_date_display }}</td>
   </tr>
+
+  <tr>
+    <td>{% trans "Setup time" %}</td>
+    <td>{{ space_request.setup_time }}</td>
+  </tr>
+
+  <tr>
+    <td>{% trans "Cleanup time" %}</td>
+    <td>{{ space_request.cleanup_time }}</td>
+  </tr>
 </table>
 
 <h2>{% trans "Charges/Donations" %}</h2>

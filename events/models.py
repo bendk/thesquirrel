@@ -271,7 +271,8 @@ class SingleSpaceUseRequest(SpaceUseRequest):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    setup_cleanup_time = models.CharField(max_length=255, blank=True)
+    setup_time = models.CharField(max_length=255, blank=True)
+    cleanup_time = models.CharField(max_length=255, blank=True)
     event_charge = models.CharField(max_length=255)
     squirrel_donation = models.TextField(blank=True)
 

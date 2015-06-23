@@ -212,15 +212,15 @@ class SingleSpaceRequestForm(forms.ModelForm):
         model = SingleSpaceUseRequest
         fields = (
             'title', 'event_type', 'description', 'date', 'start_time',
-            'end_time', 'setup_cleanup_time', 'event_charge',
+            'end_time', 'setup_time', 'cleanup_time', 'event_charge',
             'squirrel_donation', 'name', 'email', 'squirrel_member',
             'organization', 'website', 'mission', 'phone_number',
             'additional_comments',
         )
         labels = {
             'title': _('Event title'),
-            'setup_cleanup_time': _('Do you need extra setup/cleanup time? '
-                                    'If so, how much?'),
+            'setup_time': _('What time do you want to setup for the event?'),
+            'cleanup_time': _('How long do you need to cleanup the event?'),
             'event_charge': _('Will you ask for donations?'),
             'squirrel_donation': _('If you are collecting money for your '
                                    'event, does our standard donation '
