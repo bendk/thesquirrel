@@ -57,7 +57,8 @@ class SingleSpaceUseRequestFactory(SpaceUseRequestFactory):
     date = date(2015, 1, 1)
     start_time = time(12, 0)
     end_time = time(13, 30)
-    setup_cleanup_time = '1 hour before'
+    setup_time = '1 hour before'
+    cleanup_time = '1 hour'
     event_charge = '$50'
     squirrel_donation = 'Yes the donation works for us'
 
