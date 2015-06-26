@@ -15,12 +15,35 @@ function editorUploadImage(fieldset, textarea) {
     var addMediaProgress = $('.add-media-progress', fieldset);
     var addMediaProgressBar = $('.bar', addMediaProgress);
     var uploadImage = $('button.upload-image', fieldset);
+    var copyImage = $('button.copy-image', fieldset);
     var uploadFile = $('<input type="file" name="file">');
     var uploadFileForm = $('<form>').append(uploadFile);
     body.append(uploadFileForm.hide());
 
     uploadImage.click(function() {
         uploadFile.click();
+        return false;
+    });
+    copyImage.click(function() {
+        var url = window.prompt(copyImage.data('prompt'));
+        if(!url) {
+            return false;
+        }
+        textarea.prop('disabled', true);
+        $.ajax({
+            type: 'POST',
+            url: '/editor/copy-image/',
+            data: { 'url': url },
+            headers: {
+                'X-CSRFToken': $.cookie('csrftoken'),
+            },
+            success: function(responseData) {
+                textarea.prop('disabled', false);
+                if(responseData['imageId']) {
+                    insertImageTag(responseData['imageId']);
+                }
+            }
+        });
         return false;
     });
     uploadFile.change(function() {
@@ -41,7 +64,9 @@ function editorUploadImage(fieldset, textarea) {
                     addMedia.show();
                     addMediaProgress.hide();
                     textarea.prop('disabled', false);
-                    insertImageTag(responseData['imageId']);
+                    if(responseData['imageId']) {
+                        insertImageTag(responseData['imageId']);
+                    }
                 }
             });
         }

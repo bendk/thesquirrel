@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
+import requests
 
 from . import config
 from .models import EditorImage
@@ -35,6 +36,24 @@ def upload_image(request):
         except Exception, e:
             return JsonResponse({'error': str(e)})
         return JsonResponse({'imageId': image.id})
+
+@login_required
+def copy_image(request):
+    try:
+        url = request.POST['url']
+    except KeyError:
+        return JsonResponse({'error': 'no URL given'})
+    try:
+        response = requests.get(url)
+    except StandardError:
+        return JsonResponse({'error': 'error fetching {}'.format(url)})
+    if response.status_code != 200:
+        return JsonResponse({'error': 'error fetching {}'.format(url)})
+    try:
+        image = EditorImage.objects.create_from_data(response.content)
+    except Exception, e:
+        return JsonResponse({'error': str(e)})
+    return JsonResponse({'imageId': image.id})
 
 def formatting_help(request):
     return render(request, 'editor/formatting-help.html')

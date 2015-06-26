@@ -14,8 +14,9 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-import collections
+from cStringIO import StringIO
 from datetime import timedelta
+import collections
 import os
 import re
 
@@ -44,6 +45,9 @@ class EditorImageManager(models.Manager):
         instance = self.create(image_type=pil_image.format.lower())
         instance.write_files(pil_image)
         return instance
+
+    def create_from_data(self, data):
+        return self.create_from_file(StringIO(data))
 
 class EditorImage(models.Model):
     """An image that's been uploaded into the editor.  """
