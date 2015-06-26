@@ -18,12 +18,12 @@ from __future__ import absolute_import
 
 from django import template
 
-from ..models import EventDate
+from ..models import CalendarItem
 
 register = template.Library()
 
 @register.inclusion_tag('events/upcoming.html', name='upcoming-events')
 def upcoming_events():
     return {
-        'event_dates': EventDate.upcoming()[:4],
+        'calendar_items': CalendarItem.upcoming()[:4],
     }

@@ -51,14 +51,16 @@ class Event(models.Model):
         return u'Event: {}'.format(self.title)
 
     def update_dates(self):
-        self.date_set.all().delete()
+        self.calendar_items.all().delete()
         dates = set([self.date])
         if self.has_repeat():
             dates.update(dt.date() for dt in self.repeat.calc_repeat_rrule())
         for exclude in self.excludes.all():
             dates.discard(exclude.date)
-        EventDate.objects.bulk_create([
-            EventDate(event=self, date=date)
+        CalendarItem.objects.bulk_create([
+            CalendarItem(event=self, date=date,
+                         start_time=self.start_time,
+                         end_time=self.end_time)
             for date in dates
         ])
 
@@ -136,9 +138,13 @@ class EventRepeatExclude(models.Model):
     event = models.ForeignKey(Event, related_name='excludes')
     date = models.DateField(unique=True)
 
-class EventDate(models.Model):
-    event = models.ForeignKey(Event, related_name='date_set')
+class CalendarItem(models.Model):
+    """Represents an entry in the calendar."""
+
+    event = models.ForeignKey(Event, related_name='calendar_items')
     date = models.DateField(db_index=True)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
 
     @classmethod
     def upcoming(cls):
@@ -146,6 +152,20 @@ class EventDate(models.Model):
         return (cls.objects.filter(date__gte=today)
                 .select_related('event')
                 .order_by('date', 'event__start_time'))
+
+    @property
+    def space_request(self):
+        return self.event.space_request
+
+    def get_start_time_display(self):
+        return format_time(self.start_time)
+
+    def get_end_time_display(self):
+        return format_time(self.end_time)
+
+    def get_time_display(self):
+        return '{} - {}'.format(self.get_start_time_display(),
+                                self.get_end_time_display())
 
 class SpaceUseRequestQueryset(models.QuerySet):
     def iterator(self):

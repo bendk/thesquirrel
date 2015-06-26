@@ -32,8 +32,9 @@ from django.utils.translation import ugettext as _
 
 from .forms import (EventWithRepeatForm, SingleSpaceRequestForm,
                     OngoingSpaceRequestForm, SpaceRequestUpdateForm)
-from .models import (Event, EventDate, SpaceUseRequest, SingleSpaceUseRequest,
-                     OngoingSpaceUseRequest)
+from .models import (Event, CalendarItem, SpaceUseRequest,
+                     SingleSpaceUseRequest, OngoingSpaceUseRequest)
+from .utils import format_time
 from utils.breadcrumbs import BreadCrumb
 
 def view(request, id):
@@ -47,7 +48,7 @@ def view(request, id):
     })
 
 def make_calendar(start_date, show_pending):
-    qs = EventDate.objects.filter(
+    qs = CalendarItem.objects.filter(
         date__gte=start_date,
         date__lt=start_date + relativedelta(months=1),
     ).select_related('event', 'event__space_request')
@@ -56,18 +57,18 @@ def make_calendar(start_date, show_pending):
             Q(event__space_request__isnull=True) |
             Q(event__space_request__state=SpaceUseRequest.APPROVED)
         )
-    events_by_date = defaultdict(list)
-    for event_date in qs:
-        events_by_date[event_date.date].append(event_date.event)
+    date_map = defaultdict(list)
+    for item in qs:
+        date_map[item.date].append(item)
 
     calendar = []
     for week in Calendar(6).monthdatescalendar(start_date.year,
                                                start_date.month):
         week_with_events = []
         for day_date in week:
-            events = events_by_date[day_date]
-            events.sort(key=lambda e: e.start_time)
-            week_with_events.append((day_date, events))
+            items = date_map[day_date]
+            items.sort(key=lambda item: item.start_time)
+            week_with_events.append((day_date, items))
         calendar.append(week_with_events)
     return calendar
 
@@ -281,7 +282,7 @@ def edit_space_request(request, id):
 @login_required
 def bottomliner(request):
     events = (Event.objects
-              .filter(date_set__date=date.today())
+              .filter(calendar_items__date=date.today())
               .select_related('space_request'))
 
     return render(request, 'events/bottomliner.html', {

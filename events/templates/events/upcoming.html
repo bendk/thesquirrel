@@ -1,8 +1,8 @@
 <ul class="upcoming">
-  {% for event_date in event_dates %}
+  {% for item in calendar_items %}
   <li>
-    <a href="{% url "events:view" event_date.event.id %}" class="title">{{ event_date.event.title }}</a>
-    <div class="date">{{ event_date.date|date:"D, M. j" }} - {{ event_date.event.get_start_time_display }} - {{ event_date.event.get_end_time_display }}</div>
+    <a href="{% url "events:view" item.event.id %}" class="title">{{ item.event.title }}</a>
+    <div class="date">{{ item.date|date:"D, M. j" }} - {{ item.event.get_time_display }}</div>
   </li>
   {% endfor %}
 </ul>

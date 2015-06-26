@@ -25,13 +25,16 @@ import pytz
 
 from ..factories import *
 from ..models import (Event, EventRepeat, EventRepeatExclude,
-                      EventDate, SpaceUseRequest)
+                      CalendarItem, SpaceUseRequest)
 
 class TestEventModels(TestCase):
     def check_dates(self, event, correct_dates):
         event.update_dates()
-        assert_items_equal([d.date for d in event.date_set.all()],
+        assert_items_equal([d.date for d in event.calendar_items.all()],
                            correct_dates)
+        for event_date in event.calendar_items.all():
+            assert_equal(event_date.start_time, event.start_time)
+            assert_equal(event_date.end_time, event.end_time)
 
     def test_create_dates_no_repeat(self):
         event = EventFactory(date=date(2015, 1, 1))
@@ -62,7 +65,9 @@ class TestEventModels(TestCase):
     def test_update_dates(self):
         event = EventFactory(date=date(2015, 1, 1))
         # make an extra event date -- it should be deleted in update_dates()
-        EventDate.objects.create(event=event, date=date(2015, 1, 2))
+        CalendarItem.objects.create(event=event, date=date(2015, 1, 2),
+                                    start_time=time(11, 30),
+                                    end_time=time(12, 30))
         self.check_dates(event, [date(2015, 1, 1)])
 
 class TestSpaceUseRequestModels(TestCase):
@@ -73,4 +78,3 @@ class TestSpaceUseRequestModels(TestCase):
             types = [sr.get_type_display()
                      for sr in SpaceUseRequest.objects.all()]
         assert_items_equal(types, ['Single use', 'Ongoing use'])
-

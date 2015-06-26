@@ -23,24 +23,24 @@
   <tbody>
     {% for week in calendar %}
     <tr>
-      {% for date, events in week %}
+      {% for date, items in week %}
       <td data-date-title="{{ date|date:"l F jS, Y"}}" {% if date.month != start_date.month %} class="other-month"{% endif %}>
         <div class="day">{{ date.day }}</div>
-        {% if events %}
+        {% if items %}
         <ul>
-          {% for event in events %}
-          {% if event.space_request.is_pending %}
+          {% for item in items %}
+          {% if item.space_request.is_pending %}
           <li class="pending">
-          {% elif event.space_request.is_declined or event.space_request.is_canceled %}
+          {% elif item.space_request.is_declined or item.space_request.is_canceled %}
           <li class="declined">
-          {% elif event.space_request.is_approved_pending_deposit %}
+          {% elif item.space_request.is_approved_pending_deposit %}
           <li class="approved-pending-deposit">
           {% else %}
           <li>
           {% endif %}
-            <a href="{% url "events:view" event.id %}">
-              <div class="time">{% blocktrans with start_time=event.get_start_time_display end_time=event.get_end_time_display %}{{ start_time }} - {{ end_time}} {% endblocktrans %}</div>
-              <div class="title" href="{% url "events:view" event.id %}">{{ event.title }}</div>
+            <a href="{% url "events:view" item.event.id %}">
+              <div class="time">{% blocktrans with start_time=item.get_start_time_display end_time=item.get_end_time_display %}{{ start_time }} - {{ end_time}} {% endblocktrans %}</div>
+              <div class="title" href="{% url "events:view" item.event.id %}">{{ item.event.title }}</div>
             </a>
           </li>
           {% endfor %}
