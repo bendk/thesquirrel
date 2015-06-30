@@ -20,8 +20,8 @@ from datetime import date, time, timedelta
 import factory
 
 from thesquirrel.factories import *
-from .models import (Event, EventRepeat, SingleSpaceUseRequest,
-                     OngoingSpaceUseRequest)
+from .models import (Event, EventRepeat, EventRepeatExclude,
+                     SingleSpaceUseRequest, OngoingSpaceUseRequest)
 
 class EventFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Event
@@ -31,13 +31,34 @@ class EventFactory(factory.DjangoModelFactory):
     date = date(2015, 1, 1)
     start_time = time(12, 0)
     end_time = time(14, 0)
-    author = UserFactory()
 
     @factory.post_generation
     def with_repeat(obj, create, extracted, **kwargs):
         if extracted:
-            EventRepeat.objects.create(event=obj, type='2W', th=True,
-                                       until=obj.date + timedelta(days=30))
+            EventRepeat.objects.create(
+                event=obj, type='2W', th=True,
+                start_date=obj.date + timedelta(days=1),
+                end_date=obj.date + timedelta(days=30),
+                start_time=obj.start_time,
+                end_time=obj.end_time
+            )
+
+    @factory.post_generation
+    def with_exclude(obj, create, extracted, **kwargs):
+        if extracted:
+            EventRepeatExclude.objects.create(
+                event=obj, date=obj.date + timedelta(days=1),
+            )
+
+class EventRepeatFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = EventRepeat
+
+    type = '2W'
+    th = True
+    start_date = date(2015, 1, 1)
+    end_date = date(2015, 2, 1)
+    start_time = time(7)
+    end_time = time(8)
 
 class SpaceUseRequestFactory(factory.DjangoModelFactory):
     title = factory.Sequence(lambda n: 'event-request-{}'.format(n))

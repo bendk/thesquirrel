@@ -30,7 +30,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from .forms import (EventWithRepeatForm, SingleSpaceRequestForm,
+from .forms import (CompositeEventForm, SingleSpaceRequestForm,
                     OngoingSpaceRequestForm, SpaceRequestUpdateForm)
 from .models import (Event, CalendarItem, SpaceUseRequest,
                      SingleSpaceUseRequest, OngoingSpaceUseRequest)
@@ -159,16 +159,16 @@ def edit_form(request, instance, return_url):
         if instance and 'delete' in request.POST:
             instance.delete()
             return redirect('events:calendar')
-        form = EventWithRepeatForm(data=request.POST, instance=instance)
+        form = CompositeEventForm(data=request.POST, event=instance)
         if form.is_valid():
-            event = form.save(request.user)
+            event = form.save()
             if 'space-request' in request.GET:
                 return redirect('events:space-request',
                                 request.GET['space-request'])
             else:
                 return redirect('events:view', event.id)
     else:
-        form = EventWithRepeatForm(instance=instance)
+        form = CompositeEventForm(event=instance)
 
     if not instance or not instance.pk:
         title = _('Create New Event')
@@ -181,7 +181,9 @@ def edit_form(request, instance, return_url):
 
     return render(request, "events/edit.html", {
         'event_form': form.event_form,
+        'exclude_form': form.exclude_form,
         'repeat_form': form.repeat_form,
+        'update_repeat_forms': form.update_repeat_forms,
         'title': title,
         'submit_text': submit_text,
         'enable_delete': enable_delete,

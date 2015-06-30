@@ -283,9 +283,6 @@ form.events {
     }
 
     .exclude-list {
-        width: 70%;
-        float: right;
-        margin-left: 2rem;
         position: relative;
 
         .pika-single {
@@ -300,16 +297,23 @@ form.events {
             width: 100%;
             border-radius: 5px;
             border: 1px solid #aaa;
+
+            a {
+                float: right;
+            }
         }
 
-        .date {
-            background: $light-gray;
+        .date, a.add {
             @include small-text;
             line-height: 2.5rem;
             padding: 0 10px;
             border-radius: 5px;
-            margin: 0 0 5px 5px;
             float: left;
+        }
+
+        .date {
+            background: $light-gray;
+            margin: 0 5px 5px 0;
 
             a {
                 border: 0;
@@ -321,7 +325,14 @@ form.events {
         }
 
         a.add {
-            margin: 0;
+            color: $dark-gray;
+            background: $white;
+            border: 1px solid $gray;
+            cursor: pointer;
+
+            &:hover {
+                text-decoration: none;
+            }
         }
     }
 
@@ -337,7 +348,7 @@ form.events {
         }
     }
 
-    .details {
+    .details, .exclude-form {
         display: none;
     }
 }

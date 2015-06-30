@@ -16,9 +16,11 @@
 
 from __future__ import absolute_import
 from datetime import datetime, time
+import itertools
 
 from dateutil.relativedelta import relativedelta
 from django import forms
+from django.forms.util import ErrorDict
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -95,12 +97,11 @@ class EventForm(forms.ModelForm):
 
         return cleaned_data
 
-    def save(self, user, update_dates=True):
+    def save(self, update_calendar_items=True):
         event = super(EventForm, self).save(commit=False)
-        event.author = user
         event.save()
-        if update_dates:
-            event.update_dates()
+        if update_calendar_items:
+            event.update_calendar_items()
         return event
 
 def two_years_from_now():
@@ -108,30 +109,30 @@ def two_years_from_now():
 
 class EventRepeatForm(forms.ModelForm):
     TYPE_CHOICES = [
-        ('', _("Don't Repeat")),
+        ('', _("No repeat")),
     ] + repeat.CHOICES
 
     type = forms.ChoiceField(choices=TYPE_CHOICES, label='')
-    until = DateField(initial=two_years_from_now)
-    exclude = MultipleDateField(required=False)
+    end_date = DateField(initial=two_years_from_now)
+    start_date = DateField()
+    start_time = TimeField(initial='18:00:00')
+    end_time = TimeField(initial='19:00:00')
 
-    def __init__(self, instance=None, *args, **kwargs):
-        if instance:
-            initial = {
-                'exclude': [e.date for e in instance.event.excludes.all()]
-            }
+    def __init__(self, number, *args, **kwargs):
+        super(EventRepeatForm, self).__init__(*args, **kwargs)
+        self.updating = kwargs.get('instance') is not None
+        self.number = number
+        self.setup_empty_type_label()
+        if number > 1:
+            self.heading = _('Repeat #{number}').format(number=number)
         else:
-            initial = None
-        super(EventRepeatForm, self).__init__(instance=instance,
-                                              initial=initial, *args,
-                                              **kwargs)
+            self.heading = _('Repeat')
 
     class Meta:
         model = EventRepeat
         fields = (
-            'type', 'until',
+            'type', 'start_date', 'end_date', 'start_time', 'end_time',
             'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su',
-            'exclude',
         )
         labels = {
             'mo': _('Mon'),
@@ -143,64 +144,111 @@ class EventRepeatForm(forms.ModelForm):
             'su': _('Sun'),
         }
 
-    def enabled(self):
-        return self.data['type'] != ''
+    def setup_empty_type_label(self):
+        field = self.fields['type']
+        new_choices = []
+        for value, label in field.choices:
+            if value == '':
+                if self.updating:
+                    label = _('Delete repeat')
+                else:
+                    label = _('No repeat')
+            new_choices.append((value, label))
+        field.choices = new_choices
+
+
+    def full_clean(self):
+        if self.is_bound and self.type_is_empty():
+            # skip any other validation in this case
+            self._errors = ErrorDict()
+            self.cleaned_data = {}
+        else:
+            super(EventRepeatForm, self).full_clean()
 
     def clean(self):
-        cleaned_data = super(EventRepeatForm, self).clean()
-        if not any(day for day in weekday_fields if cleaned_data[day]):
+        if not self.any_day_selected():
             self.add_error('type', forms.ValidationError(
                 _('No days selected'), code='no-weekdays'))
-        return cleaned_data
+        return self.cleaned_data
+
+    def type_is_empty(self):
+        return self.data.get(self.add_prefix('type')) == ''
+
+    def any_day_selected(self):
+        return any(day for day in weekday_fields if self.cleaned_data[day])
 
     def save(self, event):
+        if self.type_is_empty():
+            if self.updating:
+                self.instance.delete()
+            return
         repeat = super(EventRepeatForm, self).save(commit=False)
         repeat.event = event
         repeat.save()
+        return repeat
+
+class EventRepeatExcludeForm(forms.Form):
+    dates = MultipleDateField(required=False)
+
+    def save(self, event):
         event.excludes.all().delete()
         event.excludes.bulk_create(
             EventRepeatExclude(event=event, date=date)
-            for date in set(self.cleaned_data['exclude'])
+            for date in set(self.cleaned_data['dates'])
         )
-        return repeat
 
-class EventWithRepeatForm(object):
-    """Form-like object that handles both the EventForm and
-    EventRepeatForm.
+class CompositeEventForm(object):
+    """Form-like object that handles an EventForm, multiple
+    EventRepeatForms, and a EventRepeatExcludeForm.
     """
 
-    def __init__(self, instance=None, data=None):
-        if instance and instance.has_repeat():
-            repeat = instance.repeat
+    def __init__(self, event=None, data=None):
+        self.event_form = EventForm(prefix='event', instance=event, data=data)
+        self.make_exclude_form(event, data)
+        self.make_repeat_forms(event, data)
+
+    def make_exclude_form(self, event, data):
+        if event:
+            initial = {
+                'dates': [e.date for e in event.excludes.all()]
+            }
         else:
-            repeat = None
-        if data and data.get('repeat-type'):
-            repeat_data = data
+            initial = None
+        print initial
+        self.exclude_form = EventRepeatExcludeForm(
+            prefix='exclude', initial=initial, data=data,
+        )
+
+    def make_repeat_forms(self, event, data):
+        counter = itertools.count(1)
+        if event:
+            self.update_repeat_forms = [
+                EventRepeatForm(
+                    prefix='repeat-update-{}'.format(i),
+                    number=counter.next(), instance=repeat, data=data
+                )
+                for i, repeat in enumerate(event.repeat_set.all())
+            ]
         else:
-            repeat_data = None
-        self.event_form = EventForm(instance=instance, data=data)
-        self.repeat_form = EventRepeatForm(prefix='repeat', instance=repeat,
-                                           data=repeat_data)
-        self.data = data
+            self.update_repeat_forms = []
+
+        self.repeat_form = EventRepeatForm(
+            prefix='repeat-create', number=counter.next(), data=data
+        )
 
     def is_valid(self):
-        if not self.repeat_form.is_bound:
-            # just need to validate the event form
-            return self.event_form.is_valid()
-        else:
-            # need to validate both forms, make sure we clean both
-            self.event_form.full_clean()
-            self.repeat_form.full_clean()
-            return self.event_form.is_valid() and self.repeat_form.is_valid()
+        all_forms = [self.event_form, self.repeat_form, self.exclude_form]
+        all_forms.extend(self.update_repeat_forms)
 
-    def save(self, user):
-        event = self.event_form.save(user, update_dates=False)
-        if self.repeat_form.is_bound:
-            self.repeat_form.save(event)
-        elif event.has_repeat():
-            event.excludes.all().delete()
-            event.repeat.delete()
-        event.update_dates()
+        return all([f.is_valid() for f in all_forms])
+
+    def save(self):
+        event = self.event_form.save(update_calendar_items=False)
+        self.repeat_form.save(event)
+        self.exclude_form.save(event)
+        for update_repeat_form in self.update_repeat_forms:
+            update_repeat_form.save(event)
+        event.update_calendar_items()
         return event
 
 class SingleSpaceRequestForm(forms.ModelForm):

@@ -4,7 +4,7 @@
 <h1>{{ title }}</h1>
 <form method="POST" class="events">
   {% csrf_token %}
-  <fieldset class="compact">
+  <fieldset class="compact event-form">
     <legend>{% trans "Event Info" %}</legend>
     {% include "field.html" with field=event_form.title %}
     {% include "field.html" with field=event_form.date %}
@@ -13,36 +13,27 @@
     {% include "field.html" with field=event_form.start_time %}
     {% include "field.html" with field=event_form.end_time %}
   </fieldset>
-  <fieldset class="compact">
-    <legend>{% trans "Repeat" %}</legend>
-    {% include "field.html" with field=repeat_form.type %}
-    <div class="details">
-      <div class="weekdays">
-        <label>{% trans "Mon" %}<br>{{ repeat_form.mo }}</label>
-        <label>{% trans "Tue" %}<br>{{ repeat_form.tu }}</label>
-        <label>{% trans "Wed" %}<br>{{ repeat_form.we }}</label>
-        <label>{% trans "Thu" %}<br>{{ repeat_form.th }}</label>
-        <label>{% trans "Fri" %}<br>{{ repeat_form.fr }}</label>
-        <label>{% trans "Sat" %}<br>{{ repeat_form.sa }}</label>
-        <label>{% trans "Sun" %}<br>{{ repeat_form.su }}</label>
+
+  {% for form in update_repeat_forms %}
+  {% include "events/_repeat-formset.html" %}
+  {% endfor %}
+  {% include "events/_repeat-formset.html" with form=repeat_form %}
+
+  <fieldset class="exclude-form">
+    <legend>{% trans "Exclude Dates" %}</legend>
+
+    <div class="exclude-list group">
+      {% for date in exclude_form.dates.value %}
+      <div class="date">
+        <input type="hidden" name="exclude-dates" value="{{ date }}">
+        {{ date }}
+        <a><span class="fa fa-close"></span></a>
       </div>
-      {% include "field.html" with field=repeat_form.until %}
-      <label>
-        {% trans "Exclude Dates" %}
-        <div class="exclude-list group">
-          {% for date in repeat_form.exclude.value %}
-            <div class="date">
-              <input type="hidden" name="repeat-exclude" value="{{ date }}">
-              {{ date }}
-              <a><span class="fa fa-close"></span></a>
-            </div>
-          {% endfor %}
-          <a class='button add'>{% trans "Add" %}</a>
-          <div class="calendar">
-            <a class='button close'>{% trans "Close" %}</a>
-          </div>
-        </div>
-      </label>
+      {% endfor %}
+      <a class='add'>{% trans "Add Date" %}</a>
+      <div class="calendar">
+        <a class='button close'>{% trans "Close" %}</a>
+      </div>
     </div>
   </fieldset>
   {% include "editor/fieldset.html" with field=event_form.description %}

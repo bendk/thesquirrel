@@ -7,11 +7,9 @@
   <dt>{% trans "Bottomliner" %}</dt>
   <dd>{{ event.bottomliner }}</dd>
 
-  <dt>{% trans "Date" %}</dt>
-  <dd>{{ event.get_date_display }}</dd>
+  <dt>{% trans "When" %}</dt>
+  <dd>{{ event.get_when_text }}</dd>
 
-  <dt>{% trans "Time" %}</dt>
-  <dd>{{ event.get_time_display }}</dd>
   {% if user.is_authenticated and event.space_request %}
   <dt>{% trans "Space Request" %}</dt>
   <dd><a href="{% url "events:space-request" event.space_request.id %}">{{ event.space_request.title }} ({{ event.space_request.get_state_display }})</a></dd>

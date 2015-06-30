@@ -129,6 +129,8 @@ MEDIA_BUILDER = {
         'video.js': 'http://www.videojs.com/downloads/video-js-4.12.3.zip',
         'fontawesome': ('http://fortawesome.github.io/'
                         'Font-Awesome/assets/font-awesome-4.3.0.zip'),
+        'underscore': ('https://github.com/jashkenas/underscore/'
+                       'archive/1.8.3.tar.gz'),
     },
     'SASS_BUNDLES': {
         'app.css': {
@@ -155,6 +157,7 @@ MEDIA_BUILDER = {
                 'mediabuilder/downloads/jquery.cookie/jquery.cookie.js',
                 'mediabuilder/downloads/Pikaday/pikaday.js',
                 'mediabuilder/downloads/video.js/video.dev.js',
+                'mediabuilder/downloads/underscore/underscore.js',
                 'thesquirrel/js/*.js',
                 'editor/js/editor.js',
                 'events/js/events.js',

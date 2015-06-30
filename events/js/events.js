@@ -1,24 +1,66 @@
 (function() {
     $(document).ready(function() {
         $('input.pikaday').each(handlePikaday);
-        $('form.events #id_repeat-type').each(handleRepeatSelect);
-        $('form.events .exclude-list').each(handleExcludeList);
+        $('form.events').each(handleEventForm);
         $('table.calendar').each(handleCalendar);
     });
 
-    function handleRepeatSelect() {
-        var input = $(this);
-        input.change(function() {
-            if(input.val()) {
-                $('form.events .details').show();
+    function handleEventForm(form) {
+        var repeatSelects = $('.repeat-form .type select', form);
+        var excludeSection = $('.exclude-form', form);
+        var excludeList = $('.exclude-list', form);
+
+        mirrorEventField('start_time');
+        mirrorEventField('end_time');
+        mirrorEventField('date', 'start_date');
+        repeatSelects.change(onRepeatTypeChange).change();
+        handleExcludeList(excludeList);
+
+        function anyRepeatEnabled() {
+            return repeatSelects.is(function() {
+                return $(this).val();
+            });
+        }
+
+        function onRepeatTypeChange() {
+            var selected = $(this).val();
+            var repeatForm = $(this).closest('.repeat-form');;
+            var detailsSection = $('.details', repeatForm);
+
+            if(selected) {
+                detailsSection.show();
+                excludeSection.show();
             } else {
-                $('form.events .details').hide();
+                detailsSection.hide();
+                if(!anyRepeatEnabled()) {
+                    excludeSection.hide();
+                }
             }
-        }).change();
+        }
+
+        function mirrorEventField(eventFieldName, repeatFieldName) {
+            if(repeatFieldName === undefined) {
+                repeatFieldName = eventFieldName;
+            }
+
+            var eventField = $('#id_event-' + eventFieldName);
+            var repeatField = $('#id_repeat-create-' + repeatFieldName);
+            var repeatFieldChanged = false;
+
+            eventField.change(function() {
+                if(!repeatFieldChanged) {
+                    repeatField.val(eventField.val());
+                }
+            }).change();
+
+            repeatField.change(function() {
+                repeatFieldChanged = true;
+            });
+        }
     }
 
-    function handleExcludeList() {
-        var excludeList = $(this);
+
+    function handleExcludeList(excludeList) {
         var calendar = $('.calendar', excludeList);
         var closeButton = $('a.close', excludeList);
         var addButton = $('a.add', excludeList);
@@ -50,7 +92,7 @@
 
         function appendDate(dateStr) {
             var dateElt = $('<div class="date">' + dateStr + ' </div>');
-            var input = $('<input type="hidden" name="repeat-exclude">')
+            var input = $('<input type="hidden" name="exclude-dates">')
                 .val(dateStr);
             var removeButton = $('<a class="button">').click(onRemoveClicked)
                 .append($('<span class="fa fa-close">'));
@@ -76,12 +118,14 @@
             trigger: input[0],
             onSelect: function(date) {
                 var parts = [
-            zeroPad(date.getMonth() + 1, 2),
-            zeroPad(date.getDate(), 2),
-            date.getFullYear()
-            ];
-        input.val(parts.join('/'));
-        picker.hide();
+                    zeroPad(date.getMonth() + 1, 2),
+                    zeroPad(date.getDate(), 2),
+                    date.getFullYear()
+                ];
+                input.val(parts.join('/'));
+                picker.hide();
+                // ensure change handlers get called
+                input.change();
             },
         });
         input.after(picker.el);

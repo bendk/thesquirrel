@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<fieldset class="compact repeat-form">
+  <legend>{{ form.heading }}</legend>
+
+  <div class="type">
+    {% include "field.html" with field=form.type %}
+  </div>
+  <div class="details">
+    <div class="weekdays">
+      <label>{% trans "Mon" %}<br>{{ form.mo }}</label>
+      <label>{% trans "Tue" %}<br>{{ form.tu }}</label>
+      <label>{% trans "Wed" %}<br>{{ form.we }}</label>
+      <label>{% trans "Thu" %}<br>{{ form.th }}</label>
+      <label>{% trans "Fri" %}<br>{{ form.fr }}</label>
+      <label>{% trans "Sat" %}<br>{{ form.sa }}</label>
+      <label>{% trans "Sun" %}<br>{{ form.su }}</label>
+    </div>
+    {% include "field.html" with field=form.start_date %}
+    {% include "field.html" with field=form.end_date %}
+    {% include "field.html" with field=form.start_time %}
+    {% include "field.html" with field=form.end_time %}
+  </div>
+</fieldset>

@@ -9,6 +9,10 @@ form {
         padding: 10px;
         margin-bottom: 30px;
         background: $off-white;
+
+        > .section {
+            padding-bottom: 40px;
+        }
     }
 
     legend {

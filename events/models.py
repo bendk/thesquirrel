@@ -44,25 +44,28 @@ class Event(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    author = models.ForeignKey(User)
     space_request = models.ForeignKey('SpaceUseRequest', null=True)
 
     def __unicode__(self):
         return u'Event: {}'.format(self.title)
 
-    def update_dates(self):
+    def update_calendar_items(self):
         self.calendar_items.all().delete()
-        dates = set([self.date])
-        if self.has_repeat():
-            dates.update(dt.date() for dt in self.repeat.calc_repeat_rrule())
-        for exclude in self.excludes.all():
-            dates.discard(exclude.date)
-        CalendarItem.objects.bulk_create([
-            CalendarItem(event=self, date=date,
+        excludes = set(e.date for e in self.excludes.all())
+        to_create = [
+            CalendarItem(event=self, date=self.date,
                          start_time=self.start_time,
                          end_time=self.end_time)
-            for date in dates
+        ]
+        to_create.extend([
+            CalendarItem(event=self, date=dt.date(),
+                         start_time=repeat.start_time,
+                         end_time=repeat.end_time)
+            for repeat in self.repeat_set.all()
+            for dt in repeat.calc_repeat_rrule()
+            if dt.date() not in excludes
         ])
+        CalendarItem.objects.bulk_create(to_create)
 
     def get_start_time_display(self):
         return format_time(self.start_time)
@@ -74,22 +77,18 @@ class Event(models.Model):
         return '{} - {}'.format(self.get_start_time_display(),
                                 self.get_end_time_display())
     
-    def get_date_display(self):
-        if self.has_repeat():
-            return _('{repeat_type} on {days}').format(
-                repeat_type=self.repeat.get_type_display(),
-                days=self.repeat.get_weekdays_display()
+    def get_when_text(self):
+        repeats = self.repeat_set.all()
+        if repeats:
+            return '.  '.join(
+                _('{start_time} {repeat_type} on {days}').format(
+                    start_time=repeat.start_time,
+                    repeat_type=repeat.get_type_display(),
+                    days=repeat.get_weekdays_display())
+                for repeat in repeats
             )
         else:
             return self.date
-
-    def has_repeat(self):
-        try:
-            self.repeat
-        except EventRepeat.DoesNotExist:
-            return False
-        else:
-            return True
 
 # list of (field_name, rrule_class, display_string) tuples
 weekday_field_info = [
@@ -104,9 +103,12 @@ weekday_field_info = [
 weekday_fields = [info[0] for info in weekday_field_info]
 
 class EventRepeat(models.Model):
-    event = models.OneToOneField(Event, related_name='repeat')
+    event = models.ForeignKey(Event, related_name='repeat_set')
     type = models.CharField(max_length=3, choices=repeat.CHOICES)
-    until = models.DateField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     su = models.BooleanField(default=False)
     mo = models.BooleanField(default=False)
     tu = models.BooleanField(default=False)
@@ -131,8 +133,8 @@ class EventRepeat(models.Model):
         return ', '.join(unicode(d) for d in days)
 
     def calc_repeat_rrule(self):
-        return repeat.get_rrule(self.type, self.event.date,
-                                self.until, self._rrule_weekdays())
+        return repeat.get_rrule(self.type, self.start_date,
+                                self.end_date, self._rrule_weekdays())
 
 class EventRepeatExclude(models.Model):
     event = models.ForeignKey(Event, related_name='excludes')

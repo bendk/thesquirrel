@@ -17,13 +17,15 @@
 
 from __future__ import absolute_import
 from datetime import date, time
+import mock
 
 from django.test import TestCase
 from nose.tools import *
 
 from thesquirrel.factories import *
 from ..factories import *
-from ..forms import EventForm, EventRepeatForm, EventWithRepeatForm
+from ..forms import (EventForm, EventRepeatForm, EventRepeatExcludeForm,
+                     CompositeEventForm)
 from ..models import EventRepeat, EventRepeatExclude
 
 class EventFormTest(TestCase):
@@ -48,185 +50,143 @@ class EventFormTest(TestCase):
             'end_time': '19:30',
         })
         assert_true(form.is_valid())
-        user = UserFactory()
-        event = form.save(user)
-        assert_equal(event.author, user)
+        form.save()
 
 class EventRepeatFormTest(TestCase):
-    def test_one_weekday_required(self):
-        form = EventRepeatForm(data={
-            'type': '1M',
-            'until': '2/1/2015',
-        })
-        assert_false(form.is_valid())
+    def make_form(self, update=False, number=1):
+        if update:
+            event = EventFactory(with_repeat=True)
+            instance = event.repeat_set.all().get()
+        else:
+            event = EventFactory()
+            instance = None
+        return EventRepeatForm(number, instance=instance)
+
+    def make_form_with_data(self, update=False, no_days=False,
+                            empty_type=False, number=1):
+        if update:
+            event = EventFactory(with_repeat=True)
+            instance = event.repeat_set.all().get()
+        else:
+            event = EventFactory()
+            instance = None
+        data = {
+            'type': '1M' if not empty_type else '',
+            'start_date': '1/1/2015',
+            'we': True if not no_days else False,
+            'end_date': '2/1/2015',
+            'start_time': '16:30',
+            'end_time': '18:30',
+        }
+        return EventRepeatForm(number, instance=instance, data=data)
 
     def test_save(self):
-        event = EventFactory()
-        form = EventRepeatForm(data={
-            'type': '1M',
-            'until': '2/1/2015',
-            'we': 'True',
-        })
+        form = self.make_form_with_data()
         assert_true(form.is_valid(), form.errors.as_text())
+        event = EventFactory()
         repeat = form.save(event)
         assert_equal(repeat.event, event)
 
-    def test_save_with_exclude(self):
-        event = EventFactory()
-        form = EventRepeatForm(data={
-            'type': '1M',
-            'until': '2/1/2015',
-            'we': 'True',
-            'exclude': ['2/4/2015'],
-        })
+    def test_one_weekday_required(self):
+        form = self.make_form_with_data(no_days=True)
+        assert_false(form.is_valid())
+
+    def test_empty_type_doesnt_create_new(self):
+        form = self.make_form_with_data(empty_type=True)
         assert_true(form.is_valid(), form.errors.as_text())
-        repeat = form.save(event)
-        assert_equal(repeat.event, event)
-        assert_equal([e.date for e in repeat.event.excludes.all()],
-                     [date(2015, 2, 4)])
-
-    def test_exclude_initial_value(self):
-        event = EventFactory(with_repeat=True)
-        event.excludes.add(EventRepeatExclude(date=date(2015, 3, 4)))
-        form = EventRepeatForm(instance=event.repeat)
-        assert_equal(form['exclude'].value(), ['03/04/2015'])
-
-class EventWithRepeatFormTest(TestCase):
-    def form_data(self):
-        return {
-            'title': 'test-title',
-            'description': 'test-description',
-            'location': 'library',
-            'bottomliner': 'Santa',
-            'date': '1/1/2015',
-            'start_time': '18:30',
-            'end_time': '19:30',
-            'repeat-type': '',
-        }
-
-    def form_data_with_invalid_repeat(self):
-        data = self.form_data()
-        data.update({
-            'repeat-type': '1M',
-            # no until or weekdays selected
-        })
-        return data
-
-    def form_data_with_repeat(self):
-        data = self.form_data()
-        data.update({
-            'repeat-type': '1M',
-            'repeat-until': '2/1/2015',
-            'repeat-we': True
-        })
-        return data
-
-    def form_data_with_exclude(self):
-        data = self.form_data_with_repeat()
-        data.update({
-            'repeat-exclude': ['2/4/2015'],
-        })
-        return data
-
-    def test_no_instance(self):
-        form = EventWithRepeatForm()
-        assert_is_instance(form.event_form, EventForm)
-        assert_is_instance(form.repeat_form, EventRepeatForm)
-        assert_equal(form.event_form.instance.id, None)
-        assert_equal(form.repeat_form.instance.id, None)
-
-    def test_instance_without_repeat(self):
         event = EventFactory()
-        form = EventWithRepeatForm(instance=event)
-        assert_equal(form.event_form.instance, event)
-        assert_equal(form.repeat_form.instance.id, None)
+        form.save(event)
+        assert_false(event.repeat_set.all().exists())
 
-    def test_instance_with_repeat(self):
-        event = EventFactory(with_repeat=True)
-        form = EventWithRepeatForm(instance=event)
-        assert_equal(form.event_form.instance, event)
-        assert_equal(form.repeat_form.instance, event.repeat)
+    def test_empty_type_deletes_existing(self):
+        form = self.make_form_with_data(update=True, empty_type=True)
+        assert_true(form.is_valid(), form.errors.as_text())
+        event = EventFactory()
+        form.save(event)
+        assert_false(event.repeat_set.all().exists())
 
-    def test_repeat_form_bound(self):
-        # when repeat-type is empty, we shouldn't bind data to the repeat form
-        form = EventWithRepeatForm(data=self.form_data())
-        assert_false(form.repeat_form.is_bound)
-        form = EventWithRepeatForm(data=self.form_data_with_repeat())
-        assert_true(form.repeat_form.is_bound)
+    def check_empty_type_label(self, form, correct_label):
+        empty_type_label = None
+        for value, label in form.fields['type'].choices:
+            if value == '':
+                empty_type_label = unicode(label)
+                break
+        assert_not_equal(empty_type_label, None)
+        assert_equal(empty_type_label, correct_label)
 
-    def test_validation_without_repeat(self):
-        form = EventWithRepeatForm(data={})
-        assert_false(form.is_valid())
-        form = EventWithRepeatForm(data=self.form_data())
+    def test_empty_type_labels(self):
+        form = self.make_form()
+        self.check_empty_type_label(self.make_form(), u'No repeat')
+        self.check_empty_type_label(self.make_form(update=True),
+                                    u'Delete repeat')
+
+    def test_headings(self):
+        assert_equal(self.make_form().heading, 'Repeat')
+        assert_equal(self.make_form(number=2).heading, 'Repeat #2')
+
+class EventRepeatExcludeFormTest(TestCase):
+    def test_create_excludes(self):
+        event = EventFactory(with_repeat=True, with_exclude=True)
+        form = EventRepeatExcludeForm(data={
+            'dates': ['2/4/2015', '2/5/2015'],
+        })
         assert_true(form.is_valid())
+        form.save(event)
 
-    def test_validation_with_repeat(self):
-        form = EventWithRepeatForm(data=self.form_data_with_invalid_repeat())
-        assert_false(form.is_valid())
-        form = EventWithRepeatForm(data=self.form_data_with_repeat())
-        assert_true(form.is_valid())
-
-    def test_save_without_repeat(self):
-        user = UserFactory()
-        form = EventWithRepeatForm(data=self.form_data())
-        assert_true(form.is_valid())
-        event = form.save(user)
-        assert_equal(event.title, 'test-title')
-        assert_equal(event.author, user)
-        assert_false(event.has_repeat())
-
-    def test_save_with_repeat(self):
-        user = UserFactory()
-        form = EventWithRepeatForm(data=self.form_data_with_repeat())
-        assert_true(form.is_valid())
-        event = form.save(user)
-        assert_equal(event.title, 'test-title')
-        assert_equal(event.author, user)
-        assert_true(event.has_repeat())
-
-    def test_save_with_repeat_exclusion(self):
-        user = UserFactory()
-        form = EventWithRepeatForm(data=self.form_data_with_exclude())
-        assert_true(form.is_valid())
-        event = form.save(user)
-        assert_equal([e.date for e in event.excludes.all()],
-                     [date(2015, 2, 4)])
-
-    def test_save_with_deletes_repeat_exclusions(self):
-        user = UserFactory()
-        event = EventFactory(with_repeat=True)
-        # this exclude should be removed when we submit the form data
-        event.excludes.add(EventRepeatExclude(date=date(2015, 3, 4)))
-        form = EventWithRepeatForm(data=self.form_data_with_exclude(),
-                                   instance=event)
-        assert_true(form.is_valid())
-        event = form.save(user)
-        assert_equal([e.date for e in event.excludes.all()],
-                     [date(2015, 2, 4)])
-
-    def test_invalid_exclude(self):
-        user = UserFactory()
-        data = self.form_data_with_repeat()
-        data['repeat-exclude'] = ['invalid-date']
-        form = EventWithRepeatForm(data=data)
+    def test_invalid_value(self):
+        form = EventRepeatExcludeForm(data={
+            'dates': ['invalid-date'],
+        })
         assert_false(form.is_valid())
 
-    def test_save_without_repeat_deletes_existing_repeat(self):
-        event = EventFactory(with_repeat=True)
-        user = UserFactory()
-        form = EventWithRepeatForm(data=self.form_data(), instance=event)
-        assert_true(form.is_valid())
-        event = form.save(user)
-        # since the form didn't have repeat data, we should delete the repeat
-        assert_false(EventRepeat.objects.filter(event=event).exists())
+class CompositeEventFormTest(TestCase):
+    def test_initial_excludes(self):
+        event = EventFactory(with_repeat=True, with_exclude=True)
+        form = CompositeEventForm(event)
+        assert_equal(form.exclude_form.initial['dates'], [
+            e.date for e in event.excludes.all()
+        ])
 
-    def test_save_without_repeat_deletes_existing_exclude(self):
+    def mock_out_subforms(self, composite_form):
+        def mock_subform():
+            return mock.Mock(
+                is_valid=mock.Mock(return_value=True),
+            )
+
+        composite_form.repeat_form = mock_subform()
+        composite_form.event_form = mock_subform()
+        composite_form.exclude_form = mock_subform()
+        for i in range(len(composite_form.update_repeat_forms)):
+            composite_form.update_repeat_forms[i] = mock_subform()
+        return composite_form
+
+    def test_is_valid(self):
         event = EventFactory(with_repeat=True)
-        event.excludes.add(EventRepeatExclude(date=date(2015, 3, 4)))
-        user = UserFactory()
-        form = EventWithRepeatForm(data=self.form_data(), instance=event)
+        form = self.mock_out_subforms(CompositeEventForm(event))
         assert_true(form.is_valid())
-        event = form.save(user)
-        # since the form didn't have repeat data, we should delete the exclude
-        # date
-        assert_false(event.excludes.all().exists())
+        assert_true(form.event_form.is_valid.called)
+        assert_true(form.repeat_form.is_valid.called)
+        for repeat_form in form.update_repeat_forms:
+            assert_true(repeat_form.is_valid.called)
+
+    def test_is_valid_return_false(self):
+        event = EventFactory(with_repeat=True)
+        form = self.mock_out_subforms(CompositeEventForm(event))
+        form.event_form.is_valid.return_value = False
+        assert_false(form.is_valid())
+        # Even though event_form.is_valid() returns False, we should still
+        # call is_valid for each subform so that the ErrorDict is generated.
+        assert_true(form.event_form.is_valid.called)
+        assert_true(form.repeat_form.is_valid.called)
+        for repeat_form in form.update_repeat_forms:
+            assert_true(repeat_form.is_valid.called)
+
+    def test_save(self):
+        event = EventFactory(with_repeat=True)
+        form = self.mock_out_subforms(CompositeEventForm(event))
+        saved_event = form.event_form.save.return_value
+        assert_equal(form.save(), saved_event)
+
+        assert_true(form.repeat_form.save.call_args, mock.call(saved_event))
+        for repeat_form in form.update_repeat_forms:
+            assert_true(repeat_form.save.call_args, mock.call(saved_event))
