@@ -35,7 +35,18 @@ from editor.fields import EditorTextField
 from . import repeat
 from .utils import format_time
 
-class Event(models.Model):
+class EventTimeMixin(object):
+    def get_start_time_display(self):
+        return format_time(self.start_time)
+
+    def get_end_time_display(self):
+        return format_time(self.end_time)
+
+    def get_time_display(self):
+        return '{} - {}'.format(self.get_start_time_display(),
+                                self.get_end_time_display())
+
+class Event(models.Model, EventTimeMixin):
     title = models.CharField(max_length=255)
     description = EditorTextField()
     location = models.CharField(max_length=255)
@@ -67,28 +78,19 @@ class Event(models.Model):
         ])
         CalendarItem.objects.bulk_create(to_create)
 
-    def get_start_time_display(self):
-        return format_time(self.start_time)
-
-    def get_end_time_display(self):
-        return format_time(self.end_time)
-
-    def get_time_display(self):
-        return '{} - {}'.format(self.get_start_time_display(),
-                                self.get_end_time_display())
-    
     def get_when_text(self):
         repeats = self.repeat_set.all()
         if repeats:
-            return '.  '.join(
-                _('{start_time} {repeat_type} on {days}').format(
-                    start_time=repeat.start_time,
+            return [
+                _('{repeat_type} at {days}, {start_time}').format(
                     repeat_type=repeat.get_type_display(),
-                    days=repeat.get_weekdays_display())
+                    days=repeat.get_weekdays_display(),
+                    start_time=repeat.get_start_time_display(),
+                )
                 for repeat in repeats
-            )
+            ]
         else:
-            return self.date
+            return [self.date]
 
 # list of (field_name, rrule_class, display_string) tuples
 weekday_field_info = [
@@ -102,7 +104,7 @@ weekday_field_info = [
 ]
 weekday_fields = [info[0] for info in weekday_field_info]
 
-class EventRepeat(models.Model):
+class EventRepeat(models.Model, EventTimeMixin):
     event = models.ForeignKey(Event, related_name='repeat_set')
     type = models.CharField(max_length=3, choices=repeat.CHOICES)
     start_date = models.DateField()
@@ -140,7 +142,7 @@ class EventRepeatExclude(models.Model):
     event = models.ForeignKey(Event, related_name='excludes')
     date = models.DateField(unique=True)
 
-class CalendarItem(models.Model):
+class CalendarItem(models.Model, EventTimeMixin):
     """Represents an entry in the calendar."""
 
     event = models.ForeignKey(Event, related_name='calendar_items')
@@ -158,16 +160,6 @@ class CalendarItem(models.Model):
     @property
     def space_request(self):
         return self.event.space_request
-
-    def get_start_time_display(self):
-        return format_time(self.start_time)
-
-    def get_end_time_display(self):
-        return format_time(self.end_time)
-
-    def get_time_display(self):
-        return '{} - {}'.format(self.get_start_time_display(),
-                                self.get_end_time_display())
 
 class SpaceUseRequestQueryset(models.QuerySet):
     def iterator(self):

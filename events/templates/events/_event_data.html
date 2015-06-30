@@ -8,7 +8,13 @@
   <dd>{{ event.bottomliner }}</dd>
 
   <dt>{% trans "When" %}</dt>
-  <dd>{{ event.get_when_text }}</dd>
+  <dd>
+    <ul class="compact">
+    {% for when_text in event.get_when_text %}
+      <li>{{ when_text }}</li>
+    {% endfor %}
+    </ul>
+  </dd>
 
   {% if user.is_authenticated and event.space_request %}
   <dt>{% trans "Space Request" %}</dt>

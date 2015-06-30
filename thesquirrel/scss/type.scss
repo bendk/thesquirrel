@@ -131,6 +131,14 @@ li {
 }
 ul {
     list-style-type: disc;
+
+    &.compact {
+        list-style-type: none;
+    }
+}
+
+.compact > li {
+    padding: 0;
 }
 
 
