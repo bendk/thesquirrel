@@ -78,19 +78,29 @@ class Event(models.Model, EventTimeMixin):
         ])
         CalendarItem.objects.bulk_create(to_create)
 
+    def get_date_display(self):
+        return '{d:%a} {d.month}/{d.day}/{d.year}'.format(d=self.date)
+
     def get_when_text(self):
         repeats = self.repeat_set.all()
         if repeats:
             return [
-                _('{repeat_type} at {days}, {start_time}').format(
+                _('{repeat_type} at {days}, {start_time} - {end_time}').format(
                     repeat_type=repeat.get_type_display(),
                     days=repeat.get_weekdays_display(),
                     start_time=repeat.get_start_time_display(),
+                    end_time=repeat.get_end_time_display(),
                 )
                 for repeat in repeats
             ]
         else:
-            return [self.date]
+            return [
+                _('{date}, {start_time}-{end_time}').format(
+                    date=self.get_date_display(),
+                    start_time=self.get_start_time_display(),
+                    end_time=self.get_end_time_display(),
+                ),
+            ]
 
 # list of (field_name, rrule_class, display_string) tuples
 weekday_field_info = [
