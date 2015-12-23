@@ -58,6 +58,24 @@ class UpdateCalendarItemsTest(TestCase):
             (date(2015, 1, 29), time(10), time(11)),
         ])
 
+    def test_no_duplicate_dates(self):
+        # if the event and repeat share the start date, we should not create a
+        # duplicate
+        event = EventFactory(date=date(2015, 1, 1),
+                             start_time=time(8),
+                             end_time=time(9))
+        event.repeat_set.add(EventRepeat(
+            event=event, type='2W', th=True,
+            start_date=date(2015, 1, 1), end_date=date(2015, 2, 1),
+            start_time=time(10), end_time=time(11),
+        ))
+
+        self.check_update_calendar_items(event, [
+            (date(2015, 1, 1), time(8), time(9)),
+            (date(2015, 1, 15), time(10), time(11)),
+            (date(2015, 1, 29), time(10), time(11)),
+        ])
+
     def test_two_repeats(self):
         event = EventFactory(date=date(2015, 1, 1),
                              start_time=time(8),

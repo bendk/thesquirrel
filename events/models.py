@@ -68,6 +68,9 @@ class Event(models.Model, EventTimeMixin):
                          start_time=self.start_time,
                          end_time=self.end_time)
         ]
+        # Often the event and repeat share a start date, in that case don't
+        # create a duplicate date.
+        excludes.add(self.date)
         to_create.extend([
             CalendarItem(event=self, date=dt.date(),
                          start_time=repeat.start_time,
