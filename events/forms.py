@@ -232,22 +232,24 @@ class CompositeEventForm(object):
         else:
             self.update_repeat_forms = []
 
-        self.repeat_form = EventRepeatForm(
-            prefix='repeat-create', number=counter.next(), data=data
-        )
+        self.repeat_forms = [
+            EventRepeatForm(prefix='repeat-create-{}'.format(i),
+                            number=counter.next(), data=data)
+            for i in range(5)
+        ]
 
     def is_valid(self):
-        all_forms = [self.event_form, self.repeat_form, self.exclude_form]
+        all_forms = [self.event_form, self.exclude_form]
+        all_forms.extend(self.repeat_forms)
         all_forms.extend(self.update_repeat_forms)
 
         return all([f.is_valid() for f in all_forms])
 
     def save(self):
         event = self.event_form.save(update_calendar_items=False)
-        self.repeat_form.save(event)
+        for form in self.repeat_forms + self.update_repeat_forms:
+            form.save(event)
         self.exclude_form.save(event)
-        for update_repeat_form in self.update_repeat_forms:
-            update_repeat_form.save(event)
         event.update_calendar_items()
         return event
 

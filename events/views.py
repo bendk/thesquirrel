@@ -182,7 +182,7 @@ def edit_form(request, instance, return_url):
     return render(request, "events/edit.html", {
         'event_form': form.event_form,
         'exclude_form': form.exclude_form,
-        'repeat_form': form.repeat_form,
+        'repeat_forms': form.repeat_forms,
         'update_repeat_forms': form.update_repeat_forms,
         'title': title,
         'submit_text': submit_text,

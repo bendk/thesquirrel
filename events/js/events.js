@@ -14,12 +14,44 @@
         mirrorEventField('end_time');
         mirrorEventField('date', 'start_date');
         repeatSelects.change(onRepeatTypeChange).change();
+        hideExtraNewRepeatForms();
         handleExcludeList(excludeList);
 
         function anyRepeatEnabled() {
             return repeatSelects.is(function() {
                 return $(this).val();
             });
+        }
+
+        function hideExtraNewRepeatForms() {
+            $('.new-repeat-forms fieldset:gt(0)', form).hide();
+            $('.new-repeat-forms :input').change(function() {
+                var fieldset = $(this).closest('fieldset');
+                if(repeatFormFilledIn(fieldset)) {
+                    var next = fieldset.next();
+                    if(next) {
+                        next.show();
+                    }
+                }
+            });
+        }
+
+        function repeatFormFilledIn(fieldset) {
+            return weekdaySelected(fieldset) && datesSelected(fieldset);
+        }
+
+        function weekdaySelected(fieldset) {
+            return $('.weekdays input').is(function(i, elt) {
+                return $(elt).prop('checked');
+            });
+        }
+
+        function datesSelected(fieldset) {
+            var dateInputs = $('input.pikaday', fieldset);
+            var filledInDateInputs = dateInputs.filter(function(i, elt) {
+                return $(elt).val();
+            });
+            return filledInDateInputs.length == dateInputs.length;
         }
 
         function onRepeatTypeChange() {

@@ -153,9 +153,10 @@ class CompositeEventFormTest(TestCase):
                 is_valid=mock.Mock(return_value=True),
             )
 
-        composite_form.repeat_form = mock_subform()
         composite_form.event_form = mock_subform()
         composite_form.exclude_form = mock_subform()
+        for i in range(len(composite_form.repeat_forms)):
+            composite_form.repeat_forms[i] = mock_subform()
         for i in range(len(composite_form.update_repeat_forms)):
             composite_form.update_repeat_forms[i] = mock_subform()
         return composite_form
@@ -165,9 +166,10 @@ class CompositeEventFormTest(TestCase):
         form = self.mock_out_subforms(CompositeEventForm(event))
         assert_true(form.is_valid())
         assert_true(form.event_form.is_valid.called)
-        assert_true(form.repeat_form.is_valid.called)
-        for repeat_form in form.update_repeat_forms:
+        for repeat_form in form.repeat_forms:
             assert_true(repeat_form.is_valid.called)
+        for update_form in form.update_repeat_forms:
+            assert_true(update_form.is_valid.called)
 
     def test_is_valid_return_false(self):
         event = EventFactory(with_repeat=True)
@@ -177,9 +179,10 @@ class CompositeEventFormTest(TestCase):
         # Even though event_form.is_valid() returns False, we should still
         # call is_valid for each subform so that the ErrorDict is generated.
         assert_true(form.event_form.is_valid.called)
-        assert_true(form.repeat_form.is_valid.called)
-        for repeat_form in form.update_repeat_forms:
+        for repeat_form in form.repeat_forms:
             assert_true(repeat_form.is_valid.called)
+        for update_form in form.update_repeat_forms:
+            assert_true(update_form.is_valid.called)
 
     def test_save(self):
         event = EventFactory(with_repeat=True)
@@ -187,6 +190,7 @@ class CompositeEventFormTest(TestCase):
         saved_event = form.event_form.save.return_value
         assert_equal(form.save(), saved_event)
 
-        assert_true(form.repeat_form.save.call_args, mock.call(saved_event))
-        for repeat_form in form.update_repeat_forms:
+        for repeat_form in form.repeat_forms:
             assert_true(repeat_form.save.call_args, mock.call(saved_event))
+        for update_form in form.update_repeat_forms:
+            assert_true(update_form.save.call_args, mock.call(saved_event))

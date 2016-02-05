@@ -17,7 +17,11 @@
   {% for form in update_repeat_forms %}
   {% include "events/_repeat-formset.html" %}
   {% endfor %}
-  {% include "events/_repeat-formset.html" with form=repeat_form %}
+  <div class="new-repeat-forms">
+    {% for form in repeat_forms %}
+    {% include "events/_repeat-formset.html" %}
+    {% endfor %}
+  </div>
 
   <fieldset class="exclude-form">
     <legend>{% trans "Exclude Dates" %}</legend>
