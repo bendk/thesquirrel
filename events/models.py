@@ -232,14 +232,14 @@ class SpaceUseRequest(models.Model):
 
     INBOX = 'I'
     WAITING_FOR_THEM = 'W'
-    WAITING_FOR_MEETING = 'M'
-    WAITING_FOR_BOTTOMLINER = 'B'
+    NEEDS_DISCUSSION = 'M'
+    NEEDS_BOTTOMLINER = 'B'
     COMPLETE = 'C'
     LIST_CHOICES = (
         (INBOX, 'Inbox'),
         (WAITING_FOR_THEM, 'Waiting for them'),
-        (WAITING_FOR_MEETING, 'Waiting for meeting'),
-        (WAITING_FOR_BOTTOMLINER, 'Waiting for bottomliner'),
+        (NEEDS_DISCUSSION, 'Needs discussion'),
+        (NEEDS_BOTTOMLINER, 'Needs bottomliner'),
         (COMPLETE, 'Complete'),
     )
 

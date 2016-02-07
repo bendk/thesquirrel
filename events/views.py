@@ -221,8 +221,8 @@ def space_requests(request):
     list_order = [
         SpaceUseRequest.INBOX,
         SpaceUseRequest.WAITING_FOR_THEM,
-        SpaceUseRequest.WAITING_FOR_MEETING,
-        SpaceUseRequest.WAITING_FOR_BOTTOMLINER,
+        SpaceUseRequest.NEEDS_DISCUSSION,
+        SpaceUseRequest.NEEDS_BOTTOMLINER,
         SpaceUseRequest.COMPLETE,
     ]
     all_requests = SpaceUseRequest.objects.current()
