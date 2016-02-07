@@ -112,9 +112,8 @@
 
 <form method="POST" action="">
   {% csrf_token %}
-  <div class="state">
-    {% include "field.html" with field=form.state %}
-  </div>
+  {% include "field.html" with field=form.state skip_required=1 %}
+  {% include "field.html" with field=form.list skip_required=1 %}
   {% include "field.html" with field=form.note %}
   <button class="submit">{% trans "Update" %}</button>
 </form>

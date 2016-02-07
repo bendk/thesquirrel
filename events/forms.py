@@ -324,18 +324,22 @@ class SpaceRequestUpdateForm(forms.Form):
         label=_('Add note'), required=False, 
         widget=forms.Textarea(attrs={'rows': 3}))
     state = forms.ChoiceField(choices=SpaceUseRequest.STATE_CHOICES,
-                              required=False)
+                              required=True)
+    list = forms.ChoiceField(choices=SpaceUseRequest.LIST_CHOICES,
+                             required=True)
 
     def __init__(self, space_request, user, data=None):
         self.space_request = space_request
         self.user = user
         super(SpaceRequestUpdateForm, self).__init__(
-            initial=dict(state=space_request.state),
+            initial=dict(state=space_request.state,
+                         list=space_request.list),
             data=data,
         )
 
     def save(self):
-        self.space_request.update_state(self.cleaned_data['state'])
+        self.space_request.update_state(self.cleaned_data['state'],
+                                        self.cleaned_data['list'])
         if self.cleaned_data['note']:
             self.space_request.notes.create(user=self.user,
                                             body=self.cleaned_data['note'])

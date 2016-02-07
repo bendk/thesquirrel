@@ -230,10 +230,25 @@ class SpaceUseRequest(models.Model):
         (CANCLED, _('Canceled')),
     )
 
+    INBOX = 'I'
+    WAITING_FOR_THEM = 'W'
+    WAITING_FOR_MEETING = 'M'
+    WAITING_FOR_BOTTOMLINER = 'B'
+    COMPLETE = 'C'
+    LIST_CHOICES = (
+        (INBOX, 'Inbox'),
+        (WAITING_FOR_THEM, 'Waiting for them'),
+        (WAITING_FOR_MEETING, 'Waiting for meeting'),
+        (WAITING_FOR_BOTTOMLINER, 'Waiting for bottomliner'),
+        (COMPLETE, 'Complete'),
+    )
+
     title = models.CharField(max_length=255)
     description = models.TextField()
     state = models.CharField(max_length=1, choices=STATE_CHOICES,
                              default=PENDING)
+    list = models.CharField(max_length=1, choices=LIST_CHOICES,
+                            default=INBOX)
     created = models.DateTimeField(default=timezone.now)
     changed = models.DateTimeField(null=True, auto_now=True)
     name = models.CharField(max_length=255, db_index=True)
@@ -278,8 +293,9 @@ class SpaceUseRequest(models.Model):
         return '{d:%a} {d.month}/{d.day}, {t}'.format(
             d=created, t=format_time(created.time()))
 
-    def update_state(self, new_state):
+    def update_state(self, new_state, new_list):
         self.state = new_state
+        self.list = new_list
         self.save()
 
     def send_email(self, request):

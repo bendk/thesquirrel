@@ -218,9 +218,22 @@ def _space_request_form(request, form_class, template_name):
 
 @login_required
 def space_requests(request):
-    requests = SpaceUseRequest.objects.current()
+    list_order = [
+        SpaceUseRequest.INBOX,
+        SpaceUseRequest.WAITING_FOR_THEM,
+        SpaceUseRequest.WAITING_FOR_MEETING,
+        SpaceUseRequest.WAITING_FOR_BOTTOMLINER,
+        SpaceUseRequest.COMPLETE,
+    ]
+    all_requests = SpaceUseRequest.objects.current()
+    request_lists = []
+    for list_code in list_order:
+        requests = [r for r in all_requests if r.list == list_code]
+        if requests:
+            request_lists.append((requests[0].get_list_display(), requests))
+
     return render(request, "events/space-requests.html", {
-        'requests': requests,
+        'request_lists': request_lists,
         'breadcrumbs': [
             BreadCrumb(_('Space Requests')),
         ],

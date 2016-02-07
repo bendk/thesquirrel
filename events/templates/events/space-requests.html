@@ -3,8 +3,11 @@
 {% block html-attrs %} class="wide-content"{% endblock %}
 {% block content %}
 <h1>{% trans "Space Requests" %}</h1>
+{% for label, requests in request_lists %}
+<h2>{{ label }}</h2>
 {% include "events/requests-table.html" %}
-{% if requests %}
+{% endfor %}
+{% if request_lists %}
 <p><em>{% trans "Note: requests will be displayed for 14 days after they are approved/declined" %}</em></p>
 {% endif %}
 {% endblock %}
