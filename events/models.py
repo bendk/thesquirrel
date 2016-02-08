@@ -204,6 +204,7 @@ class SpaceUseRequestManager(models.Manager):
             SpaceUseRequest.APPROVED_PENDING_DEPOSIT,
         )
         return (self.filter(Q(state__in=active_states) |
+                            ~Q(list=SpaceUseRequest.COMPLETE) |
                             Q(changed__gte=changed_since))
                 .extra(select={
                     'state_order':'(CASE WHEN state="P" THEN 0 ELSE 1 END)',
