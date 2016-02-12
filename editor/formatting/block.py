@@ -180,15 +180,37 @@ class Output(object):
     """Stores the output of the render process."""
     def __init__(self):
         self.parts = []
+        self.footnotes = []
 
     def append(self, text):
         self.parts.append(text)
+
+    def append_footnote(self, text):
+        """
+        Append a footnote to end of the output and return its number
+        """
+        self.footnotes.append(text)
+        return len(self.footnotes)
 
     def extend(self, text_parts):
         self.parts.extend(text_parts)
 
     def get_string(self):
+        return self.get_prefootnotes() + self.get_footnotes()
+
+    def get_prefootnotes(self):
         return ''.join(self.parts)
+
+    def get_footnotes(self):
+        if not self.footnotes:
+            return ''
+        parts = ['<div class="footnotes">\n<h3>Footnotes</h3>\n<ol>\n']
+        for i, text in enumerate(self.footnotes):
+            parts.append(
+                '<li id="footnote-{number}"><a href="#citation-{number}">'
+                '{text}</a></li>\n'.format(number=i+1, text=text))
+        parts.append('</ol>\n</div>\n')
+        return ''.join(parts)
 
 class Renderer(object):
     """Renderers a stream of tokens."""

@@ -26,6 +26,9 @@ em_strong_delimiter_re = re.compile(
     r'([*]{1,3})' # 1-3 delimiters make up the match
     r'(?![*])' # no delimiters after the match
 )
+footnote_re = re.compile(
+    r'\[footnote:\s*(.*?)\]'
+)
 def chunked_render(output, source_parts, join_str=' '):
     """Low-level rendering
 
@@ -43,12 +46,11 @@ def chunked_render(output, source_parts, join_str=' '):
 
     """
     formatted_source_parts = []
-    formatted_source_parts.append(format_part(source_parts[0]))
+    formatted_source_parts.append(format_part(output, source_parts[0]))
     for part in source_parts[1:]:
         formatted_source_parts.append(join_str)
-        formatted_source_parts.append(format_part(part))
-
-    output.extend(sub_em_and_strong(formatted_source_parts))
+        formatted_source_parts.append(format_part(output, part))
+    sub_em_and_strong(output, formatted_source_parts)
 
 puncuation_or_space = r'[\w.,:;\-]'
 format_substitutions = [
@@ -59,28 +61,38 @@ format_substitutions = [
         r'(?<![^\s\.,:;\-])' # preceded by whitespace or puncuation
         r'\'(.*)\'' # the quote content
         r'(?![^\s\.,:;\-])' # followed whitespace or puncuation
-    ), # followed by whitespace or puncuation
+    ),
         r'&lsquo;\1&rsquo;'),
     (re.compile(
         r'(?<![^\s\.,:;\-])' # preceded by whitespace or puncuation
         r'&quot;(.*)&quot;' # the quote content
         r'(?![^\s\.,:;\-])' # followed whitespace or puncuation
-    ), # followed by whitespace or puncuation
+    ),
         r'&ldquo;\1&rdquo;'),
     # dashes
     (re.compile(r'(?<!-)-{2}(?!-)'), '&mdash;'),
     # ellipsis
     (re.compile(r'(?<!\.)\.{3}(?!\.)'), '&hellip;'),
 ]
-def format_part(source):
+def format_part(output, source):
     """Handles link substitution, html entities replacement, etc.
     """
     source = escape(source, quote=True)
     for regex, repl in format_substitutions:
         source = regex.sub(repl, source)
+
+    source = sub_footnotes(output, source)
     return urlize(source)
 
-def sub_em_and_strong(source_parts):
+def sub_footnotes(output, source):
+    def repl(match):
+        number = output.append_footnote(match.group(1))
+        return ('<sup id="citation-{number}" class="citation">'
+                '<a href="#footnote-{number}">[{number}]</a>'
+                '</sup>'.format(number=number))
+    return footnote_re.sub(repl, source)
+
+def sub_em_and_strong(output, source_parts):
     delimiter_positions = []
     parts = []
     for source_part in source_parts:
@@ -166,12 +178,10 @@ def sub_em_and_strong(source_parts):
             else:
                 open_both = pos
     # join everything together and we're done
-    combined = []
     for i, part in enumerate(parts):
         if i in insert_before:
-            combined.append(insert_before[i])
-        combined.append(part)
-    return combined
+            output.append(insert_before[i])
+        output.append(part)
 
 def render(output, source):
     chunked_render(output, [source])

@@ -20,11 +20,38 @@ import os
 import re
 
 from django.test import TestCase
+from mock import Mock, call
 from nose.tools import *
 
 from editor.factories import *
 from editor.formatting import inline
 from editor.formatting import block
+
+class OutputTest(TestCase):
+    def test_append(self):
+        output = block.Output()
+        output.append('foo ')
+        output.append('bar')
+        assert_equal(output.get_string(), 'foo bar')
+
+    def test_extend(self):
+        output = block.Output()
+        output.extend(['foo ', 'bar'])
+        assert_equal(output.get_string(), 'foo bar')
+    
+    def test_add_footnote(self):
+        output = block.Output()
+        output.append('foo')
+        assert_equal(output.append_footnote('footnote'), 1)
+        assert_equal(
+            output.get_string(),
+            'foo'
+            '<div class="footnotes">\n'
+            '<h3>Footnotes</h3>\n'
+            '<ol>\n'
+            '<li id="footnote-1"><a href="#citation-1">footnote</a></li>\n'
+            '</ol>\n'
+            '</div>\n')
 
 class InlineMarkdownTest(TestCase):
     def check_inline_render(self, source, correct_output):
@@ -149,6 +176,17 @@ class InlineMarkdownTest(TestCase):
         output = block.Output()
         inline.chunked_render(output, ['*one', 'two*'])
         assert_equals(output.get_string(), '<em>one two</em>')
+
+    def test_footnotes(self):
+        output = Mock()
+        output.append_footnote.return_value = 1
+        inline.render(output, 'foo[footnote: bar]')
+        assert_items_equal(output.method_calls, [
+            call.append('foo'
+                        '<sup id="citation-1" class="citation">'
+                        '<a href="#footnote-1">[1]</a></sup>'),
+            call.append_footnote('bar')
+        ])
 
 class MarkdownTestCaseReader(object):
     def __init__(self, path):

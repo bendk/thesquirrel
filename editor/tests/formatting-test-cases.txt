@@ -558,6 +558,21 @@ Extra Pipes are allowed on the outside
 </table>
 .
 
+# footnoots
+
+footnote
+.
+Bob likes apples.[footnote: Apples and oranges p.9]  Jane likes oranges.[footnote: ibid p.10]
+.
+<p>Bob likes apples.<sup id="citation-1" class="citation"><a href="#footnote-1">[1]</a></sup>  Jane likes oranges.<sup id="citation-2" class="citation"><a href="#footnote-2">[2]</a></sup></p>
+<div class="footnotes">
+<h3>Footnotes</h3>
+<ol>
+<li id="footnote-1"><a href="#citation-1">Apples and oranges p.9</a></li>
+<li id="footnote-2"><a href="#citation-2">ibid p.10</a></li>
+</ol>
+</div>
+.
 
 # Images
 
