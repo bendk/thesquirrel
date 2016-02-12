@@ -49,7 +49,7 @@ class OutputTest(TestCase):
             '<div class="footnotes">\n'
             '<h3>Footnotes</h3>\n'
             '<ol>\n'
-            '<li id="footnote-1"><a href="#citation-1">footnote</a></li>\n'
+            '<li id="footnote-1"><b><a href="#citation-1">^</a></b> footnote</li>\n'
             '</ol>\n'
             '</div>\n')
 
