@@ -208,7 +208,7 @@ class Output(object):
         for i, text in enumerate(self.footnotes):
             parts.append(
                 '<li id="footnote-{number}">'
-                '<b><a href="#citation-{number}">^</a></b> '
+                '<a href="#citation-{number}">^</a> '
                 '{text}</li>\n'.format(number=i+1, text=text))
         parts.append('</ol>\n</div>\n')
         return ''.join(parts)

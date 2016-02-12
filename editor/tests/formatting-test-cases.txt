@@ -568,8 +568,8 @@ Bob likes apples.[footnote: Apples and oranges p.9]  Jane likes oranges.[footnot
 <div class="footnotes">
 <h3>Footnotes</h3>
 <ol>
-<li id="footnote-1"><b><a href="#citation-1">^</a></b> Apples and oranges p.9</li>
-<li id="footnote-2"><b><a href="#citation-2">^</a></b> ibid p.10</li>
+<li id="footnote-1"><a href="#citation-1">^</a> Apples and oranges p.9</li>
+<li id="footnote-2"><a href="#citation-2">^</a> ibid p.10</li>
 </ol>
 </div>
 .

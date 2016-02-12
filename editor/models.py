@@ -27,7 +27,7 @@ from django.db import models
 from django.utils import timezone
 from PIL import Image
 
-from . import config
+from editor.config import config
 
 find_image_re = re.compile('^#image(\d+)-', re.M)
 def find_images(text):

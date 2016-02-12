@@ -22,9 +22,9 @@ from django.shortcuts import render
 from django.utils.translation import gettext as _
 import requests
 
-from . import config
-from .models import EditorImage
-from .formatting import block
+from editor.config import config
+from editor.models import EditorImage
+from editor.formatting import block
 
 @login_required
 def upload_image(request):

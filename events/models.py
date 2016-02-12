@@ -31,7 +31,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from dateutil import rrule
 
-from editor.fields import EditorTextField
+from editor import EditorTextField
 from . import repeat
 from .utils import format_time
 

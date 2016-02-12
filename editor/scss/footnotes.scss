@@ -1,0 +1,15 @@
+div.footnotes {
+    padding-top: 10px;
+
+    li {
+      padding: 5px 5px;
+
+      &:target {
+          background: rgba(0,127,255,0.133);
+          a {
+              font-weight: bold;
+          }
+      }
+    }
+}
+
