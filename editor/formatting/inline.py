@@ -26,7 +26,7 @@ em_strong_delimiter_re = re.compile(
     r'([*]{1,3})' # 1-3 delimiters make up the match
     r'(?![*])' # no delimiters after the match
 )
-def chunked_render(source_parts, join_str=' '):
+def chunked_render(output, source_parts, join_str=' '):
     """Low-level rendering
 
     This method is used by the block renderer, which splits up the input
@@ -37,11 +37,9 @@ def chunked_render(source_parts, join_str=' '):
         em and strong will be matched between different lines, but URLs won't
 
     Args:
+        output: Output object to render to
         source_parts: list of strings to render inline
         join_str: between each string in the list, we will insert this string
-
-    Returns:
-        list of strings that should be joined together to make the output
 
     """
     formatted_source_parts = []
@@ -50,7 +48,7 @@ def chunked_render(source_parts, join_str=' '):
         formatted_source_parts.append(join_str)
         formatted_source_parts.append(format_part(part))
 
-    return sub_em_and_strong(formatted_source_parts)
+    output.extend(sub_em_and_strong(formatted_source_parts))
 
 puncuation_or_space = r'[\w.,:;\-]'
 format_substitutions = [
@@ -175,5 +173,5 @@ def sub_em_and_strong(source_parts):
         combined.append(part)
     return combined
 
-def render(source):
-    return ''.join(chunked_render([source]))
+def render(output, source):
+    chunked_render(output, [source])

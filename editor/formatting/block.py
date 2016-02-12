@@ -176,6 +176,20 @@ class Lexer(object):
         self.calc_next()
         return popping
 
+class Output(object):
+    """Stores the output of the render process."""
+    def __init__(self):
+        self.parts = []
+
+    def append(self, text):
+        self.parts.append(text)
+
+    def extend(self, text_parts):
+        self.parts.extend(text_parts)
+
+    def get_string(self):
+        return ''.join(self.parts)
+
 class Renderer(object):
     """Renderers a stream of tokens."""
 
@@ -192,10 +206,10 @@ class Renderer(object):
 
     def render(self, input_string):
         lexer = Lexer(input_string)
-        output = []
+        output = Output()
         while not isinstance(lexer.next_token, EOS):
             self.render_map[lexer.next_token.__class__](lexer, output)
-        return ''.join(output)
+        return output.get_string()
 
     def append_text(self, lexer, output):
         """Utility method to:
@@ -203,21 +217,21 @@ class Renderer(object):
              - Render token.text using our InlineRenderer
              - Append that text to output
         """
-        output.append(inline.render(lexer.pop_next().text))
+        inline.render(output, lexer.pop_next().text)
 
     def continue_text(self, lexer, output):
         """Utility method to do whan append_text does, but
         outputing a space beforehand.
         """
-        output.append(' ')
-        output.append(inline.render(lexer.pop_next().text))
+        utput.append(' ')
+        inline.render(output, lexer.pop_next().text)
 
     def render_heading(self, lexer, output):
         output.append('<h2>')
         text_parts = [lexer.pop_next().text]
         while isinstance(lexer.next_token, Heading):
             text_parts.append(lexer.pop_next().text)
-        output.extend(inline.chunked_render(text_parts))
+        inline.chunked_render(output, text_parts)
         output.append('</h2>\n')
 
     def render_subheading(self, lexer, output):
@@ -236,7 +250,7 @@ class Renderer(object):
                 # blank line, create a paragraph
                 if text_parts:
                     output.append('<p>')
-                    output.extend(inline.chunked_render(text_parts))
+                    inline.chunked_render(output, text_parts)
                     output.append('</p>\n')
                     text_parts = []
                 continue
@@ -244,7 +258,7 @@ class Renderer(object):
                 # new nesting level
                 if text_parts:
                     output.append('<p>')
-                    output.extend(inline.chunked_render(text_parts))
+                    inline.chunked_render(output, text_parts)
                     output.append('</p>\n')
                     text_parts = []
                 for i in xrange(token.count - nesting_level):
@@ -260,7 +274,7 @@ class Renderer(object):
         # done with the list, write out text and close our tags
         if text_parts:
             output.append('<p>')
-            output.extend(inline.chunked_render(text_parts))
+            inline.chunked_render(output, text_parts)
             output.append('</p>\n')
         for i in xrange(nesting_level):
             output.append('</blockquote>\n')
@@ -270,18 +284,18 @@ class Renderer(object):
         if start_token.starts_table(lexer.next_token):
             return self.render_table(start_token, lexer, output)
         output.append('<p>')
-        output.append(inline.render(start_token.text))
+        inline.render(output, start_token.text)
         while isinstance(lexer.next_token, Text):
             output.append('<br>')
-            output.append(inline.render(lexer.pop_next().text))
+            inline.render(output, lexer.pop_next().text)
         output.append('</p>\n')
 
     def render_table(self, start_token, lexer, output):
         output.append('<table>\n<thead>\n<tr>\n')
         for col in start_token.table_columns():
-            output.extend(
-                ('<th>', inline.render(col), '</th>\n')
-            )
+            output.append('<th>')
+            inline.render(output, col)
+            output.append('</th>\n')
         output.append('</tr>\n</thead>\n')
         # pop the separator row
         lexer.pop_next()
@@ -290,9 +304,9 @@ class Renderer(object):
             while lexer.next_token.continues_table():
                 output.append('<tr>\n')
                 for col in lexer.pop_next().table_columns():
-                    output.extend(
-                        ('<td>', inline.render(col), '</td>\n')
-                    )
+                    output.append('<td>')
+                    inline.render(output, col)
+                    output.append('</td>\n')
                 output.append('</tr>\n')
             output.append('</tbody>\n')
         output.append('</table>\n')
@@ -322,7 +336,7 @@ class Renderer(object):
         text_parts = [lexer.pop_next().text]
         while isinstance(lexer.next_token, Text):
             text_parts.append(lexer.pop_next().text)
-        output.extend(inline.chunked_render(text_parts))
+        inline.chunked_render(output, text_parts)
 
         # check if we need to render nested lists(s)
         while (isinstance(lexer.next_token, ListItem) and

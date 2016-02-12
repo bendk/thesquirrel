@@ -28,8 +28,9 @@ from editor.formatting import block
 
 class InlineMarkdownTest(TestCase):
     def check_inline_render(self, source, correct_output):
-        output = inline.render(source)
-        if output != correct_output:
+        output = block.Output()
+        inline.render(output, source)
+        if output.get_string() != correct_output:
             raise AssertionError('\n'.join((source, output, correct_output)))
 
     # <em> and <strong> rendering
@@ -145,8 +146,9 @@ class InlineMarkdownTest(TestCase):
             '<strong><a href="http://example.com/link">Text</a></strong>')
 
     def test_chunked_render(self):
-        output = inline.chunked_render(['*one', 'two*'])
-        assert_equals(''.join(output), '<em>one two</em>')
+        output = block.Output()
+        inline.chunked_render(output, ['*one', 'two*'])
+        assert_equals(output.get_string(), '<em>one two</em>')
 
 class MarkdownTestCaseReader(object):
     def __init__(self, path):
