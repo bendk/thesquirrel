@@ -1,4 +1,4 @@
-{% load i18n mediabuilder %}
+{% load i18n mediabuilder overlaybanner %}
 <html{% block html-attrs %}{% endblock %}>
 <head>
     <title>Flying Squirrel Community Space</title>
@@ -8,6 +8,7 @@
     {% sass_bundle "app.css" %}
 </head>
 <body>
+{% overlaybanner %}
 {% block nav %}
 <nav id="main">
   <div id="expand-menu">

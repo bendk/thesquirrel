@@ -1,0 +1,26 @@
+.overlay-banner {
+    display: none;
+    position: absolute;
+    z-index: $z-index-modal;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: $white;
+
+    .content {
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    button.close {
+        color: $light-gray;
+        background: none;
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        border: 0;
+        padding: 0;
+    }
+}

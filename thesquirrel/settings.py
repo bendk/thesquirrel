@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'events',
     'mediabuilder',
     'thesquirrel',
+    'overlaybanner',
     # third-party-apps
     'django_nose',
     # django apps
@@ -141,6 +142,7 @@ MEDIA_BUILDER = {
                 # Now our SCSS because it may override external SCSS variables
                 'thesquirrel/scss/app.scss',
                 'events/scss/events.scss',
+                'overlaybanner/scss/overlaybanner.scss',
                 # Finally external SCSS
                 'mediabuilder/downloads/fontawesome/scss/font-awesome.scss',
             ],
@@ -161,6 +163,7 @@ MEDIA_BUILDER = {
                 'thesquirrel/js/*.js',
                 'editor/js/editor.js',
                 'events/js/events.js',
+                'overlaybanner/js/overlaybanner.js',
             ],
         },
     },
