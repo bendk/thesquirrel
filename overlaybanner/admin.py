@@ -22,6 +22,7 @@ from overlaybanner.models import OverlayBanner
 
 @admin.register(OverlayBanner)
 class OverlayBannerAdmin(admin.ModelAdmin):
+    list_display = ['active', 'name']
     fields = ['name', 'html']
     actions = ['activate']
 

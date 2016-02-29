@@ -15,6 +15,7 @@
     }
 
     button.close {
+        @include small-text;
         color: $light-gray;
         background: none;
         position: absolute;
