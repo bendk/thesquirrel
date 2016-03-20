@@ -221,6 +221,7 @@ def space_requests(request):
     list_order = [
         SpaceUseRequest.INBOX,
         SpaceUseRequest.WAITING_FOR_THEM,
+        SpaceUseRequest.COMING_TO_MEETING,
         SpaceUseRequest.NEEDS_DISCUSSION,
         SpaceUseRequest.NEEDS_BOTTOMLINER,
         SpaceUseRequest.COMPLETE,
