@@ -233,13 +233,15 @@ class SpaceUseRequest(models.Model):
 
     INBOX = 'I'
     WAITING_FOR_THEM = 'W'
-    NEEDS_DISCUSSION = 'M'
+    NEEDS_DISCUSSION = 'N'
+    COMING_TO_MEETING = 'M'
     NEEDS_BOTTOMLINER = 'B'
     COMPLETE = 'C'
     LIST_CHOICES = (
         (INBOX, 'Inbox'),
         (WAITING_FOR_THEM, 'Waiting for them'),
         (NEEDS_DISCUSSION, 'Needs discussion'),
+        (COMING_TO_MEETING, 'Coming to meeting'),
         (NEEDS_BOTTOMLINER, 'Needs bottomliner'),
         (COMPLETE, 'Complete'),
     )
