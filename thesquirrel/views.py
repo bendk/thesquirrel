@@ -21,12 +21,8 @@ from articles.models import Article
 from docs.models import Document
 
 def home(request):
-    try:
-        topstory = Article.objects.all()[0]
-    except IndexError:
-        topstory = None
     return render(request, 'home.html', {
-        'topstory': topstory
+        'top_stories': Article.objects.all()[:5],
     })
 
 def email_list_signup(request):

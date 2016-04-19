@@ -54,11 +54,13 @@
 {% endblock %}
 
 {% block content %}
-{% if topstory %}
+{% if top_stories %}
+{% for story in top_stories %}
 <article>
-  <h2>{{ topstory.title }}</h2>
-  {{ topstory.render_body }}
+  <h2>{{ story.title }}</h2>
+  {{ story.render_body }}
 </article>
+{% endfor %}
 <a class="button" href="{% url "articles:index" %}">All Blog Posts</a>
 {% else %}
 <h2>{% trans "No blog posts" %}</h2>
