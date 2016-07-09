@@ -166,9 +166,13 @@ class CalendarItem(models.Model, EventTimeMixin):
     @classmethod
     def upcoming(cls):
         today = timezone.now().date()
-        return (cls.objects.filter(date__gte=today)
-                .select_related('event')
-                .order_by('date', 'event__start_time'))
+        return (
+            cls.objects
+            .filter(date__gte=today)
+            .filter(Q(event__space_request__isnull=True) |
+                    Q(event__space_request__state=SpaceUseRequest.APPROVED))
+            .select_related('event')
+            .order_by('date', 'event__start_time'))
 
     @property
     def space_request(self):
@@ -188,7 +192,6 @@ class SpaceUseRequestQueryset(models.QuerySet):
                 yield base_obj.ongoingspaceuserequest
             else:
                 raise TypeError("No subclass found: {}".format(base_obj))
-
 
 class SpaceUseRequestManager(models.Manager):
     def get_queryset(self):
