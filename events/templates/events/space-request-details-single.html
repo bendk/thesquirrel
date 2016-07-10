@@ -45,3 +45,17 @@
     <td>{{ space_request.squirrel_donation }}</td>
   </tr>
 </table>
+
+{% with items=space_request.calendar_items_on_date %}
+{% if items %}
+<h2>{% trans "Other Events" %}</h2>
+<table class="key-value">
+  {% for item in items %}
+  <tr>
+    <td>{{ item.event.title }}</td>
+    <td>{{ item.start_time }} - {{ item.end_time }}{% if item.event.space_request %} <a href="{{ item.event.space_request.get_absolute_url }}">({{ item.event.space_request.get_state_display }})</a>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endwith %}

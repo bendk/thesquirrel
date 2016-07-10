@@ -334,6 +334,26 @@ class SingleSpaceUseRequest(SpaceUseRequest):
             d=self.date, st=format_time(self.start_time),
             et=format_time(self.end_time))
 
+    def calendar_items_on_date(self):
+        valid_states = [
+            SpaceUseRequest.PENDING,
+            SpaceUseRequest.APPROVED_PENDING_DEPOSIT,
+            SpaceUseRequest.APPROVED,
+        ]
+        rv = []
+        for item in CalendarItem.objects.filter(date=self.date):
+            # This is awkward to put in the query because space request can be
+            # NULL.  So we manually filter out some of the results.
+            rv.append(item)
+            continue
+            if item.space_request:
+                if (item.space_request != self and
+                    item.space_request.state in valid_states):
+                    rv.append(item)
+            else:
+                rv.append(item)
+        return rv
+
 class OngoingSpaceUseRequest(SpaceUseRequest):
     dates = models.CharField(max_length=255)
     frequency = models.CharField(max_length=255)
