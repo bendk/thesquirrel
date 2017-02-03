@@ -160,9 +160,9 @@
                 input.change();
             },
         });
-        input.after(picker.el);
+        input.parent('label').after(picker.el);
         picker.hide()
-        input.click(function() {
+        input.click(function(evt) {
             if(picker.isVisible()) {
                 picker.hide();
             } else {

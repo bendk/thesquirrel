@@ -404,3 +404,9 @@ form.space-use-request {
     border-radius: 5px;
     border-color: $gray;
 }
+
+@include small-screen {
+    .pika-prev, .pika-next {
+        display: none;
+    }
+}
