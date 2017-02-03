@@ -183,9 +183,8 @@
                 return;
             }
             var eventList = $('ul', this);
-            if(eventList.length > 0) {
-                replaceDateDetails($(this).data('date-title'), eventList);
-            }
+            replaceDateDetails($(this).data('date-title'), eventList);
+            $('#date-details-hint').hide();
         });
 
         function replaceDateDetails(dateTitle, eventList) {
@@ -194,8 +193,12 @@
             }
             var heading = $('<h3>').text(dateTitle);
             dateDetails = $('<div class="date-details">')
-                .append(heading)
-                .append(eventList.clone());
+                .append(heading);
+            if(eventList.length) {
+                dateDetails.append(eventList.clone());
+            } else {
+                dateDetails.append($('<p>No events</p>'));
+            }
             calander.after(dateDetails);
         }
     }

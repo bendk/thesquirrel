@@ -52,9 +52,9 @@
     {% endfor %}
   </tbody>
 </table>
+<div id="date-details-hint" class="date-details"><p class="help">{% trans "Tap on a day to see events" %}</p></div>
 <div class="pager group">
   <a class="prev" href="{% url "events:month-calendar" year=prev_month.year month=prev_month.month %}"><i class="fa fa-arrow-left"></i> {% trans "prev" %}</a>
   <a class="next" href="{% url "events:month-calendar" year=next_month.year month=next_month.month %}">{% trans "next" %} <i class="fa fa-arrow-right"></i></a>
 </div>
-<div class="date-details"><p class="help">{% trans "Tap on a day to see events" %}</p></div>
 {% endblock %}
