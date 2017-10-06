@@ -324,6 +324,8 @@ class SingleSpaceUseRequest(SpaceUseRequest):
     cleanup_time = models.CharField(max_length=255, blank=True)
     event_charge = models.CharField(max_length=255)
     squirrel_donation = models.TextField(blank=True)
+    number_of_people = models.CharField(max_length=255)
+    space_needs = models.TextField()
 
     type = 'single'
     def get_type_display(self):

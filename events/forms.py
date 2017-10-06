@@ -262,10 +262,10 @@ class SingleSpaceRequestForm(forms.ModelForm):
         model = SingleSpaceUseRequest
         fields = (
             'title', 'event_type', 'description', 'date', 'start_time',
-            'end_time', 'setup_time', 'cleanup_time', 'event_charge',
-            'squirrel_donation', 'name', 'email', 'squirrel_member',
-            'organization', 'website', 'mission', 'phone_number',
-            'additional_comments',
+            'end_time', 'setup_time', 'cleanup_time', 'number_of_people',
+            'space_needs', 'event_charge', 'squirrel_donation', 'name',
+            'email', 'squirrel_member', 'organization', 'website', 'mission',
+            'phone_number', 'additional_comments',
         )
         labels = {
             'title': _('Event title'),
@@ -282,6 +282,10 @@ class SingleSpaceRequestForm(forms.ModelForm):
             'website': _('Website URL'),
             'mission': _('Mission Statement'),
             'additional_comments': '',
+            'number_of_people': _('Around how many people do you expect?'),
+            'space_needs': _('What equipment do you need? '
+                             '(chairs, tables, kitchen use, '
+                             'sound system etc)'),
         }
         help_texts = {
             'event_charge': _(
@@ -305,8 +309,9 @@ class OngoingSpaceRequestForm(forms.ModelForm):
             'frequency': _('Frequency of use (weekly, monthly, etc)'),
             'squirrel_goals': _('How will your use of the space advance '
                                 'the goals of the center'),
-            'space_needs': _('Material needs of the space (chairs, stage, '
-                             'sound system, desks, table, kitchen use, etc)'),
+            'space_needs': _('What equipment do you need? '
+                             '(chairs, tables, kitchen use, '
+                             'sound system etc)'),
             'squirrel_member': _('Are you a member of the FSCS or have a '
                                  'contact in the collective? If so, who?'),
             'organization': _('Organization Name'),
