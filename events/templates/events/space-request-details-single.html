@@ -23,6 +23,11 @@
   </tr>
 
   <tr>
+    <td>{% trans "Number of people" %}</td>
+    <td>{{ space_request.number_of_people }}</td>
+  </tr>
+
+  <tr>
     <td>{% trans "Setup time" %}</td>
     <td>{{ space_request.setup_time }}</td>
   </tr>
@@ -31,6 +36,12 @@
     <td>{% trans "Cleanup time" %}</td>
     <td>{{ space_request.cleanup_time }}</td>
   </tr>
+
+  <tr>
+    <td>{% trans "Space needs" %}</td>
+    <td>{{ space_request.space_needs }}</td>
+  </tr>
+
 </table>
 
 <h2>{% trans "Charges/Donations" %}</h2>
