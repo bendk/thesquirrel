@@ -4,6 +4,7 @@
 {% block content %}
 <h1>{% trans "Single Event Space Request" %}</h1>
 {% if mode == 'create' %}
+<p class="alert">{% trans "Beginning on January 1, 2018, our 4 hour event rate and 6 hour music rate will be increasing from $85 and $125 to $150 and our full building use rate will increase from $130 to $190. Requests for use of space made before 1/1/18 will be honored at the $85, $125, and $130 rates. In order to maintain the building we need to raise our rates. We haven't raised rates in years. Thank you for understanding. Happy new year!" %}</p>
 <p>{% trans "Thank you for your interest in the Flying Squirrel Community Space!" %}</p>
 
 <p>{% trans "Please read through these guidelines for using our space before you complete this form:" %}</p>
@@ -17,14 +18,14 @@
     <ul>
       <li>{% trans "Upstairs use:" %}
         <ul>
-          <li>{% trans "$85 for 4 hours." %}</li>
+          <li>{% trans "$150 for 4 hours." %}</li>
           <li>{% trans "$20 each additional hour." %}</li>
           <li>{% trans "$35 deposit." %}</li>
         </ul>
       </li>
       <li>{% trans "Upstairs + Downstairs use:" %}
         <ul>
-          <li>{% trans "$130 for 4 hours." %}</li>
+          <li>{% trans "$190 for 4 hours." %}</li>
           <li>{% trans "$30 each additional hour." %}</li>
           <li>{% trans "$50 deposit." %}</li>
         </ul>
@@ -34,7 +35,7 @@
   </li>
   <li><strong>{% trans "Music Show Rate:" %}</strong> 
     <ul>
-      <li>{% trans "$125 for the night with a $35 deposit upfront" %}</li>
+      <li>{% trans "$150 for the night with a $35 deposit upfront" %}</li>
       <li>{% trans "We can open the space for setup 4pm or after." %}</li>
       <li>{% trans "Show must end 10pm or before." %}</li>
       <li>{% trans "Shows happen in the upstairs space." %}</li>
