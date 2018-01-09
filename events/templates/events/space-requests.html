@@ -2,6 +2,7 @@
 {% load i18n %}
 {% block html-attrs %} class="wide-content"{% endblock %}
 {% block content %}
+<a href="{% url "events:space-requests-copy-notes" %}" class="pull-right">{% trans "Copy notes" %}</a>
 <h1>{% trans "Space Requests" %}</h1>
 {% for label, requests in request_lists %}
 <h2>{{ label }}</h2>

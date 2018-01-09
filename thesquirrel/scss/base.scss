@@ -37,6 +37,23 @@ $medium-screen-width: 768px;
     }
 }
 
+.split-screen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+}
+
+.split-screen-one {
+  display: grid-item;
+  grid-column: 1;
+  grid-row: 1;
+}
+.split-screen-two {
+  display: grid-item;
+  grid-column: 2;
+  grid-row: 1;
+}
+
 html {
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;

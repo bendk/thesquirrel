@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block html-attrs %} class="wide-content"{% endblock %}
+{% block content %}
+<h1>{% trans "Space Requests - Copy notes" %}</h1>
+<div class="split-screen space-request-copy-notes">
+  <div class="split-screen-one">
+    <p>Click on any number of buttons to append text to the notes box</p>
+    {% for label, requests in request_lists %}
+    <h2>{{ label }}</h2>
+    {% for request in requests %}
+    <button class="notes-note" data-note="{{ request.get_note }}" >{{ request.title }}</button>
+    {% endfor %}
+    {% endfor %}
+    {% if request_lists %}
+    <p><em>{% trans "Note: requests will be displayed for 14 days after they are approved/declined" %}</em></p>
+    {% endif %}
+  </div>
+  <div class="split-screen-two">
+    <textarea class="notes-notepad"></textarea>
+    <button class="pull-right notes-copy">{% trans "Copy" %}</button>
+    <button class="notes-clear">{% trans "Clear" %}</button>
+  </div>
+</div>
+{% endblock %}

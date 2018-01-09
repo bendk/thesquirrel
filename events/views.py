@@ -218,25 +218,22 @@ def _space_request_form(request, form_class, template_name):
 
 @login_required
 def space_requests(request):
-    list_order = [
-        SpaceUseRequest.INBOX,
-        SpaceUseRequest.WAITING_FOR_THEM,
-        SpaceUseRequest.COMING_TO_MEETING,
-        SpaceUseRequest.NEEDS_DISCUSSION,
-        SpaceUseRequest.NEEDS_BOTTOMLINER,
-        SpaceUseRequest.COMPLETE,
-    ]
-    all_requests = SpaceUseRequest.objects.current()
-    request_lists = []
-    for list_code in list_order:
-        requests = [r for r in all_requests if r.list == list_code]
-        if requests:
-            request_lists.append((requests[0].get_list_display(), requests))
-
+    request_lists = SpaceUseRequest.get_lists()
     return render(request, "events/space-requests.html", {
         'request_lists': request_lists,
         'breadcrumbs': [
             BreadCrumb(_('Space Requests')),
+        ],
+    })
+
+@login_required
+def space_requests_copy_notes(request):
+    request_lists = SpaceUseRequest.get_lists()
+    return render(request, "events/space-requests-copy-notes.html", {
+        'request_lists': request_lists,
+        'breadcrumbs': [
+            BreadCrumb(_('Space Requests'), 'events:space-requests'),
+            BreadCrumb(_('Copy notes')),
         ],
     })
 

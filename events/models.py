@@ -315,6 +315,34 @@ class SpaceUseRequest(models.Model):
         send_mail('New space use request', message, self.email,
                   [events_email], fail_silently=False)
 
+    def get_note(self):
+        """
+        Get a note for this request.
+
+        This is text that we send out for emails describing the event
+        """
+        return self.title
+
+
+    list_order = [
+        INBOX,
+        WAITING_FOR_THEM,
+        COMING_TO_MEETING,
+        NEEDS_DISCUSSION,
+        NEEDS_BOTTOMLINER,
+        COMPLETE,
+    ]
+
+    @classmethod
+    def get_lists(cls):
+        all_requests = cls.objects.current()
+        request_lists = []
+        for list_code in cls.list_order:
+            requests = [r for r in all_requests if r.list == list_code]
+            if requests:
+                request_lists.append((requests[0].get_list_display(), requests))
+        return request_lists
+
 class SingleSpaceUseRequest(SpaceUseRequest):
     event_type = models.CharField(max_length=255)
     date = models.DateField()
@@ -332,9 +360,15 @@ class SingleSpaceUseRequest(SpaceUseRequest):
         return _('Single use')
 
     def get_date_display(self):
+        events = self.event_set.all()
+        if len(events) == 1:
+            date_obj = events[0]
+        else:
+            date_obj = self
+
         return '{d:%a} {d.month}/{d.day}, {st}-{et}'.format(
-            d=self.date, st=format_time(self.start_time),
-            et=format_time(self.end_time))
+            d=date_obj.date, st=format_time(date_obj.start_time),
+            et=format_time(date_obj.end_time))
 
     def calendar_items_on_date(self):
         valid_states = [
@@ -356,6 +390,23 @@ class SingleSpaceUseRequest(SpaceUseRequest):
                 rv.append(item)
         return rv
 
+    def guess_best_date(self):
+        """
+        Guess the date based on the date submitted and the linked events
+        """
+        return self.get_date_display()
+
+    def get_note(self):
+        lines = [
+            self.title,
+            'Single use',
+            self.name
+        ]
+        lines.append(self.get_date_display())
+        if self.additional_comments:
+            lines.extend(['', self.additional_comments])
+        return '\n'.join(lines)
+
 class OngoingSpaceUseRequest(SpaceUseRequest):
     dates = models.CharField(max_length=255)
     frequency = models.CharField(max_length=255)
@@ -369,6 +420,16 @@ class OngoingSpaceUseRequest(SpaceUseRequest):
     def get_date_display(self):
         return self.dates
 
+    def get_note(self):
+        lines = [
+            self.title,
+            'Ongoing use',
+            self.name,
+            self.frequency,
+        ]
+        if self.additional_comments:
+            lines.extend(['', self.additional_comments])
+        return '\n'.join(lines)
 
 class SpaceUseNote(models.Model):
     space_use_request = models.ForeignKey(SpaceUseRequest,

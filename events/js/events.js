@@ -3,6 +3,7 @@
         $('input.pikaday').each(handlePikaday);
         $('form.events').each(handleEventForm);
         $('table.calendar').each(handleCalendar);
+        $('.space-request-copy-notes').each(handleCopyNotes);
     });
 
     function handleEventForm(form) {
@@ -201,6 +202,28 @@
             }
             calander.after(dateDetails);
         }
+    }
+
+    function handleCopyNotes() {
+        var container = $(this);
+        var notepad = $('.notes-notepad', container);
+        console.log(notepad);
+        $('.notes-note', container).click(function() {
+            var note = $(this).data('note');
+            var current = notepad.val();
+            if(current) {
+                notepad.val(current + '\n--------------------------------------------------------------------\n' + note);
+            } else {
+                notepad.val(note);
+            }
+        });
+        $('.notes-copy', container).click(function() {
+            notepad.select();
+            document.execCommand('copy');
+        });
+        $('.notes-clear', container).click(function() {
+            notepad.val('');
+        });
     }
 
 }());
