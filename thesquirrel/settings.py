@@ -21,6 +21,8 @@ if not os.path.exists(local_settings_path):
     sys.exit(-1)
 execfile(local_settings_path)
 
+BASE_URL = 'http://thesquirrel.org'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

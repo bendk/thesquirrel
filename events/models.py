@@ -401,6 +401,7 @@ class SingleSpaceUseRequest(SpaceUseRequest):
             self.title,
             'Single use',
             self.name
+            settings.BASE_URL + self.get_absolute_url(),
         ]
         lines.append(self.get_date_display())
         if self.additional_comments:
@@ -426,6 +427,7 @@ class OngoingSpaceUseRequest(SpaceUseRequest):
             'Ongoing use',
             self.name,
             self.frequency,
+            settings.BASE_URL + self.get_absolute_url(),
         ]
         if self.additional_comments:
             lines.extend(['', self.additional_comments])
