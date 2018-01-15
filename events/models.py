@@ -400,7 +400,7 @@ class SingleSpaceUseRequest(SpaceUseRequest):
         lines = [
             self.title,
             'Single use',
-            self.name
+            self.name,
             settings.BASE_URL + self.get_absolute_url(),
         ]
         lines.append(self.get_date_display())
