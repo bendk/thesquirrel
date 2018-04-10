@@ -359,12 +359,22 @@ class SingleSpaceUseRequest(SpaceUseRequest):
     def get_type_display(self):
         return _('Single use')
 
-    def get_date_display(self):
+    def get_date_object(self):
+        """
+        Gets the object to use for the event date.  This is either the
+        space request, or an event created for the request.
+        """
         events = self.event_set.all()
         if len(events) == 1:
-            date_obj = events[0]
+            return events[0]
         else:
-            date_obj = self
+            return self
+
+    def calc_date(self):
+        return self.get_date_object().date
+
+    def get_date_display(self):
+        date_obj = self.get_date_object()
 
         return '{d:%a} {d.month}/{d.day}, {st}-{et}'.format(
             d=date_obj.date, st=format_time(date_obj.start_time),
@@ -377,13 +387,9 @@ class SingleSpaceUseRequest(SpaceUseRequest):
             SpaceUseRequest.APPROVED,
         ]
         rv = []
-        for item in CalendarItem.objects.filter(date=self.date):
-            # This is awkward to put in the query because space request can be
-            # NULL.  So we manually filter out some of the results.
-            rv.append(item)
-            continue
+        for item in CalendarItem.objects.filter(date=self.calc_date()):
             if item.space_request:
-                if (item.space_request != self and
+                if (item.space_request.id != self.id and
                     item.space_request.state in valid_states):
                     rv.append(item)
             else:
