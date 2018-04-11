@@ -112,6 +112,8 @@
 
 <form method="POST" action="">
   {% csrf_token %}
+  {% include "field.html" with field=form.deposit_paid skip_required=1 %}
+  {% include "field.html" with field=form.has_bottomliner skip_required=1 %}
   {% include "field.html" with field=form.state skip_required=1 %}
   {% include "field.html" with field=form.list skip_required=1 %}
   {% include "field.html" with field=form.note %}

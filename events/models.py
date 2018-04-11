@@ -256,6 +256,8 @@ class SpaceUseRequest(models.Model):
     list = models.CharField(max_length=1, choices=LIST_CHOICES,
                             default=INBOX)
     created = models.DateTimeField(default=timezone.now)
+    deposit_paid = models.BooleanField(default=False)
+    has_bottomliner = models.BooleanField(default=False)
     changed = models.DateTimeField(null=True, auto_now=True)
     name = models.CharField(max_length=255, db_index=True)
     email = models.EmailField(max_length=255, db_index=True)
@@ -299,7 +301,9 @@ class SpaceUseRequest(models.Model):
         return '{d:%a} {d.month}/{d.day}, {t}'.format(
             d=created, t=format_time(created.time()))
 
-    def update_state(self, new_state, new_list):
+    def update_state(self, deposit_paid, has_bottomliner, new_state, new_list):
+        self.deposit_paid = deposit_paid
+        self.has_bottomliner = has_bottomliner
         self.state = new_state
         self.list = new_list
         self.save()

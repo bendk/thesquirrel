@@ -246,7 +246,7 @@ def space_request(request, id):
                                       request.POST)
         if form.is_valid():
             form.save()
-            return redirect('events:space-request', space_request.id)
+            return redirect('events:space-requests')
     else:
         form = SpaceRequestUpdateForm(space_request, request.user)
 

@@ -325,6 +325,10 @@ class OngoingSpaceRequestForm(forms.ModelForm):
         }
 
 class SpaceRequestUpdateForm(forms.Form):
+    deposit_paid = forms.BooleanField(
+        label=_('Deposit paid'), required=False)
+    has_bottomliner = forms.BooleanField(
+        label=_('Has bottomliner'), required=False)
     note = forms.CharField(
         label=_('Add note'), required=False, 
         widget=forms.Textarea(attrs={'rows': 3}))
@@ -338,12 +342,16 @@ class SpaceRequestUpdateForm(forms.Form):
         self.user = user
         super(SpaceRequestUpdateForm, self).__init__(
             initial=dict(state=space_request.state,
-                         list=space_request.list),
+                         list=space_request.list,
+                         deposit_paid=space_request.deposit_paid,
+                         has_bottomliner=space_request.has_bottomliner),
             data=data,
         )
 
     def save(self):
-        self.space_request.update_state(self.cleaned_data['state'],
+        self.space_request.update_state(self.cleaned_data['deposit_paid'],
+                                        self.cleaned_data['has_bottomliner'],
+                                        self.cleaned_data['state'],
                                         self.cleaned_data['list'])
         if self.cleaned_data['note']:
             self.space_request.notes.create(user=self.user,
