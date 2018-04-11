@@ -4,6 +4,10 @@
     <title>Flying Squirrel Community Space</title>
     <meta name="viewport" content="width=device-width">
     <link href='http://fonts.googleapis.com/css?family=Alegreya+Sans:300|Alegreya:700|Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/brands.js" integrity="sha384-qJKAzpOXfvmSjzbmsEtlYziSrpVjh5ROPNqb8UZ60myWy7rjTObnarseSKotmJIx" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/solid.js" integrity="sha384-P4tSluxIpPk9wNy8WSD8wJDvA8YZIkC6AQ+BfAFLXcUZIPQGu4Ifv4Kqq+i2XzrM" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/fontawesome.js" integrity="sha384-2IUdwouOFWauLdwTuAyHeMMRFfeyy4vqYNjodih+28v2ReC+8j+sLF9cK339k5hY" crossorigin="anonymous"></script>
     {% js_bundle "app.js" %}
     {% sass_bundle "app.css" %}
 </head>
@@ -74,13 +78,14 @@
     <a href="{% url "email-list-signup" %}"><span class="fa fa-envelope"></span> Email List</a>
     </li>
     <li>
-      <a href="http://www.facebook.com/profile.php?id=100000140036866&ref=ts"><span class="fa fa-facebook-square"></span> Facebook Page</a>
+      <a href="http://www.facebook.com/profile.php?id=100000140036866&ref=ts"><span class="fab fa-facebook"></span> Facebook Page</a>
     </li>
     <li class="last">
-      <a href="https://fundly.com/keep-the-squirrel-alive"><span class="fa fa-money"></span> Donate</a>
+      <a href="https://fundly.com/keep-the-squirrel-alive"><span class="fas fa-donate"></span> Donate</a>
     </li>
   </ul>
 </footer>
 {% block bodyextra %}{% endblock %}
+<script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
 </body>
 </html>
