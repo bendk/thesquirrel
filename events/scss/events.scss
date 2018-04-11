@@ -73,10 +73,6 @@ html#calendar {
         color: $red;
         font-style: italic;
     }
-    .approved-pending-deposit {
-        color: $green;
-        font-style: italic;
-    }
 }
 
 table.calendar, div.date-details {
@@ -165,9 +161,6 @@ table.space-requests {
         border-radius: 5px;
     }
     span.approved {
-        background: $green;
-    }
-    span.approved-pending-deposit {
         background: $green;
     }
     span.declined, span.canceled {
@@ -416,3 +409,14 @@ form.space-use-request {
   height: 40em;
   margin-bottom: 8px;
 }
+
+.deposit-icon-header {
+    font-weight: normal;
+    color: $green;
+}
+
+.bottomliner-icon-header {
+    font-weight: normal;
+    color: $dark-yellow;
+}
+

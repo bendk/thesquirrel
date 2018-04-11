@@ -33,8 +33,6 @@
           <li class="pending">
           {% elif item.space_request.is_declined or item.space_request.is_canceled %}
           <li class="declined">
-          {% elif item.space_request.is_approved_pending_deposit %}
-          <li class="approved-pending-deposit">
           {% else %}
           <li>
           {% endif %}

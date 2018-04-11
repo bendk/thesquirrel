@@ -24,16 +24,6 @@ td, th {
     }
 }
 
-.deposit-icon-header {
-    font-weight: normal;
-    color: $green;
-}
-
-.bottomliner-icon-header {
-    font-weight: normal;
-    color: $dark-yellow;
-}
-
 dl {
     @extend %group;
     margin: 0 0 10px 0;

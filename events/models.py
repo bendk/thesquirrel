@@ -202,11 +202,9 @@ class SpaceUseRequestManager(models.Manager):
         case_sql = ('(CASE WHEN state="P" THEN 0 '
                     'WHEN state="B" THEN 1 '
                     'ELSE 2 END)')
-        active_states = (
-            SpaceUseRequest.PENDING,
-            SpaceUseRequest.APPROVED_PENDING_DEPOSIT,
-        )
-        return (self.filter(Q(state__in=active_states) |
+        return (self.filter(Q(state=SpaceUseRequest.PENDING) |
+                            Q(has_bottomliner=False) |
+                            Q(deposit_paid=False) |
                             ~Q(list=SpaceUseRequest.COMPLETE) |
                             Q(changed__gte=changed_since))
                 .extra(select={
@@ -223,13 +221,11 @@ class SpaceUseRequestManager(models.Manager):
 class SpaceUseRequest(models.Model):
     PENDING = 'P'
     APPROVED = 'A'
-    APPROVED_PENDING_DEPOSIT = 'B'
     DECLINED = 'D'
     CANCLED = 'C'
     STATE_CHOICES = (
         (PENDING, _('Pending')),
         (APPROVED, _('Approved')),
-        (APPROVED_PENDING_DEPOSIT, _('Approved Pending Deposit')),
         (DECLINED, _('Declined')),
         (CANCLED, _('Canceled')),
     )
@@ -283,9 +279,6 @@ class SpaceUseRequest(models.Model):
 
     def is_approved(self):
         return self.state == self.APPROVED
-
-    def is_approved_pending_deposit(self):
-        return self.state == self.APPROVED_PENDING_DEPOSIT
 
     def is_declined(self):
         return self.state == self.DECLINED
@@ -387,7 +380,6 @@ class SingleSpaceUseRequest(SpaceUseRequest):
     def calendar_items_on_date(self):
         valid_states = [
             SpaceUseRequest.PENDING,
-            SpaceUseRequest.APPROVED_PENDING_DEPOSIT,
             SpaceUseRequest.APPROVED,
         ]
         rv = []
