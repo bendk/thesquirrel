@@ -202,10 +202,7 @@ class SpaceUseRequestManager(models.Manager):
         case_sql = ('(CASE WHEN state="P" THEN 0 '
                     'WHEN state="B" THEN 1 '
                     'ELSE 2 END)')
-        return (self.filter(Q(state=SpaceUseRequest.PENDING) |
-                            Q(has_bottomliner=False) |
-                            Q(deposit_paid=False) |
-                            ~Q(list=SpaceUseRequest.COMPLETE) |
+        return (self.filter(~Q(list=SpaceUseRequest.COMPLETE) |
                             Q(changed__gte=changed_since))
                 .extra(select={
                     'state_order':'(CASE WHEN state="P" THEN 0 ELSE 1 END)',

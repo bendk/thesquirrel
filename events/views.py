@@ -221,8 +221,21 @@ def space_requests(request):
     request_lists = SpaceUseRequest.get_lists()
     return render(request, "events/space-requests.html", {
         'request_lists': request_lists,
+        'show_all_complete_link': True,
         'breadcrumbs': [
             BreadCrumb(_('Space Requests')),
+        ],
+    })
+
+@login_required
+def space_requests_complete(request):
+    qs = SpaceUseRequest.objects.filter(list=SpaceUseRequest.COMPLETE)
+    print(qs)
+    return render(request, "events/space-requests.html", {
+        'request_lists': [(_('Complete'), qs)],
+        'breadcrumbs': [
+            BreadCrumb(_('Space Requests'), 'events:space-requests'),
+            BreadCrumb(_('Complete')),
         ],
     })
 

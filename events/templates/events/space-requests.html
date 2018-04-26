@@ -8,7 +8,7 @@
 <h2>{{ label }}</h2>
 {% include "events/requests-table.html" %}
 {% endfor %}
-{% if request_lists %}
-<p><em>{% trans "Note: requests will be displayed for 14 days after they are approved/declined" %}</em></p>
+{% if show_all_complete_link %}
+<p><a href="{% url "events:space-requests-complete" %}">{% trans "All completed events" %}</a></p>
 {% endif %}
 {% endblock %}
