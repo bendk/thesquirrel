@@ -21,7 +21,9 @@ import itertools
 from dateutil.relativedelta import relativedelta
 from django import forms
 from django.forms.util import ErrorDict
+from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
 from . import repeat
@@ -260,6 +262,15 @@ class SingleSpaceRequestForm(forms.ModelForm):
     date = DateField()
     start_time = TimeField(with_blank=True, initial='')
     end_time = TimeField(with_blank=True, initial='')
+    pou = forms.BooleanField(
+        required=True, label=format_html(
+            'I have read and understand the <a href="{url}">Flying '
+            'Squirrel Principles of Unity.</a>', url=reverse(
+                "docs:view", args=["principles-of-unity"])),
+        error_messages={
+            'required': _('Please read our Principles of '
+                          'Unity before submitting your event')
+        })
 
     class Meta:
         model = SingleSpaceUseRequest
