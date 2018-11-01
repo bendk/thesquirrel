@@ -9,6 +9,7 @@
       <th class="small-exclude">{% trans "Submission Date" %}</th>
       <th class="small-exclude">{% trans "Date" %}</th>
       <th>{% trans "Status" %}</th>
+      <th class="event-icon-header"><span class="far fa-calendar-alt"></span></th>
       <th class="deposit-icon-header"><span class="fas fa-money-bill-alt"></span></th>
       <th class="bottomliner-icon-header"><span class="fas fa-user-circle"></span></th>
     </tr>
@@ -22,6 +23,7 @@
       <td class="small-exclude">{{ request.get_created_display }}</td>
       <td class="small-exclude">{{ request.get_date_display }}</td>
       <td><span class="state {{ request.get_state_display|slugify }}">{{ request.get_state_display }}</span></td>
+      <td>{% if request.has_event %}<span class="far fa-check-square"></span>{% else %}<span class="far fa-square"></span>{% endif %}</td>
       <td>{% if request.deposit_paid %}<span class="far fa-check-square"></span>{% else %}<span class="far fa-square"></span>{% endif %}</td>
       <td>{% if request.has_bottomliner %}<span class="far fa-check-square"></span>{% else %}<span class="far fa-square"></span>{% endif %}</td>
     </tr>
