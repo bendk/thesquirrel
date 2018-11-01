@@ -43,10 +43,13 @@ class TimeField(forms.TimeField):
             choices.append(('', ''))
         for h in range(7, 24):
             for m in (0, 30):
-                t = time(h, m)
-                choices.append((t.strftime('%H:%M:00'), format_time(t)))
+                choices.append(self._make_choice(time(h, m)))
+        choices.append(self._make_choice(time(0, 0)))
         kwargs['widget'] = forms.Select(choices=choices)
         super(TimeField, self).__init__(*args, **kwargs)
+
+    def _make_choice(self, t):
+        return (t.strftime('%H:%M:00'), format_time(t))
 
 class MultipleDateField(forms.Field):
     hidden_widget = forms.MultipleHiddenInput
@@ -91,9 +94,10 @@ class EventForm(forms.ModelForm):
         cleaned_data = super(EventForm, self).clean()
 
         if ('end_time' in cleaned_data and 'start_time' in cleaned_data and
-            cleaned_data['end_time'] < cleaned_data['start_time']):
+            cleaned_data['end_time'] < cleaned_data['start_time'] and
+                cleaned_data['end_time'] != time(0, 0)):
             self.add_error('end_time', forms.ValidationError(
-                _('End time before starte time'), code='end-time-to-early'))
+                _('End time before start time'), code='end-time-to-early'))
 
         return cleaned_data
 
@@ -214,7 +218,6 @@ class CompositeEventForm(object):
             }
         else:
             initial = None
-        print initial
         self.exclude_form = EventRepeatExcludeForm(
             prefix='exclude', initial=initial, data=data,
         )
