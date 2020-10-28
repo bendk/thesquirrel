@@ -15,29 +15,29 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf import settings
-from django.conf.urls import patterns, include, url
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.urls import include, path
 
-urlpatterns = patterns('',
-    url(r'^$', 'thesquirrel.views.home', name='home'),
-    url(r'^contact-us/$', 'thesquirrel.views.contact_us', name='contact-us'),
-    url(r'^email-list-signup/$', 'thesquirrel.views.email_list_signup',
+import thesquirrel.views
+
+urlpatterns = [
+    url(r'^$', thesquirrel.views.home, name='home'),
+    url(r'^contact-us/$', thesquirrel.views.contact_us, name='contact-us'),
+    url(r'^email-list-signup/$', thesquirrel.views.email_list_signup,
         name='email-list-signup'),
-    url(r'^accounts/', include('accounts.urls', 'accounts')),
-    url(r'^editor/', include('editor.urls', 'editor')),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^articles/', include('articles.urls', 'articles')),
-    url(r'^events/', include('events.urls', 'events')),
-    url(r'^', include('docs.urls', 'docs')),
-)
+    url(r'^accounts/', include('accounts.urls')),
+    url(r'^editor/', include('editor.urls')),
+    path('admin/', admin.site.urls),
+    url(r'^articles/', include('articles.urls')),
+    url(r'^events/', include('events.urls')),
+    url(r'^', include('docs.urls')),
+]
 
 if settings.DEV:
-    urlpatterns += patterns('',
-        url(r'^mediabuilder/', include('mediabuilder.urls', 'mediabuilder')),
-    )
-    urlpatterns += (
-        static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) +
-        static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    )
-
+    urlpatterns += [
+        url(r'^mediabuilder/', include('mediabuilder.urls')),
+    ]
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

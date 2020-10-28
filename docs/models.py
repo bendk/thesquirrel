@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
-from editor import EditorTextField
+from editor.fields import EditorTextField
 
 class Document(models.Model):
     title = models.CharField(max_length=255)
@@ -27,7 +27,7 @@ class Document(models.Model):
     public = models.BooleanField(default=False)
     body = EditorTextField()
     created = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, models.CASCADE)
 
     def __unicode__(self):
         return u'Document: {}'.format(self.title)

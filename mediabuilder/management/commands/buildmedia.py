@@ -26,14 +26,14 @@ from mediabuilder import bundles, copytostatic, downloads
 class Command(BaseCommand):
     help = 'Build app CSS/JS files'
 
-    option_list = BaseCommand.option_list + (
-        make_option('--rebuild',
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--rebuild',
             action='store_true',
             dest='rebuild',
             default=False,
             help='Redownload and rebuild all media files',
-        ),
-    )
+        )
 
     def handle(self, *args, **options):
         self.setup_directories()

@@ -15,7 +15,6 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 import hashlib
-import urlparse
 import re
 
 from django.template.loader import render_to_string

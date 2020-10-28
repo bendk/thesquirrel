@@ -17,7 +17,7 @@
 """editor.formatting.inline -- Render inline text """
 
 import re
-from cgi import escape
+from html import escape
 
 from django.utils.html import urlize
 

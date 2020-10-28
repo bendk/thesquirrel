@@ -17,7 +17,9 @@
 from __future__ import absolute_import
 
 from django import template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from mediabuilder import bundles
 import mediabuilder
@@ -34,9 +36,9 @@ def js_bundle(bundle_name):
             reverse('mediabuilder:js_source', args=(bundle.name, path,))
             for path in bundle.source_paths()
         ]
-    return '\n'.join(
+    return mark_safe('\n'.join(
         '<script src="{}"></script>'.format(url) for url in urls
-    )
+    ))
 
 @register.simple_tag
 def sass_bundle(bundle_name):
@@ -45,4 +47,5 @@ def sass_bundle(bundle_name):
         url = bundle.static_url()
     else:
         url = reverse('mediabuilder:sass_source', args=(bundle.name,))
-    return '<link rel="stylesheet" type="text/css" href="{}" />'.format(url)
+    return format_html('<link rel="stylesheet" type="text/css" href="{}" />',
+                       url)

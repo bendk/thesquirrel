@@ -16,11 +16,11 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 import glob
+import importlib
 import os
 
 from django.conf import settings
 from django.templatetags.static import static
-from django.utils import importlib
 import sass
 import slimit
 
@@ -87,8 +87,6 @@ class Bundle(object):
 
     def build(self):
         content = self.build_content()
-        if isinstance(content, unicode):
-            content = content.encode('utf-8')
         with open(self.dest_path(), 'w') as f:
             f.write(content)
 

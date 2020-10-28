@@ -18,10 +18,10 @@ from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from .forms import ArticleForm

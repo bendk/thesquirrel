@@ -23,13 +23,13 @@ import string
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.urls import reverse
 
 random = SystemRandom()
-CODE_ALPHABET = string.uppercase + string.lowercase + string.digits + '-_'
+CODE_ALPHABET = string.ascii_uppercase + string.ascii_lowercase + string.digits + '-_'
 # 64 characters == 6 bits
 CODE_LENGTH = 12
 # 6 bits * 12 is over 64 bits of data, which should be enough for a nonce
@@ -47,7 +47,7 @@ class NewAccountNonceManager(models.Manager):
 class NewAccountNonce(models.Model):
     code = models.CharField(max_length=CODE_LENGTH, default=make_code)
     email = models.CharField(max_length=255)
-    invited_by = models.ForeignKey(User)
+    invited_by = models.ForeignKey(User, models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
 
     objects = NewAccountNonceManager()

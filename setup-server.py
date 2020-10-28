@@ -28,7 +28,7 @@ def manage(*command):
 
 def production():
     mod_dict = {}
-    execfile(os.path.join(BASE_DIR, 'local_settings.py'), mod_dict)
+    exec(open(os.path.join(BASE_DIR, 'local_settings.py')).read(), mod_dict)
     return not mod_dict.get('DEV')
 
 def main():

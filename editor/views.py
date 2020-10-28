@@ -33,7 +33,7 @@ def upload_image(request):
     else:
         try:
             image = EditorImage.objects.create_from_file(request.FILES['file'])
-        except Exception, e:
+        except Exception as e:
             return JsonResponse({'error': str(e)})
         return JsonResponse({'imageId': image.id})
 
@@ -51,7 +51,7 @@ def copy_image(request):
         return JsonResponse({'error': 'error fetching {}'.format(url)})
     try:
         image = EditorImage.objects.create_from_data(response.content)
-    except Exception, e:
+    except Exception as e:
         return JsonResponse({'error': str(e)})
     return JsonResponse({'imageId': image.id})
 

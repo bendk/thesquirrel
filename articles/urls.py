@@ -14,11 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
-urlpatterns = patterns('articles.views',
-    url(r'^$', 'index', name='index'),
-    url(r'^create/$', 'create', name='create'),
-    url(r'^(?P<id>[-\w]+)/edit/$', 'edit', name='edit'),
-    url(r'^(?P<id>[-\w]+)/', 'view', name='view'),
-)
+from . import views
+
+app_name = 'articles'
+urlpatterns = [
+    url(r'^$', views.index, name='index'),
+    url(r'^create/$', views.create, name='create'),
+    url(r'^(?P<id>[-\w]+)/edit/$', views.edit, name='edit'),
+    url(r'^(?P<id>[-\w]+)/', views.view, name='view'),
+]

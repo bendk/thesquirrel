@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from cStringIO import StringIO
+from io import StringIO
 from datetime import timedelta
 import collections
 import os
@@ -134,8 +134,8 @@ class EditorImageReferenceQuerySet(models.QuerySet):
 class EditorImageReference(models.Model):
     """Tracks which images are being used by which documents.
     """
-    image = models.ForeignKey(EditorImage, related_name='references')
-    content_type = models.ForeignKey(ContentType)
+    image = models.ForeignKey(EditorImage, models.CASCADE, related_name='references')
+    content_type = models.ForeignKey(ContentType, models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 

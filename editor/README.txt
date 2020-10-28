@@ -13,7 +13,7 @@ General Setup:
   - Include editor.urls in your urlconf
 
 Using the editor:
-- Use editor.EditorTextField as for django model field that will store the edited text
+- Use editor.fields.EditorTextField as for django model field that will store the edited text
 - Use this template code to display the field:
   {% include "editor/fieldset.html" with field=field %}
 - Also include this code somewhere towards the bottom of the page:

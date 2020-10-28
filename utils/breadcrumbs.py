@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 class BreadCrumb(object):
     def __init__(self, label, view_name=None, *args, **kwargs):

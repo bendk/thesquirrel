@@ -14,12 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
-urlpatterns = patterns('accounts.views',
-    url(r'^login/$', 'login', name='login'),
-    url(r'^logout/$', 'logout', name='logout'),
-    url(r'^invite/$', 'invite', name='invite'),
-    url(r'^my/$', 'my', name='my'),
-    url(r'^create/(?P<code>[-\w]+)$', 'create', name='create'),
-)
+from . import views
+
+app_name = 'accounts'
+urlpatterns = [
+    url(r'^login/$', views.login, name='login'),
+    url(r'^logout/$', views.logout, name='logout'),
+    url(r'^invite/$', views.invite, name='invite'),
+    url(r'^my/$', views.my, name='my'),
+    url(r'^create/(?P<code>[-\w]+)$', views.create, name='create'),
+]

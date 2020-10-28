@@ -19,7 +19,7 @@ if not os.path.exists(local_settings_path):
     sys.stderr.write("No local_settings.py file!\n"
                      "Run setup-server.py\n")
     sys.exit(-1)
-execfile(local_settings_path)
+exec(open(local_settings_path).read())
 
 BASE_URL = 'http://thesquirrel.org'
 
@@ -68,26 +68,36 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.request',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'OPTIONS': {
+            'context_processors': (
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.request',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ),
+            'loaders': (
+                'django.template.loaders.app_directories.Loader',
+            ),
+        }
+
+    },
+]
 
 LOGGING = {
     'disable_existing_loggers': False,
@@ -174,4 +184,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'user-media')
 # settings defined here.
 settings_override_path = os.path.join(BASE_DIR, 'settings_override.py')
 if os.path.exists(settings_override_path):
-    execfile(settings_override_path)
+    exec(open(settings_override_path).read())

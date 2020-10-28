@@ -19,13 +19,13 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
-from editor import EditorTextField
+from editor.fields import EditorTextField
 
 class Article(models.Model):
     title = models.CharField(max_length=255)
     body = EditorTextField()
     created = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, models.CASCADE)
 
     class Meta:
         ordering = ['-id']

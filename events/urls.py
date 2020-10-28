@@ -14,32 +14,35 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
-urlpatterns = patterns('events.views',
-    url(r'^$', 'calendar', name='calendar'),
-    url(r'^bottomliner$', 'bottomliner', name='bottomliner'),
-    url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/$', 'calendar',
+from . import views
+
+app_name = 'events'
+urlpatterns = [
+    url(r'^$', views.calendar, name='calendar'),
+    url(r'^bottomliner$', views.bottomliner, name='bottomliner'),
+    url(r'^(?P<year>\d{4})/(?P<month>\d{1,2})/$', views.calendar,
         name='month-calendar'),
-    url(r'^create/$', 'create', name='create'),
-    url(r'^(?P<id>\d+)/$', 'view', name='view'),
-    url(r'^(?P<id>\d+)/edit/$', 'edit', name='edit'),
-    url(r'^(?P<id>\d+)/link/$', 'link_event', name='link-event'),
-    url(r'^(?P<id>\d+)/unlink/$', 'unlink_event', name='unlink-event'),
-    url(r'^booking/$', 'book_the_space', name='book-the-space'),
-    url(r'^space-request-form/$', 'space_request_form',
+    url(r'^create/$', views.create, name='create'),
+    url(r'^(?P<id>\d+)/$', views.view, name='view'),
+    url(r'^(?P<id>\d+)/edit/$', views.edit, name='edit'),
+    url(r'^(?P<id>\d+)/link/$', views.link_event, name='link-event'),
+    url(r'^(?P<id>\d+)/unlink/$', views.unlink_event, name='unlink-event'),
+    url(r'^booking/$', views.book_the_space, name='book-the-space'),
+    url(r'^space-request-form/$', views.space_request_form,
         name='space-request-form'),
-    url(r'^ongoing-space-request-form/$', 'ongoing_space_request_form',
+    url(r'^ongoing-space-request-form/$', views.ongoing_space_request_form,
         name='ongoing-space-request-form'),
-    url(r'^space-requests/$', 'space_requests', name='space-requests'),
-    url(r'^space-requests/complete/$', 'space_requests_complete',
+    url(r'^space-requests/$', views.space_requests, name='space-requests'),
+    url(r'^space-requests/complete/$', views.space_requests_complete,
         name='space-requests-complete'),
-    url(r'^space-requests/copy-notes/$', 'space_requests_copy_notes',
+    url(r'^space-requests/copy-notes/$', views.space_requests_copy_notes,
         name='space-requests-copy-notes'),
-    url(r'^space-requests/(?P<id>\d+)/$', 'space_request',
+    url(r'^space-requests/(?P<id>\d+)/$', views.space_request,
         name='space-request'),
-    url(r'^space-requests/(?P<id>\d+)/edit$', 'edit_space_request',
+    url(r'^space-requests/(?P<id>\d+)/edit$', views.edit_space_request,
         name='edit-space-request'),
-    url(r'^space-requests/(?P<id>\d+)/lookup-others/$', 'lookup_others',
+    url(r'^space-requests/(?P<id>\d+)/lookup-others/$', views.lookup_others,
         name='lookup-others'),
-)
+]

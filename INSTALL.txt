@@ -13,6 +13,10 @@ This line should work on debian-based systems:
 
 apt-get install python python-virtualenv python-dev build-essential libmysqlclient-dev libjpeg-dev
 
+This should work for fedora based systems
+
+dnf install python-devel mysql-devel libjpeg-devel
+
 ---------------------------
 Step 2: Create a virtualenv
 ---------------------------

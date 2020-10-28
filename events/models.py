@@ -22,16 +22,16 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Q
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from dateutil import rrule
 
-from editor import EditorTextField
+from editor.fields import EditorTextField
 from . import repeat
 from .utils import format_time
 
@@ -55,7 +55,8 @@ class Event(models.Model, EventTimeMixin):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    space_request = models.ForeignKey('SpaceUseRequest', null=True)
+    space_request = models.ForeignKey('SpaceUseRequest', models.CASCADE,
+                                      null=True)
 
     def __unicode__(self):
         return u'Event: {}'.format(self.title)
@@ -118,7 +119,7 @@ weekday_field_info = [
 weekday_fields = [info[0] for info in weekday_field_info]
 
 class EventRepeat(models.Model, EventTimeMixin):
-    event = models.ForeignKey(Event, related_name='repeat_set')
+    event = models.ForeignKey(Event, models.CASCADE, related_name='repeat_set')
     type = models.CharField(max_length=3, choices=repeat.CHOICES)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -152,13 +153,14 @@ class EventRepeat(models.Model, EventTimeMixin):
                                 self.end_date, self._rrule_weekdays())
 
 class EventRepeatExclude(models.Model):
-    event = models.ForeignKey(Event, related_name='excludes')
+    event = models.ForeignKey(Event, models.CASCADE, related_name='excludes')
     date = models.DateField(unique=True)
 
 class CalendarItem(models.Model, EventTimeMixin):
     """Represents an entry in the calendar."""
 
-    event = models.ForeignKey(Event, related_name='calendar_items')
+    event = models.ForeignKey(Event, models.CASCADE,
+                              related_name='calendar_items')
     date = models.DateField(db_index=True)
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -434,8 +436,9 @@ class OngoingSpaceUseRequest(SpaceUseRequest):
 
 class SpaceUseNote(models.Model):
     space_use_request = models.ForeignKey(SpaceUseRequest,
+                                          models.CASCADE,
                                           related_name='notes')
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, models.CASCADE)
     datetime = models.DateTimeField(default=timezone.now)
     body = models.TextField()
 

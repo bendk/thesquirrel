@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from cStringIO import StringIO
+from io import StringIO
 import json
 import shutil
 import tarfile

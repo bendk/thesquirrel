@@ -15,7 +15,7 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import absolute_import
-from cgi import escape
+from html import escape
 
 from django import template
 from django.template.loader import render_to_string
