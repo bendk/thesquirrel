@@ -46,7 +46,7 @@ SECRET_KEY = '%(secret_key)s'
 
 def make_secret_key():
     chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
-    return ''.join(random.choice(chars) for i in xrange(50))
+    return ''.join(random.choice(chars) for i in range(50))
 
 def make_content():
     return TEMPLATE % {

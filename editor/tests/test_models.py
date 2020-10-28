@@ -82,7 +82,7 @@ class EditorTextTest(TestCase):
         assert_items_equal([ref.image for ref in qs], correct_images)
 
     def test_create_references(self):
-        images = [EditorImageFactory(id=i) for i in xrange(1, 5)]
+        images = [EditorImageFactory(id=i) for i in range(1, 5)]
         body_lines = [
             # make a couple lines with references to images
             '#image1-full',
@@ -102,7 +102,7 @@ class EditorTextTest(TestCase):
 
     def test_update_references(self):
         # at first the document references images #1 and #2
-        images = [EditorImageFactory(id=i) for i in xrange(1, 5)]
+        images = [EditorImageFactory(id=i) for i in range(1, 5)]
         doc = TestDocumentFactory(body='#image1-full\n#image2-full')
         # after an update it references #2 and #3
         doc = TestDocumentFactory(body='#image3-full\n#image2-full')
@@ -113,7 +113,7 @@ class EditorTextTest(TestCase):
         # at first the document references images #1 and #2
         before = now() - timedelta(days=7)
         images = [
-            EditorImageFactory(id=i, mtime=before) for i in xrange(1, 5)
+            EditorImageFactory(id=i, mtime=before) for i in range(1, 5)
         ]
         doc = TestDocumentFactory(body='#image1-full\n#image2-full')
         # after an update it references #2 and #3
@@ -124,7 +124,7 @@ class EditorTextTest(TestCase):
 
     def test_remove_references_on_delete(self):
         # at first the document references images #1 and #2
-        images = [EditorImageFactory(id=i) for i in xrange(1, 5)]
+        images = [EditorImageFactory(id=i) for i in range(1, 5)]
         doc = TestDocumentFactory(body='#image1-full\n#image2-full')
         doc.delete()
         # check the references

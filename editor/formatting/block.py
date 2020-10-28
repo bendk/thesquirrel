@@ -284,9 +284,9 @@ class Renderer(object):
                     inline.chunked_render(output, text_parts)
                     output.append('</p>\n')
                     text_parts = []
-                for i in xrange(token.count - nesting_level):
+                for i in range(token.count - nesting_level):
                     output.append('<blockquote>\n')
-                for i in xrange(nesting_level - token.count):
+                for i in range(nesting_level - token.count):
                     output.append('</blockquote>\n')
                 nesting_level = token.count
                 if token.text:
@@ -299,7 +299,7 @@ class Renderer(object):
             output.append('<p>')
             inline.chunked_render(output, text_parts)
             output.append('</p>\n')
-        for i in xrange(nesting_level):
+        for i in range(nesting_level):
             output.append('</blockquote>\n')
 
     def render_text(self, lexer, output):

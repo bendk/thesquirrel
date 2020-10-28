@@ -99,7 +99,7 @@ def sub_em_and_strong(output, source_parts):
         split_part = em_strong_delimiter_re.split(source_part)
         old_len = len(parts)
         parts.extend(split_part)
-        delimiter_positions.extend(xrange(old_len + 1, len(parts), 2))
+        delimiter_positions.extend(range(old_len + 1, len(parts), 2))
 
     # we will iterate through the delimiters and replace them
 
