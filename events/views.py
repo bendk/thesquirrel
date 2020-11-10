@@ -105,6 +105,7 @@ def create(request):
     if 'space-request' in request.GET:
         space_request = get_object_or_404(SpaceUseRequest,
                                           id=request.GET['space-request'])
+        space_request = space_request.get_subclass()
         instance = Event(
             title=space_request.title,
             description=space_request.description,
@@ -229,8 +230,9 @@ def space_requests(request):
 
 @login_required
 def space_requests_complete(request):
-    qs = SpaceUseRequest.objects.filter(list=SpaceUseRequest.COMPLETE)
-    print(qs)
+    qs = (SpaceUseRequest.objects
+          .filter(list=SpaceUseRequest.COMPLETE)
+          .iter_subclassses())
     return render(request, "events/space-requests.html", {
         'request_lists': [(_('Complete'), qs)],
         'breadcrumbs': [
@@ -276,7 +278,8 @@ def space_request(request, id):
 @login_required
 def lookup_others(request, id):
     space_request = get_object_or_404(SpaceUseRequest, id=id)
-    other_requests = SpaceUseRequest.objects.lookup_others(space_request)
+    other_requests = (
+        SpaceUseRequest.objects.lookup_others(space_request).iter_subclassses())
     return render(request, "events/lookup-others.html", {
         'space_request': space_request,
         'other_requests': other_requests,
@@ -284,7 +287,7 @@ def lookup_others(request, id):
 
 @login_required
 def edit_space_request(request, id):
-    space_request = get_object_or_404(SpaceUseRequest, id=id)
+    space_request = get_object_or_404(SpaceUseRequest, id=id).get_subclass()
     if isinstance(space_request, SingleSpaceUseRequest):
         form_class = SingleSpaceRequestForm
         template_name = 'events/space-request-form-single.html'

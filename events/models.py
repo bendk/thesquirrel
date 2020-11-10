@@ -181,23 +181,8 @@ class CalendarItem(models.Model, EventTimeMixin):
         return self.event.space_request
 
 class SpaceUseRequestQueryset(models.QuerySet):
-    def iterator(self):
-        # This code does a couple things:
-        #   - Generate subclass instances instead of the base class
-        #   - Only uses 1 query to fetch all the data we need
-        real_query = self.select_related('singlespaceuserequest',
-                                         'ongoingspaceuserequest')
-        for base_obj in super(SpaceUseRequestQueryset, real_query).iterator():
-            if base_obj._singlespaceuserequest_cache:
-                yield base_obj.singlespaceuserequest
-            elif base_obj._ongoingspaceuserequest_cache:
-                yield base_obj.ongoingspaceuserequest
-            else:
-                raise TypeError("No subclass found: {}".format(base_obj))
-
-class SpaceUseRequestManager(models.Manager):
-    def get_queryset(self):
-        return SpaceUseRequestQueryset(self.model)
+    def iter_subclassses(self):
+        return (request.get_subclass() for request in self)
 
     def current(self):
         changed_since = timezone.now() - timedelta(days=14)
@@ -209,6 +194,11 @@ class SpaceUseRequestManager(models.Manager):
                 .extra(select={
                     'state_order':'(CASE WHEN state="P" THEN 0 ELSE 1 END)',
                 }).order_by('state_order', 'created'))
+
+class SpaceUseRequestManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('singlespaceuserequest',
+                                                     'ongoingspaceuserequest')
 
     def lookup_others(self, other_request):
         return (self
@@ -263,7 +253,7 @@ class SpaceUseRequest(models.Model):
     phone_number = models.CharField(max_length=255, db_index=True)
     additional_comments = models.TextField(blank=True)
 
-    objects = SpaceUseRequestManager()
+    objects = SpaceUseRequestManager.from_queryset(SpaceUseRequestQueryset)()
 
     class Meta:
         index_together = [
@@ -287,6 +277,17 @@ class SpaceUseRequest(models.Model):
 
     def has_event(self):
         return bool(self.event_set.all())
+
+    def get_subclass(self):
+        """
+        Get a SingleSpaceUseRequest or OngoingSpaceUseRequest instance
+        """
+        if hasattr(self, 'singlespaceuserequest'):
+            return self.singlespaceuserequest
+        elif hasattr(self, 'ongoingspaceuserequest'):
+            return self.ongoingspaceuserequest
+        else:
+            raise TypeError("No subclass found: {}".format(instance))
 
     def get_created_display(self):
         created = timezone.localtime(self.created)
@@ -331,7 +332,7 @@ class SpaceUseRequest(models.Model):
 
     @classmethod
     def get_lists(cls):
-        all_requests = cls.objects.current()
+        all_requests = cls.objects.current().iter_subclassses()
         request_lists = []
         for list_code in cls.list_order:
             requests = [r for r in all_requests if r.list == list_code]

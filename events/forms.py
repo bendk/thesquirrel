@@ -124,6 +124,8 @@ class EventRepeatForm(forms.ModelForm):
     start_time = TimeField(initial='18:00:00')
     end_time = TimeField(initial='19:00:00')
 
+    use_required_attribute = False
+
     def __init__(self, number, *args, **kwargs):
         super(EventRepeatForm, self).__init__(*args, **kwargs)
         self.updating = kwargs.get('instance') is not None
