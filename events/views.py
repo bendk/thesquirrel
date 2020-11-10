@@ -87,7 +87,7 @@ def calendar(request, year=None, month=None):
 
     return render(request, 'events/calendar.html', {
         'calendar': make_calendar(start_date,
-                                  request.user.is_authenticated()),
+                                  request.user.is_authenticated),
         'start_date': start_date,
         'next_month': start_date + relativedelta(months=1),
         'prev_month': start_date - relativedelta(months=1),

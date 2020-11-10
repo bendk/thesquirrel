@@ -28,7 +28,7 @@ from .models import Document
 from utils.breadcrumbs import BreadCrumb
 
 def index(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         documents = Document.objects.all()
     else:
         documents = Document.objects.filter(public=True)
@@ -42,7 +42,7 @@ def index(request):
 
 def view(request, slug):
     document = get_object_or_404(Document, slug=slug)
-    if not document.public and not request.user.is_authenticated():
+    if not document.public and not request.user.is_authenticated:
         return redirect_to_login(next=reverse('docs:view', args=(slug,)))
     return render(request, 'docs/view.html', {
         'document': document,
