@@ -57,8 +57,6 @@ INSTALLED_APPS = (
     'mediabuilder',
     'thesquirrel',
     'overlaybanner',
-    # third-party-apps
-    'django_nose',
     # django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -124,12 +122,6 @@ TIME_ZONE = 'America/New_York'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_PLUGINS = ['thesquirrel.nose.TestPlugin']
-NOSE_ARGS = [
-    '--logging-filter=-django.db.backends,-factory',
-    '--logging-clear-handlers',
-]
 
 MEDIA_BUILDER = {
     'BUNDLE_MEDIA': not DEV,

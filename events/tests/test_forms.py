@@ -20,7 +20,6 @@ from datetime import date, time
 import mock
 
 from django.test import TestCase
-from nose.tools import *
 
 from thesquirrel.factories import *
 from ..factories import *
@@ -37,7 +36,7 @@ class EventFormTest(TestCase):
             'start_time': '18:30',
             'end_time': '16:30',
         })
-        assert_false(form.is_valid())
+        assert not form.is_valid()
 
     def test_save(self):
         form = EventForm(data={
@@ -49,7 +48,7 @@ class EventFormTest(TestCase):
             'start_time': '18:30',
             'end_time': '19:30',
         })
-        assert_true(form.is_valid())
+        assert form.is_valid()
         form.save()
 
 class EventRepeatFormTest(TestCase):
@@ -82,37 +81,37 @@ class EventRepeatFormTest(TestCase):
 
     def test_save(self):
         form = self.make_form_with_data()
-        assert_true(form.is_valid(), form.errors.as_text())
+        assert form.is_valid()
         event = EventFactory()
         repeat = form.save(event)
-        assert_equal(repeat.event, event)
+        assert repeat.event == event
 
     def test_one_weekday_required(self):
         form = self.make_form_with_data(no_days=True)
-        assert_false(form.is_valid())
+        assert not form.is_valid()
 
     def test_empty_type_doesnt_create_new(self):
         form = self.make_form_with_data(empty_type=True)
-        assert_true(form.is_valid(), form.errors.as_text())
+        assert form.is_valid()
         event = EventFactory()
         form.save(event)
-        assert_false(event.repeat_set.all().exists())
+        assert not event.repeat_set.all().exists()
 
     def test_empty_type_deletes_existing(self):
         form = self.make_form_with_data(update=True, empty_type=True)
-        assert_true(form.is_valid(), form.errors.as_text())
+        assert form.is_valid()
         event = EventFactory()
         form.save(event)
-        assert_false(event.repeat_set.all().exists())
+        assert not event.repeat_set.all().exists()
 
     def check_empty_type_label(self, form, correct_label):
         empty_type_label = None
         for value, label in form.fields['type'].choices:
             if value == '':
-                empty_type_label = unicode(label)
+                empty_type_label = label
                 break
-        assert_not_equal(empty_type_label, None)
-        assert_equal(empty_type_label, correct_label)
+        assert empty_type_label is not None
+        assert empty_type_label == correct_label
 
     def test_empty_type_labels(self):
         form = self.make_form()
@@ -121,8 +120,8 @@ class EventRepeatFormTest(TestCase):
                                     u'Delete repeat')
 
     def test_headings(self):
-        assert_equal(self.make_form().heading, 'Repeat')
-        assert_equal(self.make_form(number=2).heading, 'Repeat #2')
+        assert self.make_form().heading == 'Repeat'
+        assert self.make_form(number=2).heading == 'Repeat #2'
 
 class EventRepeatExcludeFormTest(TestCase):
     def test_create_excludes(self):
@@ -130,22 +129,22 @@ class EventRepeatExcludeFormTest(TestCase):
         form = EventRepeatExcludeForm(data={
             'dates': ['2/4/2015', '2/5/2015'],
         })
-        assert_true(form.is_valid())
+        assert form.is_valid()
         form.save(event)
 
     def test_invalid_value(self):
         form = EventRepeatExcludeForm(data={
             'dates': ['invalid-date'],
         })
-        assert_false(form.is_valid())
+        assert not form.is_valid()
 
 class CompositeEventFormTest(TestCase):
     def test_initial_excludes(self):
         event = EventFactory(with_repeat=True, with_exclude=True)
         form = CompositeEventForm(event)
-        assert_equal(form.exclude_form.initial['dates'], [
+        assert form.exclude_form.initial['dates'] == [
             e.date for e in event.excludes.all()
-        ])
+        ]
 
     def mock_out_subforms(self, composite_form):
         def mock_subform():
@@ -164,33 +163,33 @@ class CompositeEventFormTest(TestCase):
     def test_is_valid(self):
         event = EventFactory(with_repeat=True)
         form = self.mock_out_subforms(CompositeEventForm(event))
-        assert_true(form.is_valid())
-        assert_true(form.event_form.is_valid.called)
+        assert form.is_valid()
+        assert form.event_form.is_valid.called
         for repeat_form in form.repeat_forms:
-            assert_true(repeat_form.is_valid.called)
+            assert repeat_form.is_valid.called
         for update_form in form.update_repeat_forms:
-            assert_true(update_form.is_valid.called)
+            assert update_form.is_valid.called
 
     def test_is_valid_return_false(self):
         event = EventFactory(with_repeat=True)
         form = self.mock_out_subforms(CompositeEventForm(event))
         form.event_form.is_valid.return_value = False
-        assert_false(form.is_valid())
+        assert not form.is_valid()
         # Even though event_form.is_valid() returns False, we should still
         # call is_valid for each subform so that the ErrorDict is generated.
-        assert_true(form.event_form.is_valid.called)
+        assert form.event_form.is_valid.called
         for repeat_form in form.repeat_forms:
-            assert_true(repeat_form.is_valid.called)
+            assert repeat_form.is_valid.called
         for update_form in form.update_repeat_forms:
-            assert_true(update_form.is_valid.called)
+            assert update_form.is_valid.called
 
     def test_save(self):
         event = EventFactory(with_repeat=True)
         form = self.mock_out_subforms(CompositeEventForm(event))
         saved_event = form.event_form.save.return_value
-        assert_equal(form.save(), saved_event)
+        assert form.save() == saved_event
 
         for repeat_form in form.repeat_forms:
-            assert_true(repeat_form.save.call_args, mock.call(saved_event))
+            assert repeat_form.save.call_args
         for update_form in form.update_repeat_forms:
-            assert_true(update_form.save.call_args, mock.call(saved_event))
+            assert update_form.save.call_args

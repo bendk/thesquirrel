@@ -59,7 +59,7 @@ format_substitutions = [
     # quotes
     (re.compile(
         r'(?<![^\s\.,:;\-])' # preceded by whitespace or puncuation
-        r'\'(.*)\'' # the quote content
+        r'&#x27;(.*)&#x27;' # the quote content
         r'(?![^\s\.,:;\-])' # followed whitespace or puncuation
     ),
         r'&lsquo;\1&rsquo;'),
@@ -81,8 +81,7 @@ def format_part(output, source):
     for regex, repl in format_substitutions:
         source = regex.sub(repl, source)
 
-    source = sub_footnotes(output, source)
-    return urlize(source)
+    return sub_footnotes(output, source)
 
 def sub_footnotes(output, source):
     def repl(match):

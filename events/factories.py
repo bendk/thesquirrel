@@ -24,7 +24,8 @@ from .models import (Event, EventRepeat, EventRepeatExclude,
                      SingleSpaceUseRequest, OngoingSpaceUseRequest)
 
 class EventFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Event
+    class Meta:
+        model = Event
 
     title = 'test-event'
     description = 'test-event-description'
@@ -51,7 +52,8 @@ class EventFactory(factory.DjangoModelFactory):
             )
 
 class EventRepeatFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = EventRepeat
+    class Meta:
+        model = EventRepeat
 
     type = '2W'
     th = True
@@ -73,7 +75,9 @@ class SpaceUseRequestFactory(factory.DjangoModelFactory):
     additional_comments = 'Extra comments'
 
 class SingleSpaceUseRequestFactory(SpaceUseRequestFactory):
-    FACTORY_FOR = SingleSpaceUseRequest
+    class Meta:
+        model = SingleSpaceUseRequest
+
     event_type = 'Speaker'
     date = date(2015, 1, 1)
     start_time = time(12, 0)
@@ -84,7 +88,9 @@ class SingleSpaceUseRequestFactory(SpaceUseRequestFactory):
     squirrel_donation = 'Yes the donation works for us'
 
 class OngoingSpaceUseRequestFactory(SpaceUseRequestFactory):
-    FACTORY_FOR = OngoingSpaceUseRequest
+    class Meta:
+        model = OngoingSpaceUseRequest
+
     dates = 'first monday and wednesday'
     frequency = 'monthly'
     squirrel_goals = 'We will be promoting feminism'

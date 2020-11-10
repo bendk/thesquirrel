@@ -352,6 +352,8 @@ class SingleSpaceUseRequest(SpaceUseRequest):
     number_of_people = models.CharField(max_length=255)
     space_needs = models.TextField()
 
+    objects = models.Manager.from_queryset(SpaceUseRequestQueryset)()
+
     type = 'single'
     def get_type_display(self):
         return _('Single use')
@@ -415,6 +417,8 @@ class OngoingSpaceUseRequest(SpaceUseRequest):
     frequency = models.CharField(max_length=255)
     squirrel_goals = models.TextField()
     space_needs = models.CharField(max_length=255)
+
+    objects = models.Manager.from_queryset(SpaceUseRequestQueryset)()
 
     type = 'ongoing'
     def get_type_display(self):

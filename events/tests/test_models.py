@@ -20,7 +20,6 @@ from datetime import date, time
 
 from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 from django.test import TestCase
-from nose.tools import *
 import pytz
 
 from ..factories import *
@@ -34,7 +33,7 @@ class UpdateCalendarItemsTest(TestCase):
             (d.date, d.start_time, d.end_time)
             for d in event.calendar_items.all()
         ]
-        assert_items_equal(db_items, correct_dates_and_times)
+        assert set(db_items) == set(correct_dates_and_times)
 
     def test_no_repeat(self):
         event = EventFactory()
@@ -46,11 +45,11 @@ class UpdateCalendarItemsTest(TestCase):
         event = EventFactory(date=date(2015, 1, 1),
                              start_time=time(8),
                              end_time=time(9))
-        event.repeat_set.add(EventRepeat(
+        EventRepeat.objects.create(
             event=event, type='2W', th=True,
             start_date=date(2015, 1, 2), end_date=date(2015, 2, 1),
             start_time=time(10), end_time=time(11),
-        ))
+        )
 
         self.check_update_calendar_items(event, [
             (date(2015, 1, 1), time(8), time(9)),
@@ -64,11 +63,11 @@ class UpdateCalendarItemsTest(TestCase):
         event = EventFactory(date=date(2015, 1, 1),
                              start_time=time(8),
                              end_time=time(9))
-        event.repeat_set.add(EventRepeat(
+        EventRepeat.objects.create(
             event=event, type='2W', th=True,
             start_date=date(2015, 1, 1), end_date=date(2015, 2, 1),
             start_time=time(10), end_time=time(11),
-        ))
+        )
 
         self.check_update_calendar_items(event, [
             (date(2015, 1, 1), time(8), time(9)),
@@ -80,16 +79,16 @@ class UpdateCalendarItemsTest(TestCase):
         event = EventFactory(date=date(2015, 1, 1),
                              start_time=time(8),
                              end_time=time(9))
-        event.repeat_set.add(EventRepeat(
+        EventRepeat.objects.create(
             event=event, type='2W', th=True,
             start_date=date(2015, 1, 2), end_date=date(2015, 2, 1),
             start_time=time(10), end_time=time(11),
-        ))
-        event.repeat_set.add(EventRepeat(
+        )
+        EventRepeat.objects.create(
             event=event, type='2W', we=True,
             start_date=date(2015, 1, 7), end_date=date(2015, 2, 1),
             start_time=time(11), end_time=time(12),
-        ))
+        )
 
         self.check_update_calendar_items(event, [
             (date(2015, 1, 1), time(8), time(9)),
@@ -110,12 +109,12 @@ class UpdateCalendarItemsTest(TestCase):
             year = 2016 + i
             # creating a repeat with every day of the week set so we don't
             # have to do any fancy calculation to see whih days are hit
-            event.repeat_set.add(EventRepeat(
+            EventRepeat.objects.create(
                 event=event, type='W', 
                 mo=True, tu=True, we=True, th=True, fr=True, sa=True, su=True,
                 start_date=date(year, 1, 1), end_date=date(year, 1, 2),
                 start_time=time(10), end_time=time(11),
-            ))
+            )
             correct_calendar_items.extend([
                 (date(year, 1, 1), time(10), time(11)),
                 (date(year, 1, 2), time(10), time(11)),
@@ -126,13 +125,14 @@ class UpdateCalendarItemsTest(TestCase):
         event = EventFactory(
             date=date(2015, 1, 1), start_time=time(8), end_time=time(9)
         )
-        event.repeat_set.add(EventRepeat(
+        EventRepeat.objects.create(
+            event=event,
             type='W', th=True,
             start_date=date(2015, 1, 2), end_date=date(2015, 2, 1),
             start_time=time(10), end_time=time(11),
-        ))
-        event.excludes.add(EventRepeatExclude(date=date(2015, 1, 8)))
-        event.excludes.add(EventRepeatExclude(date=date(2015, 1, 29)))
+        )
+        EventRepeatExclude.objects.create(event=event, date=date(2015, 1, 8))
+        EventRepeatExclude.objects.create(event=event, date=date(2015, 1, 29))
 
         self.check_update_calendar_items(event, [
             (date(2015, 1, 1), time(8), time(9)),
@@ -144,10 +144,11 @@ class UpdateCalendarItemsTest(TestCase):
         event = EventFactory()
         # make an extra event date -- it should be deleted in
         # update_calendar_items()
-        event.calendar_items.add(CalendarItem(
+        CalendarItem.objects.create(
+            event=event,
             date=date(2015, 1, 2),
             start_time=time(11, 30), end_time=time(12, 30),
-        ))
+        )
         self.check_update_calendar_items(event, [
             (event.date, event.start_time, event.end_time)
         ])
@@ -158,5 +159,5 @@ class TestSpaceUseRequestModels(TestCase):
         OngoingSpaceUseRequestFactory()
         with self.assertNumQueries(1):
             types = [sr.get_type_display()
-                     for sr in SpaceUseRequest.objects.all()]
-        assert_items_equal(types, ['Single use', 'Ongoing use'])
+                     for sr in SpaceUseRequest.objects.all().iter_subclassses()]
+        assert set(types) == set(['Single use', 'Ongoing use'])

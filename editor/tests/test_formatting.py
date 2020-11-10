@@ -21,7 +21,7 @@ import re
 
 from django.test import TestCase
 from mock import Mock, call
-from nose.tools import *
+import pytest
 
 from editor.factories import *
 from editor.formatting import inline
@@ -32,19 +32,18 @@ class OutputTest(TestCase):
         output = block.Output()
         output.append('foo ')
         output.append('bar')
-        assert_equal(output.get_string(), 'foo bar')
+        assert output.get_string() == 'foo bar'
 
     def test_extend(self):
         output = block.Output()
         output.extend(['foo ', 'bar'])
-        assert_equal(output.get_string(), 'foo bar')
+        assert output.get_string() == 'foo bar'
     
     def test_add_footnote(self):
         output = block.Output()
         output.append('foo')
-        assert_equal(output.append_footnote('footnote'), 1)
-        assert_equal(
-            output.get_string(),
+        assert output.append_footnote('footnote') == 1
+        assert output.get_string() == (
             'foo'
             '<div class="footnotes">\n'
             '<h3>Footnotes</h3>\n'
@@ -57,8 +56,7 @@ class InlineMarkdownTest(TestCase):
     def check_inline_render(self, source, correct_output):
         output = block.Output()
         inline.render(output, source)
-        if output.get_string() != correct_output:
-            raise AssertionError('\n'.join((source, output, correct_output)))
+        assert output.get_string() == correct_output
 
     # <em> and <strong> rendering
     def test_emphasis(self):
@@ -129,19 +127,9 @@ class InlineMarkdownTest(TestCase):
                                  '<em>three</em></strong>')
 
     def test_escape_star(self):
-        self.check_inline_render('\*one\*', '*one*')
+        self.check_inline_render('\\*one\\*', '*one*')
 
     # link rendering
-    def test_auto_link(self):
-        self.check_inline_render(
-            'http://example.com/',
-            '<a href="http://example.com/">http://example.com/</a>')
-
-    def test_auto_link_no_scheme(self):
-        self.check_inline_render(
-            'example.com',
-            '<a href="http://example.com">example.com</a>')
-
     def test_manual_link(self):
         self.check_inline_render('[Link Text](http://example.com/)',
                                  '<a href="http://example.com/">Link Text</a>')
@@ -160,7 +148,8 @@ class InlineMarkdownTest(TestCase):
         self.check_inline_render("'hello'", '&lsquo;hello&rsquo;')
 
     def test_single_quotes_not_used_for_apostrophe(self):
-        self.check_inline_render("alice's dog's food", "alice's dog's food")
+        self.check_inline_render("alice's dog's food",
+                                 "alice&#x27;s dog&#x27;s food")
 
     def test_elipsis(self):
         self.check_inline_render("hmm...", 'hmm&hellip;')
@@ -168,25 +157,24 @@ class InlineMarkdownTest(TestCase):
     # everything together
     def test_mixed_markup(self):
         self.check_inline_render(
-            'example.com **[Text](http://example.com/link)**',
-            '<a href="http://example.com">example.com</a> '
+            '**[Text](http://example.com/link)**',
             '<strong><a href="http://example.com/link">Text</a></strong>')
 
     def test_chunked_render(self):
         output = block.Output()
         inline.chunked_render(output, ['*one', 'two*'])
-        assert_equals(output.get_string(), '<em>one two</em>')
+        assert output.get_string() == '<em>one two</em>'
 
     def test_footnotes(self):
         output = Mock()
         output.append_footnote.return_value = 1
         inline.render(output, 'foo[footnote: bar]')
-        assert_items_equal(output.method_calls, [
+        assert output.method_calls == [
+            call.append_footnote('bar'),
             call.append('foo'
                         '<sup id="citation-1" class="citation">'
                         '<a href="#footnote-1">[1]</a></sup>'),
-            call.append_footnote('bar')
-        ])
+        ]
 
 class MarkdownTestCaseReader(object):
     def __init__(self, path):
@@ -214,11 +202,11 @@ class MarkdownTestCaseReader(object):
             else:
                 last_line = line
 
-def setup_formatting_cases():
-    EditorImageFactory(id=1, image_type='png')
+@pytest.fixture
+def editor_image():
+    return EditorImageFactory(id=1, image_type='png')
 
-@with_setup(setup_formatting_cases)
-def test_formatting_cases():
+def generate_formatting_cases():
     reader = MarkdownTestCaseReader(os.path.join(os.path.dirname(__file__),
                                                  'formatting-test-cases.txt'))
     comment = '<none>'
@@ -231,10 +219,10 @@ def test_formatting_cases():
             comment = new_comment
         source = '\n'.join(reader.read_body())
         correct_output = '\n'.join(reader.read_body())
-        yield (check_formatting_case,
-               reader.section, comment, source, correct_output)
+        yield (reader.section, comment, source, correct_output)
 
-def check_formatting_case(section, comment, source, correct_output):
+@pytest.mark.parametrize("section,comment,source,correct_output", generate_formatting_cases())
+def check_formatting_case(editor_image, section, comment, source, correct_output):
     output = block.render(source)
     if output.endswith('\n'):
         output = output[:-1]

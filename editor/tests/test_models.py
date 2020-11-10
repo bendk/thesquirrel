@@ -22,7 +22,6 @@ from django.conf import settings
 from django.test import TestCase
 from django.utils import safestring
 from django.utils.timezone import now
-from nose.tools import *
 from PIL import Image
 
 from ..models import EditorImage, EditorImageReference
@@ -31,13 +30,13 @@ from ..factories import *
 class EditorImageTest(TestCase):
     def check_image_file(self, path, size):
         path = os.path.join(settings.MEDIA_ROOT, path)
-        assert_true(os.path.exists(path))
+        assert os.path.exists(path)
         image = Image.open(path)
-        assert_equal(image.size, size)
+        assert image.size == size
 
     def check_image_file_deleted(self, path):
         path = os.path.join(settings.MEDIA_ROOT, path)
-        assert_false(os.path.exists(path))
+        assert not os.path.exists(path)
 
     def test_image_creation(self):
         image = EditorImage.objects.create_from_file(
@@ -69,17 +68,17 @@ class EditorImageTest(TestCase):
         # #3 is not used, and not recently touched
         image4 = EditorImageFactory(mtime=now()-timedelta(days=15))
         image4_id = image4.id
-        doc1 = TestDocumentFactory(references=[image1, image2])
-        doc2 = TestDocumentFactory(references=[image1])
+        doc1 = MockDocumentFactory(references=[image1, image2])
+        doc2 = MockDocumentFactory(references=[image1])
         EditorImage.delete_unused()
-        assert_items_equal(EditorImage.objects.all(), [image1, image2, image3])
+        assert set(EditorImage.objects.all()) == set([image1, image2, image3])
 
 class EditorTextTest(TestCase):
     def check_image_references(self, doc, correct_images):
         qs = (EditorImageReference.objects
               .for_content_object(doc)
               .select_related('image'))
-        assert_items_equal([ref.image for ref in qs], correct_images)
+        assert set(ref.image for ref in qs) == set(correct_images)
 
     def test_create_references(self):
         images = [EditorImageFactory(id=i) for i in range(1, 5)]
@@ -97,15 +96,15 @@ class EditorTextTest(TestCase):
             'text #image3-left',
             '#image3',
         ]
-        doc = TestDocumentFactory(body='\n'.join(body_lines))
+        doc = MockDocumentFactory(body='\n'.join(body_lines))
         self.check_image_references(doc, images[:2])
 
     def test_update_references(self):
         # at first the document references images #1 and #2
         images = [EditorImageFactory(id=i) for i in range(1, 5)]
-        doc = TestDocumentFactory(body='#image1-full\n#image2-full')
+        doc = MockDocumentFactory(body='#image1-full\n#image2-full')
         # after an update it references #2 and #3
-        doc = TestDocumentFactory(body='#image3-full\n#image2-full')
+        doc = MockDocumentFactory(body='#image3-full\n#image2-full')
         # check the references
         self.check_image_references(doc, images[1:3])
 
@@ -115,23 +114,23 @@ class EditorTextTest(TestCase):
         images = [
             EditorImageFactory(id=i, mtime=before) for i in range(1, 5)
         ]
-        doc = TestDocumentFactory(body='#image1-full\n#image2-full')
+        doc = MockDocumentFactory(body='#image1-full\n#image2-full')
         # after an update it references #2 and #3
-        doc = TestDocumentFactory(body='#image3-full\n#image2-full')
+        doc = MockDocumentFactory(body='#image3-full\n#image2-full')
         # all images should have their mtimes updated
-        assert_items_equal(EditorImage.objects.filter(mtime__gt=before),
-                           images[:3])
+        assert set(EditorImage.objects.filter(mtime__gt=before)) == set(
+            images[:3])
 
     def test_remove_references_on_delete(self):
         # at first the document references images #1 and #2
         images = [EditorImageFactory(id=i) for i in range(1, 5)]
-        doc = TestDocumentFactory(body='#image1-full\n#image2-full')
+        doc = MockDocumentFactory(body='#image1-full\n#image2-full')
         doc.delete()
         # check the references
         self.check_image_references(doc, [])
 
     def test_render_fieldname(self):
         # at first the document references images #1 and #2
-        doc = TestDocumentFactory(body='# header')
-        assert_equal(doc.render_body(), '<h2>header</h2>\n')
-        assert_true(isinstance(doc.render_body(), safestring.SafeText))
+        doc = MockDocumentFactory(body='# header')
+        assert doc.render_body() == '<h2>header</h2>\n'
+        assert isinstance(doc.render_body(), safestring.SafeText)

@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
+from io import BytesIO
+
 from django.core.files.base import ContentFile
 from factory.django import DjangoModelFactory
 from PIL import Image
@@ -23,7 +25,7 @@ from django.db import models
 from .fields import EditorTextField
 from .models import EditorImage, EditorImageReference
 
-class TestDocument(models.Model):
+class MockDocument(models.Model):
     body = EditorTextField()
 
 class EditorImageFactory(DjangoModelFactory):
@@ -33,15 +35,17 @@ class EditorImageFactory(DjangoModelFactory):
         model = EditorImage
 
 def make_image_file(size=(1000, 1000), image_type='png'):
-    fp = ContentFile('', 'image.' + image_type)
-    Image.new('RGB', size).save(fp, image_type)
+    buf = BytesIO()
+    Image.new('RGB', size).save(buf, image_type)
+
+    fp = ContentFile(buf.getvalue(), 'image.' + image_type)
     fp.seek(0)
     return fp
 
-class TestDocumentFactory(DjangoModelFactory):
+class MockDocumentFactory(DjangoModelFactory):
     body = 'test-body'
     class Meta:
-        model = TestDocument
+        model = MockDocument
 
     @factory.post_generation
     def references(obj, create, extracted, **kwargs):

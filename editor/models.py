@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from io import StringIO
+from io import BytesIO
 from datetime import timedelta
 import collections
 import os
@@ -29,7 +29,7 @@ from PIL import Image
 
 from editor.config import config
 
-find_image_re = re.compile('^#image(\d+)-', re.M)
+find_image_re = re.compile(r'^#image(\d+)-', re.M)
 def find_images(text):
     """Get the list of image ids in a text block."""
     if text is None:
@@ -47,7 +47,7 @@ class EditorImageManager(models.Manager):
         return instance
 
     def create_from_data(self, data):
-        return self.create_from_file(StringIO(data))
+        return self.create_from_file(BytesIO(data))
 
 class EditorImage(models.Model):
     """An image that's been uploaded into the editor.  """
@@ -56,7 +56,7 @@ class EditorImage(models.Model):
 
     objects = EditorImageManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return 'EditorImage-{}.{}'.format(self.id, self.image_type)
 
     def image_files(self):
@@ -86,12 +86,12 @@ class EditorImage(models.Model):
 
     def write_resized_image(self, pil_image, image_info):
         if image_info.width is None:
-            pil_image.save(open(image_info.path, 'w'), self.image_type)
+            pil_image.save(open(image_info.path, 'wb'), self.image_type)
         else:
             scale_factor = image_info.width / float(pil_image.size[0])
             height = int(round(pil_image.size[1] * scale_factor))
             resized = pil_image.resize((image_info.width, height))
-            resized.save(open(image_info.path, 'w'), self.image_type)
+            resized.save(open(image_info.path, 'wb'), self.image_type)
 
     def delete(self):
         for image_info in self.image_files():

@@ -18,10 +18,9 @@ from __future__ import absolute_import
 import json
 import os
 
-from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.test import Client
-from nose.tools import *
+from django.urls import reverse
 from PIL import Image
 import mock
 
@@ -40,18 +39,18 @@ class TestUploadImage(TestCase):
         response = self.client.post(self.url, {
             'file': make_image_file()
         })
-        assert_equal(response.status_code, 200)
-        assert_equal(response['content-type'], 'application/json')
+        assert response.status_code == 200
+        assert response['content-type'] == 'application/json'
         response_data = json.loads(response.content)
         image = EditorImage.objects.get(id=response_data['imageId'])
         for path, width in image.image_files():
-            assert_true(os.path.exists(path))
+            assert os.path.exists(path)
 
     def test_login_required(self):
         response = self.client.post(self.url, {
             'file': make_image_file()
         })
-        assert_equal(response.status_code, 302)
+        assert response.status_code == 302
 
 class TestCopyImage(TestCase):
     def setUp(self):
@@ -69,17 +68,20 @@ class TestCopyImage(TestCase):
             response = self.client.post(self.url, {
                 'url': 'http://example.com/',
             })
-        assert_true(mock_get.called)
-        assert_equal(mock_get.call_args, mock.call('http://example.com/'))
-        assert_equal(response.status_code, 200)
-        assert_equal(response['content-type'], 'application/json')
+        assert mock_get.called
+        assert mock_get.call_args == mock.call('http://example.com/')
+        assert response.status_code == 200
+        assert response['content-type'] == 'application/json'
         response_data = json.loads(response.content)
+        if 'error' in response_data:
+            raise AssertionError('error copying image: {}'.format(
+                response_data['error']))
         image = EditorImage.objects.get(id=response_data['imageId'])
         for path, width in image.image_files():
-            assert_true(os.path.exists(path))
+            assert os.path.exists(path)
 
     def test_login_required(self):
         response = self.client.post(self.url, {
             'url': 'http://example.com/',
         })
-        assert_equal(response.status_code, 302)
+        assert response.status_code == 302

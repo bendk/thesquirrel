@@ -47,7 +47,7 @@ class MarkdownExampleNode(template.Node):
         self.nodelist = nodelist
 
     def render(self, context):
-        source = unicode(self.nodelist.render(context)).strip()
+        source = str(self.nodelist.render(context)).strip()
         return render_to_string('editor/formatting-example.html', {
             'source': mark_safe(escape(source).replace('\n', '<br>')),
             'rendered': mark_safe(_example_renderer.render(source)),
