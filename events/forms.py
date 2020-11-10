@@ -230,7 +230,7 @@ class CompositeEventForm(object):
             self.update_repeat_forms = [
                 EventRepeatForm(
                     prefix='repeat-update-{}'.format(i),
-                    number=counter.next(), instance=repeat, data=data
+                    number=next(counter), instance=repeat, data=data
                 )
                 for i, repeat in enumerate(event.repeat_set.all())
             ]
@@ -239,7 +239,7 @@ class CompositeEventForm(object):
 
         self.repeat_forms = [
             EventRepeatForm(prefix='repeat-create-{}'.format(i),
-                            number=counter.next(), data=data)
+                            number=next(counter), data=data)
             for i in range(5)
         ]
 
