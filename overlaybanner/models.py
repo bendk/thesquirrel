@@ -30,7 +30,7 @@ class OverlayBanner(models.Model):
         except IndexError:
             return None
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def activate(self):

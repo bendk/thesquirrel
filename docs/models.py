@@ -29,5 +29,5 @@ class Document(models.Model):
     created = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, models.CASCADE)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'Document: {}'.format(self.title)

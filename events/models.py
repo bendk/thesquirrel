@@ -58,7 +58,7 @@ class Event(models.Model, EventTimeMixin):
     space_request = models.ForeignKey('SpaceUseRequest', models.CASCADE,
                                       null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'Event: {}'.format(self.title)
 
     def update_calendar_items(self):
@@ -146,7 +146,7 @@ class EventRepeat(models.Model, EventTimeMixin):
             for field_name, weekday, day_name in weekday_field_info
             if getattr(self, field_name)
         ]
-        return ', '.join(unicode(d) for d in days)
+        return ', '.join(str(d) for d in days)
 
     def calc_repeat_rrule(self):
         return repeat.get_rrule(self.type, self.start_date,
