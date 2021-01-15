@@ -32,7 +32,7 @@ DATABASES = {
         'HOST': MYSQL_HOST,
         'PORT': MYSQL_PORT,
         'OPTIONS': {
-            'init_command': 'SET storage_engine=INNODB',
+            'init_command': 'SET default_storage_engine=INNODB',
         },
         'TEST_SERIALIZE': False,
     },

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # setup-server.py
 #
@@ -24,7 +24,7 @@ def setup_virtualenv():
                            'requirements.txt'])
 
 def manage(*command):
-    subprocess.check_call(['env/bin/python', 'manage.py' ] + list(command))
+    subprocess.check_call(['env/bin/python3', 'manage.py' ] + list(command))
 
 def production():
     mod_dict = {}
