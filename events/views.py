@@ -207,8 +207,10 @@ def _space_request_form(request, form_class, template_name):
             messages.add_message(
                 request, messages.INFO,
                 _("Thanks for considering the squirrel for your event!  "
-                  "We'll get back to you soon.  If you have any questions "
-                  "email us: flying-squirrel-events@lists.rocus.org."))
+                  "We will contact you in the next couple days.  If you "
+                  "don't hear back from us in 3 days, please call "
+                  "us at 585-205-8778.  If you have any questions "
+                  "please email: flying-squirrel-events@lists.rocus.org."))
             return redirect('home')
     else:
         form = form_class()
