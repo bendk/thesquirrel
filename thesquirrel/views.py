@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from articles.models import Article
 from docs.models import Document
@@ -26,7 +26,7 @@ def home(request):
     })
 
 def email_list_signup(request):
-    return render(request, 'email-list-signup.html')
+    return redirect("https://lists.mayfirst.org/mailman/listinfo/flying-squirrel-announce")
 
 def contact_us(request):
     return render(request, 'contact-us.html')
