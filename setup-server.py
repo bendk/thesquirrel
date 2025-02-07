@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # setup-server.py
 #
@@ -20,6 +20,7 @@ import subprocess
 BASE_DIR = os.path.dirname(__file__)
 
 def setup_virtualenv():
+    subprocess.check_call(['env/bin/pip', 'install', 'setuptools==57.5.0'])
     subprocess.check_call(['env/bin/pip', 'install', '-r',
                            'requirements.txt'])
 

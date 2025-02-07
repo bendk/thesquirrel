@@ -22,7 +22,6 @@ import os
 from django.conf import settings
 from django.templatetags.static import static
 import sass
-import slimit
 
 import mediabuilder
 
@@ -95,8 +94,7 @@ class JSBundle(Bundle):
 
     def build_content(self):
         js_source = [open(path).read() for path in self.source_paths()]
-        return slimit.minify(''.join(js_source), mangle=True,
-                             mangle_toplevel=False)
+        return ''.join(js_source)
 
 class SassBundle(Bundle):
     settings_key = 'SASS_BUNDLES'
