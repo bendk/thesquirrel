@@ -1,5 +1,5 @@
 form {
-    @extend .group;
+    @include group;
     margin: 0;
     padding: 20px 10px 10px 10px;
     border: 1px solid $light-gray;
@@ -66,7 +66,7 @@ form {
 
             label {
                 text-align: right;
-                @extend .group;
+                @include group;
             }
         }
     }
@@ -111,9 +111,9 @@ form {
     button, a.button {
         @include button(secondary);
         &.submit {
+            @include button(primary);
             float: right;
             margin: 0;
-            @include button(primary);
         }
         &.delete {
             @include button(delete);

@@ -28,7 +28,7 @@ $medium-screen-width: 768px;
 }
 
 
-.group {
+@mixin group {
     // clearfix for container elements with floating children
     &:after {
         content: "";

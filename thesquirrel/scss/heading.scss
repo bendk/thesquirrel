@@ -1,5 +1,5 @@
 .heading {
-    @extend %group;
+    @include group;
     @extend %medium-text;
     background: url($static-url + 'images/heading.png') center top no-repeat #ffc600;
     border-bottom: 1px solid $gray;

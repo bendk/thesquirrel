@@ -4,7 +4,7 @@ footer {
     background: #eee;
 
     ul {
-        @extend %group;
+        @include group;
         max-width: 1200px;
         margin: 0 auto;
         padding: 0;

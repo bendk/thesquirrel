@@ -1,5 +1,5 @@
 nav#main {
-    @extend %group;
+    @include group;
     @extend %medium-text;
 
     top: 0;
@@ -35,14 +35,6 @@ nav#main {
         text-align: right;
         button {
             display: none;
-            margin: 5px 10px;
-            @include button(secondary, small);
-            &:hover {
-                background-color: $white;
-            }
-            &.active {
-                background-color: darken($white, 8%);
-            }
         }
     }
 
@@ -67,6 +59,14 @@ nav#main {
 
         #expand-menu button {
             display: inline-block;
+            @include button(secondary, small);
+            margin: 5px 10px;
+            &:hover {
+                background-color: $white;
+            }
+            &.active {
+                background-color: darken($white, 8%);
+            }
         }
     }
 }

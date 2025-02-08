@@ -13,7 +13,7 @@
 }
 
 article {
-    @extend %group;
+    @include group;
     h1 {
         border-bottom: 1px solid $light-gray;
     }

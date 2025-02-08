@@ -26,8 +26,8 @@
     @return nth(button-sizing($size), 2);
 }
 
-%button {
-    @extend %body-font;
+@mixin button($style: primary, $size: normal) {
+    @include body-font;
     display: inline-block;
     text-align: center;
     border-radius: 5px;
@@ -38,34 +38,21 @@
     &:hover {
         text-decoration: none;
     }
-}
 
-@each $size in large, normal, small {
-    %button-#{$size} {
-        $sizing: button-sizing($size);
-        font-size: nth($sizing, 1);
-        line-height: nth($sizing, 2);
-        padding: 0 nth($sizing, 3);
-        margin-right: nth($sizing, 4);
+    $sizing: button-sizing($size);
+    font-size: nth($sizing, 1);
+    line-height: nth($sizing, 2);
+    padding: 0 nth($sizing, 3);
+    margin-right: nth($sizing, 4);
+
+    $colors: button-colors($style);
+    background-color: nth($colors, 1);
+    color: nth($colors, 2);
+    border-color: nth($colors, 3);
+    &:hover {
+        background-color: nth($colors, 4);
     }
-}
 
-@each $style in primary, secondary, delete {
-    %button-#{$style} {
-        $colors: button-colors($style);
-        background-color: nth($colors, 1);
-        color: nth($colors, 2);
-        border-color: nth($colors, 3);
-        &:hover {
-            background-color: nth($colors, 4);
-        }
-    }
-}
-
-@mixin button($style: primary, $size: normal) {
-    @extend %button;
-    @extend %button-#{$style};
-    @extend %button-#{$size};
 }
 
 button, a.button {

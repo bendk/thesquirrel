@@ -70,7 +70,7 @@ fieldset.editor {
     }
 
     button.close {
-        @include button(secondary, medium);
+        @include button(secondary, normal);
         position: absolute;
         right: 10px;
         margin: 0;

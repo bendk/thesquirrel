@@ -1,8 +1,12 @@
 $normal-line-height: 2.5rem;
 
-%body-font {
+@mixin body-font {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
     font-weight: 400;
+}
+
+%body-font {
+    @include body-font
 }
 
 %header-font {

@@ -256,9 +256,7 @@ class SpaceUseRequest(models.Model):
     objects = SpaceUseRequestManager.from_queryset(SpaceUseRequestQueryset)()
 
     class Meta:
-        index_together = [
-            ('state', 'changed'),
-        ]
+        indexes = [models.Index(fields=["state", "changed"])]
 
     def get_absolute_url(self):
         return reverse('events:space-request', args=(self.id,))
