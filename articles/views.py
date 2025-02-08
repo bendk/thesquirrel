@@ -36,7 +36,7 @@ def index(request):
     except EmptyPage:
         articles = paginator.page(paginator.num_pages)
 
-    if request.is_ajax():
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({
             'page': render_to_string('articles/_page.html', {
                 'articles': articles
