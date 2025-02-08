@@ -21,7 +21,7 @@ dnf install python-devel mysql-devel libjpeg-devel
 Step 2: Create a virtualenv
 ---------------------------
 
-virtualenv env
+python -m venv env
 ./env/bin/pip install -r requirements.txt
 
 ------------------------------

@@ -18,10 +18,11 @@ from __future__ import absolute_import
 
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from factory.django import DjangoModelFactory
 import factory
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(DjangoModelFactory):
     username = factory.Sequence(lambda i: 'user-{}'.format(i))
     email = factory.Sequence(lambda i: 'user-{}@example.com'.format(i))
     password = make_password('password')

@@ -38,6 +38,7 @@ DATABASES = {
     },
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 DEBUG = DEV
 TEMPLATE_DEBUG = DEBUG
 if DEV:

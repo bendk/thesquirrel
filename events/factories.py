@@ -17,13 +17,14 @@
 from __future__ import absolute_import
 from datetime import date, time, timedelta
 
+from factory.django import DjangoModelFactory
 import factory
 
 from thesquirrel.factories import *
 from .models import (Event, EventRepeat, EventRepeatExclude,
                      SingleSpaceUseRequest, OngoingSpaceUseRequest)
 
-class EventFactory(factory.DjangoModelFactory):
+class EventFactory(DjangoModelFactory):
     class Meta:
         model = Event
 
@@ -51,7 +52,7 @@ class EventFactory(factory.DjangoModelFactory):
                 event=obj, date=obj.date + timedelta(days=1),
             )
 
-class EventRepeatFactory(factory.DjangoModelFactory):
+class EventRepeatFactory(DjangoModelFactory):
     class Meta:
         model = EventRepeat
 
@@ -62,7 +63,7 @@ class EventRepeatFactory(factory.DjangoModelFactory):
     start_time = time(7)
     end_time = time(8)
 
-class SpaceUseRequestFactory(factory.DjangoModelFactory):
+class SpaceUseRequestFactory(DjangoModelFactory):
     title = factory.Sequence(lambda n: 'event-request-{}'.format(n))
     description = 'my event'
     name = 'Susan B. Event Requestor'
