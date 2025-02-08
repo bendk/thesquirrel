@@ -23,6 +23,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
@@ -262,7 +263,10 @@ def space_request(request, id):
         form = SpaceRequestUpdateForm(space_request, request.user,
                                       request.POST)
         if form.is_valid():
-            form.save()
+            # for some reason, this won't actually save on the brown server unless wrapped in an
+            # atomic
+            with transaction.atomic():
+                form.save()
             return redirect('events:space-requests')
     else:
         form = SpaceRequestUpdateForm(space_request, request.user)
