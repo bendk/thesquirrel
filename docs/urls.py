@@ -14,14 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import include, url
+from django.urls import include, re_path
 
 from . import views
 
 app_name = 'docs'
 urlpatterns = [
-    url(r'^docs/$', views.index, name='index'),
-    url(r'^docs/create/$', views.create, name='create'),
-    url(r'^(?P<slug>[-\w]+)/$', views.view, name='view'),
-    url(r'^(?P<slug>[-\w]+)/edit/$', views.edit, name='edit'),
+    re_path(r'^docs/$', views.index, name='index'),
+    re_path(r'^docs/create/$', views.create, name='create'),
+    re_path(r'^(?P<slug>[-\w]+)/$', views.view, name='view'),
+    re_path(r'^(?P<slug>[-\w]+)/edit/$', views.edit, name='edit'),
 ]

@@ -15,7 +15,7 @@
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
 from django import forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from docs.models import Document
 

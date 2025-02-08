@@ -21,7 +21,7 @@ from django.contrib.auth.views import redirect_to_login
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from .forms import DocumentForm
 from .models import Document

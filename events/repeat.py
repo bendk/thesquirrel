@@ -18,7 +18,7 @@
 """Define ways that we can repeat events."""
 
 from dateutil import rrule
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 class WeeklyRule(object):
     def __init__(self, interval):

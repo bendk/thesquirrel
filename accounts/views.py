@@ -23,8 +23,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
-from django.utils.http import is_safe_url
-from django.utils.translation import ugettext as _
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.translation import gettext as _
 
 from . import forms
 from .models import NewAccountNonce
@@ -35,7 +35,7 @@ def login(request):
         if form.is_valid():
             auth.login(request, form.get_user())
             next_url = request.GET.get('next')
-            if next_url and is_safe_url(next_url):
+            if next_url and url_has_allowed_host_and_scheme(next_url):
                 return HttpResponseRedirect(next_url)
             else:
                 return redirect("home")

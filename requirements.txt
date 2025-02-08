@@ -1,4 +1,4 @@
-Django==2.2.16
+Django==3.2
 Pillow==11.1.0
 mock==5.1.0
 pytest==6.1.2

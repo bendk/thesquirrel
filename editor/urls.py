@@ -14,15 +14,15 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import url
+from django.urls import re_path
 from django.views.generic import TemplateView
 
 from . import views
 
 app_name = 'editor'
 urlpatterns = [
-    url(r'^upload-image/$', views.upload_image, name='upload-image'),
-    url(r'^copy-image/$', views.copy_image, name='copy-image'),
-    url(r'^preview/$', views.preview, name='preview'),
-    url(r'^formatting-help/$', views.formatting_help, name='formatting-help'),
+    re_path(r'^upload-image/$', views.upload_image, name='upload-image'),
+    re_path(r'^copy-image/$', views.copy_image, name='copy-image'),
+    re_path(r'^preview/$', views.preview, name='preview'),
+    re_path(r'^formatting-help/$', views.formatting_help, name='formatting-help'),
 ]

@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with thesquirrel.org.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import include, url
+from django.urls import include, re_path
 
 import mediabuilder
 from . import views
@@ -24,8 +24,8 @@ if mediabuilder.config.BUNDLE_MEDIA:
     urlpatterns = []
 else:
     urlpatterns = [
-        url(r'^src/js/(?P<bundle_name>[^/]+)/(?P<path>.*)$',
+        re_path(r'^src/js/(?P<bundle_name>[^/]+)/(?P<path>.*)$',
             views.js_source, name='js_source'),
-        url(r'^src/sass/(?P<bundle_name>.*)$',
+        re_path(r'^src/sass/(?P<bundle_name>.*)$',
             views.sass_source, name='sass_source'),
     ]
