@@ -18,6 +18,7 @@ from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db import transaction
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.template.loader import render_to_string
@@ -54,10 +55,12 @@ def view(request, id):
     })
 
 @login_required
+@transaction.atomic
 def create(request):
     return edit_form(request, None, reverse('articles:index'))
 
 @login_required
+@transaction.atomic
 def edit(request, id):
     instance = get_object_or_404(Article, id=id)
     return edit_form(request, instance, reverse('articles:view', args=(id,)))

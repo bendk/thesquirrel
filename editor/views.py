@@ -17,6 +17,7 @@
 from __future__ import absolute_import
 
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
@@ -26,6 +27,7 @@ from editor.config import config
 from editor.models import EditorImage
 from editor.formatting import block
 
+@transaction.atomic
 @login_required
 def upload_image(request):
     if 'file' not in request.FILES:
@@ -37,6 +39,7 @@ def upload_image(request):
             return JsonResponse({'error': str(e)})
         return JsonResponse({'imageId': image.id})
 
+@transaction.atomic
 @login_required
 def copy_image(request):
     try:

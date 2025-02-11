@@ -125,6 +125,7 @@ def edit(request, id):
     instance = get_object_or_404(Event, id=id)
     return edit_form(request, instance, reverse('events:calendar'))
 
+@transaction.atomic
 @login_required
 def link_event(request, id):
     event = get_object_or_404(Event, id=id)
@@ -145,6 +146,7 @@ def link_event(request, id):
         'space_requests': space_requests,
     })
 
+@transaction.atomic
 @login_required
 def unlink_event(request, id):
     event = get_object_or_404(Event, id=id)
@@ -153,6 +155,8 @@ def unlink_event(request, id):
         event.save()
     return redirect('events:view', event.id)
 
+@transaction.atomic
+@login_required
 def edit_form(request, instance, return_url):
     return_url = request.GET.get('return_url', return_url)
     if request.method == 'POST':
@@ -191,10 +195,14 @@ def edit_form(request, instance, return_url):
         'enable_delete': enable_delete,
     })
 
+@transaction.atomic
+@login_required
 def space_request_form(request):
     return _space_request_form(request, SingleSpaceRequestForm,
                                'events/space-request-form-single.html')
 
+@transaction.atomic
+@login_required
 def ongoing_space_request_form(request):
     return _space_request_form(request, OngoingSpaceRequestForm,
                                'events/space-request-form-ongoing.html')
@@ -255,6 +263,7 @@ def space_requests_copy_notes(request):
         ],
     })
 
+@transaction.atomic
 @login_required
 def space_request(request, id):
     space_request = get_object_or_404(SpaceUseRequest, id=id)
@@ -263,10 +272,7 @@ def space_request(request, id):
         form = SpaceRequestUpdateForm(space_request, request.user,
                                       request.POST)
         if form.is_valid():
-            # for some reason, this won't actually save on the brown server unless wrapped in an
-            # atomic
-            with transaction.atomic():
-                form.save()
+            form.save()
             return redirect('events:space-requests')
     else:
         form = SpaceRequestUpdateForm(space_request, request.user)
