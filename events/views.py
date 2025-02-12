@@ -156,7 +156,6 @@ def unlink_event(request, id):
     return redirect('events:view', event.id)
 
 @transaction.atomic
-@login_required
 def edit_form(request, instance, return_url):
     return_url = request.GET.get('return_url', return_url)
     if request.method == 'POST':
@@ -196,13 +195,11 @@ def edit_form(request, instance, return_url):
     })
 
 @transaction.atomic
-@login_required
 def space_request_form(request):
     return _space_request_form(request, SingleSpaceRequestForm,
                                'events/space-request-form-single.html')
 
 @transaction.atomic
-@login_required
 def ongoing_space_request_form(request):
     return _space_request_form(request, OngoingSpaceRequestForm,
                                'events/space-request-form-ongoing.html')
