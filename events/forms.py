@@ -216,7 +216,7 @@ class CompositeEventForm(object):
         self.make_repeat_forms(event, data)
 
     def make_exclude_form(self, event, data):
-        if event:
+        if event.pk:
             initial = {
                 'dates': [e.date for e in event.excludes.all()]
             }
@@ -228,7 +228,7 @@ class CompositeEventForm(object):
 
     def make_repeat_forms(self, event, data):
         counter = itertools.count(1)
-        if event:
+        if event.pk:
             self.update_repeat_forms = [
                 EventRepeatForm(
                     prefix='repeat-update-{}'.format(i),
