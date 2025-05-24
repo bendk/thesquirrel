@@ -21,6 +21,7 @@ from django.contrib import auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -62,6 +63,7 @@ def my(request):
         'form': form,
     })
 
+@transaction.atomic
 @login_required
 def invite(request):
     if request.method == 'POST':
@@ -81,6 +83,7 @@ def invite(request):
         'form': form,
     })
 
+@transaction.atomic
 def create(request, code):
     nonce = get_object_or_404(NewAccountNonce.objects.active(), code=code)
     initial = dict(email=nonce.email)
