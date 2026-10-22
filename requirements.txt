@@ -1,5 +1,5 @@
 Django==5.1
-Pillow==11.1.0
+Pillow==13.0.0
 mock==5.1.0
 pytest==8.3.4
 pytest-django==4.9.0
